@@ -18,7 +18,7 @@ dataset = project.version(1).download("yolov8")
 
 wandb.login(key=WANDB_API_KEY)
 
-wandb.init(
+run = wandb.init(
     entity="caretech",
     # rename this to what u want the run to be named
     project="david",
@@ -46,19 +46,22 @@ wandb.init(
 # documenation
 # https://docs.ultralytics.com/modes/train/#train-settings
 
-model = YOLO("yolo26m.pt")
+model = YOLO("yolo26s.pt")
 add_wandb_callback(model, enable_model_checkpointing=True) # this saves weights to colab
 
 
 # Train the model
-results = model.train(
-    # these are the hyperparameters
-    # setting optimizer as auto overrides set hyperparameters
-    data="/content/V1-CareTech-Combined-Dataset-1/data.yaml",
-    epochs=100,
-    imgsz=640,
-    batch=0.8,
-    patience=50,
-    cache=True,
-    device=0,
-)
+try:
+    results = model.train(
+        # these are the hyperparameters
+        # setting optimizer as auto overrides set hyperparameters
+        data="/content/V1-CareTech-Combined-Dataset-1/data.yaml",
+        epochs=100,
+        imgsz=640,
+        batch=0.8,
+        patience=50,
+        cache=True,
+        device=0,
+    )
+except:
+    run.alert("crash", "training crashed")
