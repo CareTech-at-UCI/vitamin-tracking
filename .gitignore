@@ -1,7 +1,5 @@
+# Secrets and Environments
 .env
-lahari-himal
-.DS_Store
-/lahari_himal/datasets/
 .venv
 
 
@@ -9,3 +7,5 @@ lahari-himal
 rushil_king/V1-CareTech-Combined-Dataset-1
 rohan-david
 .DS_Store
+/lahari_himal/datasets/
+lahari-himal
