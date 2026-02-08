@@ -1,3 +1,8 @@
 .env
-.DS_Store
+.venv
+
+
+# Datasets
 rushil_king/V1-CareTech-Combined-Dataset-1
+rohan-david
+.DS_Store
