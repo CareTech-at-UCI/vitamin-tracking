@@ -1,4 +1,7 @@
 .env
+lahari-himal
+.DS_Store
+/lahari_himal/datasets/
 .venv
 
 
