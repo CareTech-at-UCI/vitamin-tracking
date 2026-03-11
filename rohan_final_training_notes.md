@@ -8,9 +8,10 @@ Unfortunately, I was only able to undergo one model training as I ran out of cre
 
 Here are the details for the model:
 YOLO26x (Extra Large model -- the largest out of all available)
+Epochs - 58
 Dataset ablation - removed 15% of the lowest quality images from each class
 Preprocessing - Auto-orient, 640x640 resizing
 Augmentations - None
-Results - mAP@50 77.3%, Precision 79.4%, Recall 70.1%
+Results (on Test Set)- mAP@50 77.3%, Precision 79.4%, Recall 70.1%, F1 72.9%
 
-I honestly wasn't too impressed with this model. I feel that I've been able to obtain similar results with the lighter v11, v26 versions, and using an XL model didn't make it as accurate as I thought it would. I did run out of credits and it seemed like the model was continuing to progress, however, which makes any evaluations I give a bit inaccurate. I know there's not much more time, and credits are dwindling, but I would love to fully train a huge model like this one and see how good it can actually get.
+I honestly wasn't too impressed with this model. I feel that I've been able to obtain similar results with the lighter v11, v26 versions, and using an XL model didn't make it as accurate as I thought it would. I did run out of credits and it seemed like the model was continuing to progress, however, which makes any evaluations I give a bit inaccurate (stopped at 58 epochs). I know there's not much more time, and credits are dwindling, but I would love to fully train a huge model like this one and see how good it can actually get.
