@@ -1,6 +1,7 @@
 # Secrets and Environments
 .env
-.venv
+**.venv
+**__pycache__
 
 
 # Datasets
