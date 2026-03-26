@@ -3,14 +3,14 @@
 
  
 ## 📚 Table of Contents
-- [Overview](#-overview)
+- [Project Overview](#-project-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Installation](#-installation)
 - [Feedback and Contributing](#-feedback-and-contributing)
 - [Authors](#-authors)
 
-## Overview
+## Overview of Vitamind
 
 At CareTech, our main mission is to build projects to promote early-disease detection. 
 
