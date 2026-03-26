@@ -10,19 +10,19 @@
 - [Feedback and Contributing](#-feedback-and-contributing)
 - [Authors](#-authors)
 
-## ℹ️ Overview
+## Overview
 
 At CareTech, our main mission is to build projects to promote early-disease detection. 
 
 **Vitamind** is designed to help users track their daily and weekly vitamin intake and understand how it impacts their cognitive health. By analyzing dietary habits, the application provides insights and recommendations to support better brain health over time and takes into each personal user's health and characteristics into account.
 
-## ✨ Features
+## 🌟 Features
 
-- 📊 Track daily vitamin intake
-- 🧠 Analyze impact on cognitive health
-- 📈 Personalized insights and recommendations
-- 🍎 Food logging and categorization
-- 🎯 Goal-based progress tracking
+- Track daily vitamin intake
+- Analyze impact on cognitive health
+- Personalized insights and recommendations
+- Food logging and categorization
+- Goal-based progress tracking
 
 ## 🛠 Tech Stack
 
