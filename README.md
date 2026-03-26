@@ -1,5 +1,5 @@
 # Welcome to Vitamind! 🧠
-> *An application that connects vitamin intake to a person's cognitive health*
+> *An application that connects a person's vitamin intake to their personal cognitive health*
 
  
 ## 📚 Table of Contents
