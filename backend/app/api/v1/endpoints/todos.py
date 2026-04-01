@@ -50,7 +50,7 @@ async def get_todos(
 
 @router.post("/")
 async def create_todo(
-    body: TodoCreate,
+    body: TodoCreate, # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
 ):
     """
@@ -60,7 +60,7 @@ async def create_todo(
 
         response = (
             supabase.table("todos")
-            .insert({"name": body.name})
+            .???({"name": ???})     # Update the ??? with the correct information! Hint: You have to use the 'body' argument for one of them.
             .execute()
         )
         rows = response.data or []
@@ -79,7 +79,7 @@ async def create_todo(
 @router.patch("/{todo_id}")
 async def update_todo(
     todo_id: UUID,
-    body: TodoUpdate,
+    body: TodoUpdate, # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
 ):
     """
@@ -91,7 +91,7 @@ async def update_todo(
             raise HTTPException(status_code=400, detail="Provide at least one field to update")
         response = (
             supabase.table("todos")
-            .update({"name": body.name})
+            .???({"name": ???})   # Update the ??? with the correct command! Hint: The second ??? is the same as the one used in POST.
             .eq("id", str(todo_id))
             .execute()
         )
@@ -118,7 +118,7 @@ async def delete_todo(
 
         response = (
             supabase.table("todos")
-            .delete()
+            .???()                      # Update the ??? with the correct command!
             .eq("id", str(todo_id))
             .execute()
         )
