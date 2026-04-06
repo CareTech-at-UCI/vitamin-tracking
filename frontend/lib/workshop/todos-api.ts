@@ -42,9 +42,15 @@ export async function listTodos(limit = 20): Promise<ListTodosResponse> {
  *   return res.json() as Promise<TodoRow>;
  */
 export async function createTodo(_name: string): Promise<TodoRow> {
-  throw new Error(
-    "Workshop: implement createTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+  const base = getWorkshopApiBaseUrl();
+
+  const res = await fetch(`${base}/api/v1/todos/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: _name }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json() as Promise<TodoRow>;
 }
 
 /**
@@ -60,9 +66,15 @@ export async function createTodo(_name: string): Promise<TodoRow> {
  *   return res.json() as Promise<TodoRow>;
  */
 export async function updateTodo(_id: string, _name: string): Promise<TodoRow> {
-  throw new Error(
-    "Workshop: implement updateTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+  const base = getWorkshopApiBaseUrl();
+
+  const res = await fetch(`${base}/api/v1/todos/${_id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: _name }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json() as Promise<TodoRow>;
 }
 
 /**
@@ -73,7 +85,8 @@ export async function updateTodo(_id: string, _name: string): Promise<TodoRow> {
  *   if (!res.ok) throw new Error(await res.text());
  */
 export async function deleteTodo(_id: string): Promise<void> {
-  throw new Error(
-    "Workshop: implement deleteTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+  const base = getWorkshopApiBaseUrl();
+
+  const res = await fetch(`${base}/api/v1/todos/${_id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error(await res.text());
 }

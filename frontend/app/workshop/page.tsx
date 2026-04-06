@@ -93,8 +93,8 @@ export default function WorkshopPage() {
               NEXT_PUBLIC_API_URL
             </code>{" "}
             if needed (defaults to{" "}
-            <code className="font-mono text-xs">http://127.0.0.1:8000</code>). API
-            explorer:{" "}
+            <code className="font-mono text-xs">http://127.0.0.1:8000</code>).
+            API explorer:{" "}
             <code className="rounded bg-white/6 px-1.5 py-0.5 font-mono text-xs">
               {getWorkshopApiBaseUrl()}/docs
             </code>
@@ -107,8 +107,10 @@ export default function WorkshopPage() {
               <h2 className="text-lg font-semibold text-black">List</h2>
               <p className="mt-1 text-sm text-black/60">
                 <code className="font-mono text-xs">GET</code> implemented in{" "}
-                <code className="font-mono text-xs">lib/workshop/todos-api.ts</code> (
-                <code className="font-mono text-xs">listTodos</code>)
+                <code className="font-mono text-xs">
+                  lib/workshop/todos-api.ts
+                </code>{" "}
+                (<code className="font-mono text-xs">listTodos</code>)
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -127,7 +129,9 @@ export default function WorkshopPage() {
 
           {actionError ? (
             <div className="mt-6 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
-              <div className="text-sm font-medium text-red-800">Request failed</div>
+              <div className="text-sm font-medium text-red-800">
+                Request failed
+              </div>
               <pre className="mt-2 whitespace-pre-wrap text-xs text-red-800/90">
                 {actionError}
               </pre>
@@ -166,7 +170,8 @@ export default function WorkshopPage() {
               <p className="mt-3 text-sm text-black/55">Loading…</p>
             ) : items.length === 0 ? (
               <p className="mt-3 text-sm text-black/55">
-                No rows yet. Insert in Supabase or implement Add above, then refresh.
+                No rows yet. Insert in Supabase or implement Add above, then
+                refresh.
               </p>
             ) : (
               <ul className="mt-4 divide-y divide-black/10 overflow-hidden rounded-xl border border-black/10">
@@ -176,8 +181,12 @@ export default function WorkshopPage() {
                     className="flex flex-col gap-3 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-black">{todo.name}</p>
-                      <p className="mt-0.5 font-mono text-xs text-black/45">{todo.id}</p>
+                      <p className="truncate text-sm font-medium text-black">
+                        {todo.name}
+                      </p>
+                      <p className="mt-0.5 font-mono text-xs text-black/45">
+                        {todo.id}
+                      </p>
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-2">
                       <button

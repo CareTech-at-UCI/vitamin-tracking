@@ -70,10 +70,19 @@ async def create_todo(
 
     On failure, map exceptions to HTTP 500 with a useful `detail` string.
     """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement create_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    try:
+        response = (
+            supabase.table("todos")
+            .insert({"name": body.name})
+            .execute()
+        )
+        rows = response.data or []
+        if not rows:
+            raise HTTPException(status_code=500, detail="Insert returned no row")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+    
+    return rows[0]
 
 
 @router.patch("/{todo_id}")
@@ -100,10 +109,22 @@ async def update_todo(
             raise HTTPException(status_code=404, detail="Todo not found")
         return rows[0]
     """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement update_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    try:
+        if body.name is None:
+            raise HTTPException(status_code=400, detail="Provide at least one field to update")
+        response = (
+            supabase.table("todos")
+            .update({"name": body.name})
+            .eq("id", str(todo_id))
+            .execute()
+        )
+        rows = response.data or []
+        if not rows:
+            raise HTTPException(status_code=404, detail="Todo not found")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+    
+    return rows[0]
 
 
 @router.delete("/{todo_id}")
@@ -127,7 +148,17 @@ async def delete_todo(
             raise HTTPException(status_code=404, detail="Todo not found")
         return {"deleted": True, "id": str(todo_id)}
     """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement delete_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    try: 
+        response = (
+            supabase.table("todos")
+            .delete()
+            .eq("id", str(todo_id))
+            .execute()
+        )
+        rows = response.data or []
+        if not rows:
+            raise HTTPException(status_code=404, detail="Todo not found")
+    except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+    
+    return rows[0]
