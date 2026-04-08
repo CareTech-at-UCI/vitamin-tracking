@@ -1,0 +1,8 @@
+CREATE TABLE nutrients (
+  -- PRIMARY KEY
+  nutrient_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+
+  name TEXT NOT NULL,
+  symbol TEXT UNIQUE,
+  unit TEXT
+);

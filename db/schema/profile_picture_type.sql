@@ -1,0 +1,1 @@
+CREATE TYPE profile_picture_type as ENUM ('fox', 'monkey', 'cat');

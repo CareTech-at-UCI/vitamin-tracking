@@ -1,0 +1,1 @@
+CREATE TYPE sex_type as ENUM ('male', 'female', 'other');
