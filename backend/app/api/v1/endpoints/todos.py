@@ -11,23 +11,21 @@ with the examples in each function’s docstring)
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel, Field
 from supabase import Client
 
 from app.api.deps.supabase import get_supabase_admin
+from app.api.schemas.todos import (
+    ListTodosResponse,
+    TodoCreate,
+    TodoDeleteResponse,
+    TodoRow,
+    TodoUpdate,
+)
 
 router = APIRouter()
 
 
-class TodoCreate(BaseModel):
-    name: str = Field(..., min_length=1, max_length=500)
-
-
-class TodoUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=500)
-
-
-@router.get("/")
+@router.get("/", response_model=ListTodosResponse)
 async def get_todos(
     limit: int = Query(default=20, ge=1, le=100),
     supabase: Client = Depends(get_supabase_admin),
@@ -48,7 +46,7 @@ async def get_todos(
     return {"count": len(response.data or []), "items": response.data or []}
 
 
-@router.post("/")
+@router.post("/", response_model=TodoRow)
 async def create_todo(
     body: TodoCreate, # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
@@ -76,7 +74,7 @@ async def create_todo(
     )
 
 
-@router.patch("/{todo_id}")
+@router.patch("/{todo_id}", response_model=TodoRow)
 async def update_todo(
     todo_id: UUID,
     body: TodoUpdate, # The parsed request (dictionary)
@@ -106,7 +104,7 @@ async def update_todo(
     )
 
 
-@router.delete("/{todo_id}")
+@router.delete("/{todo_id}", response_model=TodoDeleteResponse)
 async def delete_todo(
     todo_id: UUID,
     supabase: Client = Depends(get_supabase_admin),
