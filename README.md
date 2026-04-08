@@ -34,9 +34,96 @@ At CareTech, our main mission is to build projects to promote early-disease dete
 
 ## Installation
 
+### 0. Prerequisites
+
+- **Node.js** and **pnpm** or **npm** — for the Next.js frontend
+- **Python 3** — for the FastAPI backend
+
+### 1. Clone the repository and use the workshop branch
+
+If you do not have the repo yet:
+
+```bash
+git clone https://github.com/CareTech-at-UCI/vitamin-tracking.git
+cd vitamin-tracking
+```
+
+Download the latest remote branches:
+
+```bash
+git fetch origin
+```
+
+### 2. Backend (terminal 1)
+
+Open a terminal at the **repository root**, then:
+
+```bash
+cd backend
+python3 -m venv .venv
+```
+
+Activate the virtual environment:
+
+- **macOS / Linux:** `source .venv/bin/activate`
+- **Windows (Command Prompt):** `.venv\Scripts\activate.bat`
+
+Install dependencies (this is the same install the project expects):
+
 ```bash
 pip install -r requirements.txt
 ```
+
+If `fastapi` is not found or installs incorrectly, try:
+
+```bash
+pip install "fastapi[standard]"
+```
+
+Create a **`.env`** file in the `backend` directory (not `.env.local`). Copy `backend/.env.example` and fill in your Supabase values.
+
+Optional: `CORS_ORIGINS` defaults to `http://localhost:3000,http://127.0.0.1:3000` so the frontend can call the API.
+
+Start the API (from `backend` with the venv active):
+
+```bash
+fastapi dev
+```
+
+If the CLI does not pick up the app automatically, run:
+
+```bash
+fastapi dev app/main.py
+```
+
+- **Interactive API docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) — use this to try each endpoint (e.g. todos under `/api/v1/todos`).
+
+### 3. Frontend (terminal 2)
+
+Use a **second terminal** at the repository root:
+
+```bash
+cd frontend
+pnpm install
+# or: npm install
+```
+
+Create **`frontend/.env.local`** (Next.js convention). Copy `frontend/.env.local.example` and set the secrets.
+
+Start the dev server:
+
+```bash
+pnpm dev
+# or: npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). For the workshop full-stack flow, open [http://localhost:3000/workshop](http://localhost:3000/workshop) — it should load todos from the backend when both servers are running and env vars are correct.
+
+### 4. Quick verification checklist
+
+1. **Two terminals:** Backend (`fastapi dev` in `backend/`) and frontend (`pnpm dev` or `npm run dev` in `frontend/`) run without errors.
+2. **Backend:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) loads and you can execute the endpoints from the UI.
+3. **Frontend ↔ backend:** With the API up, [http://localhost:3000/workshop](http://localhost:3000/workshop) fetches todos successfully (`NEXT_PUBLIC_API_URL` and backend `CORS_ORIGINS` must allow `http://localhost:3000`).
 
 
 ## Feedback and Contributing
