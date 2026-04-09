@@ -10,15 +10,17 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class TodoCreate(BaseModel):
+    """Request body for `POST /api/v1/todos/`"""
     name: str = Field(..., min_length=1, max_length=500)
 
 
 class TodoUpdate(BaseModel):
+    """Request body for `PATCH /api/v1/todos/{todo_id}`"""
     name: str | None = Field(default=None, min_length=1, max_length=500)
 
 
 class TodoRow(BaseModel):
-    """One row from `public.todos` (matches frontend `TodoRow`)."""
+    """One row from `public.todos`"""
 
     model_config = ConfigDict(extra="ignore")
 
@@ -27,14 +29,14 @@ class TodoRow(BaseModel):
 
 
 class ListTodosResponse(BaseModel):
-    """Response from `GET /api/v1/todos/`."""
+    """Response from `GET /api/v1/todos/`"""
 
     count: int
     items: list[TodoRow]
 
 
 class TodoDeleteResponse(BaseModel):
-    """Response from `DELETE /api/v1/todos/{todo_id}` when implemented."""
+    """Response from `DELETE /api/v1/todos/{todo_id}` when implemented"""
 
     deleted: bool
     id: str
