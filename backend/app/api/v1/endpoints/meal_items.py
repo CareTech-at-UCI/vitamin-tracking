@@ -19,7 +19,7 @@ router = APIRouter()
 
 @router.get("/", response_model=ListMealItemsResponse)
 async def get_meal_items(
-    limit: int = Query(default=20, ge=1, le=100),
+    limit: int = Query(default=20, ge=1, le=100), # change limits as needed idk
     supabase: Client = Depends(get_supabase_admin),
 ):
     """List rows from meal_items"""
