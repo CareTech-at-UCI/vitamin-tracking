@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 
 /**
  * Workshop: UI only - implement requests in `lib/workshop/todos-api.ts`
- * The error panel shows thrown messages (including "Workshop: implement …" until done)
+ * The error panel shows thrown messages from failed requests.
  */
 
 export default function WorkshopPage() {
@@ -19,9 +19,14 @@ export default function WorkshopPage() {
   const [loading, setLoading] = useState(true);
   const [actionError, setActionError] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
+  /** Inline rename: which todo id is being edited, and the draft title */
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
 
   const reload = useCallback(async () => {
     setActionError(null);
+    setEditingId(null);
+    setEditingName("");
     setLoading(true);
     try {
       const data = await listTodos();
@@ -62,15 +67,33 @@ export default function WorkshopPage() {
     }
   }
 
-  async function handleRename(todo: TodoRow) {
+  function startRename(todo: TodoRow) {
     setActionError(null);
-    const next = window.prompt("New name", todo.name);
-    if (next == null) return;
-    const trimmed = next.trim();
-    if (trimmed === "" || trimmed === todo.name) return;
+    setEditingId(todo.id);
+    setEditingName(todo.name);
+  }
 
+  function cancelRename() {
+    setEditingId(null);
+    setEditingName("");
+  }
+
+  async function commitRename(original: TodoRow) {
+    if (editingId !== original.id) return;
+    const trimmed = editingName.trim();
+    if (trimmed === "") {
+      setActionError("Name cannot be empty.");
+      return;
+    }
+    if (trimmed === original.name) {
+      cancelRename();
+      return;
+    }
+
+    setActionError(null);
     try {
-      await updateTodo(todo.id, trimmed);
+      await updateTodo(original.id, trimmed);
+      cancelRename();
       await reload();
     } catch (e) {
       setActionError(e instanceof Error ? e.message : "Rename failed");
@@ -106,9 +129,8 @@ export default function WorkshopPage() {
             <div>
               <h2 className="text-lg font-semibold text-black">List</h2>
               <p className="mt-1 text-sm text-black/60">
-                <code className="font-mono text-xs">GET</code> implemented in{" "}
-                <code className="font-mono text-xs">lib/workshop/todos-api.ts</code> (
-                <code className="font-mono text-xs">listTodos</code>)
+                CRUD via{" "}
+                <code className="font-mono text-xs">lib/workshop/todos-api.ts</code>
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -155,48 +177,83 @@ export default function WorkshopPage() {
               Add
             </button>
           </form>
-          <p className="mt-2 text-xs text-black/45">
-            Implement <code className="font-mono">createTodo</code> in{" "}
-            <code className="font-mono">todos-api.ts</code>
-          </p>
-
           <div className="mt-8 border-t border-black/10 pt-6">
             <h3 className="text-sm font-semibold text-black">Rows</h3>
             {loading && items.length === 0 ? (
               <p className="mt-3 text-sm text-black/55">Loading…</p>
             ) : items.length === 0 ? (
               <p className="mt-3 text-sm text-black/55">
-                No rows yet. Insert in Supabase or implement Add above, then refresh.
+                No rows yet. Add one above or insert rows in Supabase, then refresh.
               </p>
             ) : (
               <ul className="mt-4 divide-y divide-black/10 overflow-hidden rounded-xl border border-black/10">
-                {items.map((todo) => (
-                  <li
-                    key={todo.id}
-                    className="flex flex-col gap-3 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-black">{todo.name}</p>
-                      <p className="mt-0.5 font-mono text-xs text-black/45">{todo.id}</p>
-                    </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                      <button
-                        type="button"
-                        className="rounded-lg border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-black hover:bg-black/4"
-                        onClick={() => void handleRename(todo)}
-                      >
-                        Rename
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-lg border border-red-500/25 bg-red-500/5 px-3 py-1.5 text-xs font-medium text-red-900 hover:bg-red-500/10"
-                        onClick={() => void handleDelete(todo.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                {items.map((todo) => {
+                  const isEditing = editingId === todo.id;
+                  return (
+                    <li
+                      key={todo.id}
+                      className="flex flex-col gap-3 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="min-w-0 flex-1">
+                        {isEditing ? (
+                          <input
+                            autoFocus
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") void commitRename(todo);
+                              if (e.key === "Escape") cancelRename();
+                            }}
+                            className="w-full max-w-md rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-medium text-black focus:border-black/30 focus:outline-none focus:ring-2 focus:ring-black/10"
+                            aria-label="Todo name"
+                          />
+                        ) : (
+                          <p className="truncate text-sm font-medium text-black">{todo.name}</p>
+                        )}
+                        <p className="mt-0.5 font-mono text-xs text-black/45">{todo.id}</p>
+                      </div>
+                      <div className="flex shrink-0 flex-wrap gap-2">
+                        {isEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              className="rounded-lg border border-black/15 bg-black px-3 py-1.5 text-xs font-medium text-white hover:bg-black/90"
+                              onClick={() => void commitRename(todo)}
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-lg border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-black hover:bg-black/4"
+                              onClick={cancelRename}
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              className="rounded-lg border border-black/15 bg-white px-3 py-1.5 text-xs font-medium text-black hover:bg-black/4"
+                              disabled={editingId != null}
+                              onClick={() => startRename(todo)}
+                            >
+                              Rename
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-lg border border-red-500/25 bg-red-500/5 px-3 py-1.5 text-xs font-medium text-red-900 hover:bg-red-500/10"
+                              disabled={editingId != null}
+                              onClick={() => void handleDelete(todo.id)}
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
