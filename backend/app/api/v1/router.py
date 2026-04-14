@@ -8,7 +8,7 @@ Includes all endpoint routers in one place.
 
 from fastapi import APIRouter
 
-from .endpoints import meal_nutrients, meals, nutrients, users, todos
+from .endpoints import meal_nutrients, meals, nutrients, nutrient_goals, users, todos
 
 router = APIRouter()
 
@@ -17,3 +17,4 @@ router.include_router(meals.router, prefix="/meals", tags=["meals"])
 router.include_router(todos.router, prefix="/todos", tags=["todos"])
 router.include_router(nutrients.router, prefix="/nutrients", tags=["nutrients"])
 router.include_router(meal_nutrients.router, prefix="/meal-nutrients", tags=["meal-nutrients"])
+router.include_router(nutrient_goals.router, prefix="/nutrient-goals", tags=["nutrient-goals"])

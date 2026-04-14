@@ -44,3 +44,37 @@ class MealNutrientBatchResponse(BaseModel):
 
     count: int
     items: list[MealNutrientRow]
+
+
+class ListMealNutrientsResponse(BaseModel):
+    """Response for getting all nutrient rows linked to meal"""
+
+    count: int
+    items: list[MealNutrientRow]
+
+
+class MealNutrientUpdate(BaseModel):
+    """Request body for `PATCH /api/v1/meal-nutrients/item/{item_id}/nutrient/{nutrient_id}`"""
+
+    quantity: float = Field(..., ge=0)
+
+
+class MealNutrientSyncCreate(BaseModel):
+    """Request body for `PUT /api/v1/meal-nutrients/meal/{item_id}/sync`"""
+
+    nutrients: list[MealNutrientInput] = Field(..., min_length=1)
+
+
+class MealNutrientSyncResponse(BaseModel):
+    """Response for sync route."""
+
+    count: int
+    items: list[MealNutrientRow]
+
+
+class MealNutrientDeleteResponse(BaseModel):
+    """Response for `DELETE /api/v1/meal-nutrients/item/{item_id}/nutrient/{nutrient_id}`"""
+
+    deleted: bool
+    item_id: int
+    nutrient_id: int
