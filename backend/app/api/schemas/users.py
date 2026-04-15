@@ -37,7 +37,7 @@ class UserUpdate(BaseModel):
     is_pregnant: bool | None = None
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
-    recomendations: list[str] | None = None
+    recommendations: list[str] | None = None
 
 
 class UserResponse(BaseModel):
@@ -56,7 +56,7 @@ class UserResponse(BaseModel):
     is_pregnant: bool | None = None
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
-    recomendations: list[str] | None = None
+    recommendations: list[str] | None = None
     created_at: datetime
     updated_at: datetime 
 
@@ -66,3 +66,19 @@ class ListUserResponse(BaseModel):
 
     count: int
     items: list[UserResponse]
+
+
+class UserCreate(BaseModel):
+    """Request body for `POST /api/v1/users/`"""
+
+    first_name: str = Field(min_length=1, max_length=20)
+    last_name: str = Field(min_length=1, max_length=20)
+    date_of_birth: date
+    sex: SexType
+    height: Decimal = Field(max_digits=5, decimal_places=2, gt=0)
+    weight: Decimal = Field(max_digits=5, decimal_places=2, gt=0)
+    activity_level: int = Field(ge=1, le=5)
+    is_pregnant: bool | None = None
+    profile_picture: ProfilePictureType | None = None
+    goal_type: str | None = None
+    recommendations: list[str] | None = None
