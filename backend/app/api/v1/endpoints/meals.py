@@ -95,9 +95,6 @@ async def update_meal(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Update a meal entry"""
-    # error handle to make sure at least one field is provided 
-    # RUSHIL
-
     update_data = {}
     if body.consumed_at:
         update_data["consumed_at"] = body.consumed_at.isoformat()
@@ -105,6 +102,9 @@ async def update_meal(
         update_data["type"] = body.type.value
     if body.notes is not None:
         update_data["notes"] = body.notes
+
+    if not update_data:
+        raise HTTPException(status_code=400, detail="Provide at least one field to update")
 
     try:
         response = (
