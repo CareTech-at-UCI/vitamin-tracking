@@ -17,7 +17,7 @@ class UserDietRestrictionsCreate(BaseModel):
 
 
 class UserDietRestrictionsBatchCreate(BaseModel):
-    """Rrequest body for `POST /api/v1/user-diet-restrictions/batch`"""
+    """Request body for `POST /api/v1/user_diet_restrictions/batch`"""
     user_id: UUID
     diet_ids: List[int] = Field(..., min_items=1)
 
@@ -32,6 +32,7 @@ class UserDietRestrictionsRow(BaseModel):
 
 
 class UserDietRestrictionItem(BaseModel):
+    """one user-diet pairing"""
     user_id: UUID
     diet_id: int
     name: str | None
@@ -39,17 +40,17 @@ class UserDietRestrictionItem(BaseModel):
 
 
 class ListUserDietRestrictionsResponse(BaseModel):
-    count: int
+    """Request body for both GET paths"""
     items: List[UserDietRestrictionItem]
 
 
 class UserDietRestrictionsDelete(BaseModel):
-    """Response from `DELETE /api/v1/user-diet-restrictions/{id}` when implemented"""
-
-    deleted: bool
-    id: int
+    """Request body for `DELETE /api/v1/user_diet_restrictions/user/{user_id}/diet/{diet_id}`"""
+    user_id: UUID
+    diet_id: int
+    deleted: bool = True
 
 
 class UserDietRestrictionsPut(BaseModel):
-    """Response from `PUT /api/v1/user-diet-restrictions/user/{user_id}/sync"""
-    restriction_list: List[str] = Field(..., min_items=1)
+    """Request body for `PUT /api/v1/user_diet_restrictions/user/{user_id}/sync"""
+    diet_ids: List[int] = Field(..., min_items=1)
