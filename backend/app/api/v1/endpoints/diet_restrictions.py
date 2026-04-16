@@ -38,6 +38,30 @@ async def get_diet_restrictions(
     return {"count": len(response.data or []), "items": response.data or []}
 
 
+@router.get("/{diet_id}", response_model=DietRestrictionRow)
+async def get_diet_restriction(
+    diet_id: int,
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """
+    Retrieve one row from `public.diet_restrictions` by `diet_id`
+    """
+    try:
+        response = (
+            supabase.table("diet_restrictions")
+            .select("*")
+            .eq("diet_id", diet_id)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+
+    rows = response.data or []
+    if not rows:
+        raise HTTPException(status_code=404, detail="Diet restriction not found")
+    return rows[0]
+
+
 @router.post("/", response_model=DietRestrictionRow)
 async def create_diet_restriction(
     body: DietRestrictionCreate,  # The parsed request (dictionary)
