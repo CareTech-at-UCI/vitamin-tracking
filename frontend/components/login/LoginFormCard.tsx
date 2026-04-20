@@ -16,7 +16,7 @@ export function LoginFormCard() {
           <p
             className={`${montserratAlternates.className} w-full max-w-84 text-[36px] font-semibold leading-none tracking-[-0.08em] text-accent lg:max-w-none lg:text-[3.35rem] lg:tracking-tight`}
           >
-            Welcome back!
+            Welcome back
           </p>
           <h1 className="mt-1 w-full max-w-84 text-[48px] font-semibold leading-[0.92] tracking-[-0.06em] text-accent md:whitespace-nowrap lg:max-w-none lg:text-[5.1rem] lg:leading-[0.95] lg:tracking-tight">
             to Nutritional Diet App
