@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "components/VitaminRing.jsx", "app/vitamin-information/page.jsx", "app/vitamin-dashboard/page.jsx", "app/recent-foods/page.jsx"  ],
   "exclude": ["node_modules"]
 }
