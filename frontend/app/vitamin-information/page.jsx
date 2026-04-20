@@ -34,7 +34,7 @@ export default function VitaminInfoPage() {
         </h1>
 
         {/* Description */}
-        <p className="text-secondary font-secondary mb-10">
+        <p className="text-secondary font-medium font-secondary mb-10">
           Vitamins are micronutrients that we need in small amounts for various
           metabolic processes and bodily functions.
         </p>

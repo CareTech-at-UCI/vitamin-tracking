@@ -2,11 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function VitaminDropdown({
-  id,
-  title = "Vitamin A",
-  isActive = false,
-}) {
+export default function VitaminDropdown({ id, title, isActive = false }) {
   const [open, setOpen] = useState(isActive);
 
   useEffect(() => {
@@ -15,7 +11,6 @@ export default function VitaminDropdown({
 
   return (
     <div className="py-4">
-      {/* Header */}
       <div
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center cursor-pointer group"
@@ -33,12 +28,11 @@ export default function VitaminDropdown({
         </span>
       </div>
 
-      {/* Content */}
       {open && (
-        <div className="mt-6 grid grid-cols-2 gap-12 text-secondary font-bold font-secondary">
+        <div className="mt-6 grid grid-cols-2 gap-12 text-secondary font-secondary">
           <div>
-            <h4 className="font-semibold mb-2">Functions</h4>
-            <ul className="list-disc ml-5 space-y-1 text-sm">
+            <h1 className="font-bold text-xl">Functions</h1>
+            <ul className="font-semibold list-disc ml-5 text-md">
               <li>Helps immune system fight disease</li>
               <li>Keeps skin healthy</li>
               <li>Supports growth</li>
@@ -48,16 +42,16 @@ export default function VitaminDropdown({
 
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold mb-2">Plant Sources</h4>
-              <ul className="list-disc ml-5 text-sm">
+              <h1 className="font-bold text-xl">Plant Sources</h1>
+              <ul className="font-semibold list-disc ml-5 text-md">
                 <li>Orange/yellow vegetables</li>
                 <li>Leafy greens</li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">Animal Sources</h4>
-              <ul className="list-disc ml-5 text-sm">
+              <h1 className="font-bold text-xl">Animal Sources</h1>
+              <ul className="font-semibold list-disc ml-5 text-md">
                 <li>Liver</li>
                 <li>Eggs</li>
                 <li>Milk products</li>
