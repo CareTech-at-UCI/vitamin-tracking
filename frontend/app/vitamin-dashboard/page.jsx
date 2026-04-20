@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import VitaminRing from "@/components/VitaminRing";
+import Sidebar from "@/components/Sidebar";
 
 // ---------------------------------------------------------------------------
 // Dummy vitamin data
@@ -70,15 +71,12 @@ export default function VitaminDashboardPage() {
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
   const handleInfoClick = (vitaminId) => {
-    router.push(`/vitamin-info?vitamin=${vitaminId}`);
+    router.push(`/vitamin-information?vitamin=${vitaminId}`);
   };
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="w-32 bg-primary flex items-start justify-center py-6">
-        <img src="/logo.svg" alt="Logo" className="w-auto h-20" />
-      </div>
+      <Sidebar />
 
       {/* Main Content */}
       <div className="flex-1 px-8">
