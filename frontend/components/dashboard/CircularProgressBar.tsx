@@ -14,11 +14,7 @@ export function CircularProgressBar({ percentage, vitaminName }: CircularProgres
 
     return (
         <div className="flex flex-col items-center gap-2">
-            <svg
-                width={size}
-                height={size}
-                viewBox={`0 0 ${size} ${size}`}
-            >
+            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                 {/* Track */}
                 <circle
                     cx={size / 2}
@@ -28,37 +24,45 @@ export function CircularProgressBar({ percentage, vitaminName }: CircularProgres
                     stroke="#B5CEB5"
                     strokeWidth={strokeWidth}
                 />
-                {/* Progress arc */}
-                <circle
-                    cx={size / 2}
-                    cy={size / 2}
-                    r={radius}
-                    fill="none"
-                    stroke="#0F3D2E"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    strokeLinecap="round"
-                    transform={`rotate(-90 ${size / 2} ${size / 2})`}
-                />
+                {/* Progress arc — starts at top, goes counter-clockwise */}
+                <g style={{ transform: "scaleX(-1)", transformOrigin: "center", transformBox: "fill-box" }}>
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="none"
+                        stroke="#0F3D2E"
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        transform={`rotate(-90 ${size / 2} ${size / 2})`}
+                    />
+                </g>
                 {/* Percentage label */}
                 <text
                     x={size / 2}
                     y={size / 2}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize={22}
-                    fontWeight={600}
-                    fill="#171717"
+                    fontSize={20}
+                    fontWeight={500}
+                    fill="#0A3323"
+                    letterSpacing="-1"
+                    fontFamily="var(--font-instrument-sans)"
                 >
                     {percentage}%
                 </text>
             </svg>
 
-            {/* Vitamin name + info tooltip link */}
+            {/* Vitamin name + info link */}
             <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">{vitaminName}</span>
-                <Link href="/vitamin-info" className="text-[#171717] leading-none">ⓘ</Link>
+                <span className="font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] text-[#0A3323]">
+                    {vitaminName}
+                </span>
+                <Link href="/vitamin-info" className="flex items-center">
+                    <img src="/info-icon.svg" alt="Vitamin info" width={16} height={16} />
+                </Link>
             </div>
         </div>
     );

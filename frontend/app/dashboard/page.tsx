@@ -10,9 +10,10 @@ export default function Dashboard() {
                 <h1 className="text-5xl font-bold text-[#171717]">Dashboard</h1>
                 <Link
                     href="/profile"
-                    className="bg-[#26612F] text-white text-sm font-medium px-5 py-2 rounded-full"
+                    className="flex items-center gap-1 bg-[#26612F] text-[#FDFAE7] font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] px-6 py-2 rounded-full"
                 >
                     Profile Info
+                    <img src="/curly-arrow-icon.svg" alt="" width={24} height={18} />
                 </Link>
             </div>
 
@@ -29,9 +30,10 @@ export default function Dashboard() {
             <div className="flex justify-end">
                 <Link
                     href="/recent-foods"
-                    className="bg-[#26612F] text-white text-sm font-medium px-5 py-2 rounded-full"
+                    className="flex items-center gap-1 bg-[#26612F] text-[#FDFAE7] font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] px-6 py-2 rounded-full"
                 >
                     Recent Food
+                    <img src="/curly-arrow-icon.svg" alt="" width={24} height={18} />
                 </Link>
             </div>
 
