@@ -25,7 +25,7 @@ const infoCards = [
 export function HomeInfoSection() {
   return (
     <section className="w-full bg-background pb-7 sm:py-14">
-      <div className="mx-auto w-full max-w-6xl px-7 sm:px-8">
+      <div className="mx-auto w-full max-w-6xl px-7 sm:px-8 lg:h-screen">
         <div className="sm:hidden">
           <div className="h-px bg-border-subtle/80" />
           <div className="pt-2">
