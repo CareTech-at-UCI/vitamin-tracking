@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Instrument_Sans } from "next/font/google";
 import { Montserrat_Alternates } from "next/font/google";
 
 const montserratAlternates = Montserrat_Alternates({
@@ -7,18 +8,31 @@ const montserratAlternates = Montserrat_Alternates({
   weight: "600",
 });
 
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: "500",
+});
+
 export function HomeHero() {
   return (
     <section className="w-full bg-[radial-gradient(58rem_32rem_at_90%_0%,#96c685_6%,#dbe9cf_45%,transparent_58%),radial-gradient(38rem_26rem_at_64%_102%,#72ab5f_18%,#c7dfba_52%,transparent_63%),var(--background)]">
+      <div className="relative aspect-[50/38] w-[clamp(2.25rem,5vw,3.125rem)]">
+        <Image
+          src="/logo.png"
+          alt="Nutritional Diet App logo"
+          fill
+          sizes="(min-width: 64rem) 3.125rem, (min-width: 40rem) 2.75rem, 2.25rem"
+          className="object-contain"
+          priority
+        />
+      </div>
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-7 py-7 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:py-14 lg:h-screen">
         <div className="space-y-6">
-          <Image src="/logo.png" alt="Nutritional Diet App logo" width={50} height={38} priority />
-
           <div className="space-y-5">
-            <h1 className={`${montserratAlternates.className} max-w-md text-[80px] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl`}>
+            <h1 className={`${montserratAlternates.className} max-w-md text-[clamp(2.75rem,8vw,5rem)] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl`}>
               Nutritional Diet App
             </h1>
-            <p className="max-w-xl text-[2rem] leading-[1.18] text-accent sm:text-lg sm:leading-relaxed lg:text-[2rem] lg:leading-[1.3]">
+            <p className={`${instrumentSans.className} max-w-xl text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent`}>
               Track your nutritional intake and understand vitamin-related health
               impacts through a combination of {" "}
               <span className="text-accent-warm">food logging</span>, {" "}
@@ -30,23 +44,29 @@ export function HomeHero() {
           <div className="hidden flex-col gap-3 sm:flex sm:flex-row sm:items-center">
             <Link
               href="/login"
-              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-accent px-5 text-[1.2rem] font-medium text-white transition hover:brightness-95"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-accent px-5 text-[clamp(0.95rem,2vw,1.2rem)] font-medium transition hover:brightness-95"
+              style={{ color: "rgba(253, 250, 231, 1)" }}
             >
               Sign up
-              <Image src="/login.png" alt="" width={15} height={15} aria-hidden="true" />
+              <span className="relative block aspect-square w-[clamp(0.75rem,1.3vw,0.9375rem)]" aria-hidden="true">
+                <Image src="/sign-up-button.png" alt="" fill sizes="(min-width: 64rem) 0.9375rem, 0.75rem" className="object-contain" />
+              </span>
             </Link>
             <Link
               href="/login"
-              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-accent/70 bg-surface px-5 text-[1.2rem] font-medium text-accent transition hover:bg-surface-strong"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-accent/70 bg-surface px-5 text-[clamp(0.95rem,2vw,1.2rem)] font-medium text-accent transition hover:bg-surface-strong"
+              style={{ color: "rgba(38, 97, 47, 1)" }}
             >
               Login
-              <Image src="/login.png" alt="" width={15} height={15} aria-hidden="true" />
+              <span className="relative block aspect-square w-[clamp(0.75rem,1.3vw,0.9375rem)]" aria-hidden="true">
+                <Image src="/login-button.png" alt="" fill sizes="(min-width: 64rem) 0.9375rem, 0.75rem" className="object-contain" />
+              </span>
             </Link>
           </div>
         </div>
 
         <div className="hidden lg:grid lg:place-items-center">
-          <div className="grid aspect-4/5 w-full max-w-88 place-items-center border-2 border-[#2992f5] bg-[#cfcfd1] text-center text-[3rem] font-medium text-black">
+          <div className="grid aspect-4/5 w-full max-w-88 place-items-center bg-[#cfcfd1] text-center text-[clamp(1.75rem,4vw,3rem)] font-medium text-black">
             Image
           </div>
         </div>
