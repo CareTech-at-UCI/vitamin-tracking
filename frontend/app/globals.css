@@ -16,6 +16,11 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #26612F;
+    --primary_600: #0F3D2E;
+    --secondary: #0A3323;
+    --background: #FFFDEE;
+    --accent: #F16F33;
   }
 }
 
