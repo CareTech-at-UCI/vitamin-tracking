@@ -1,15 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Montserrat_Alternates } from "next/font/google";
+
+const montserratAlternates = Montserrat_Alternates({
+  subsets: ["latin"],
+  weight: "600",
+});
 
 export function HomeHero() {
   return (
     <section className="w-full bg-[radial-gradient(58rem_32rem_at_90%_0%,#96c685_6%,#dbe9cf_45%,transparent_58%),radial-gradient(38rem_26rem_at_64%_102%,#72ab5f_18%,#c7dfba_52%,transparent_63%),var(--background)]">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-7 py-7 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:py-14">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 px-7 py-7 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:py-14 lg:h-screen">
         <div className="space-y-6">
           <Image src="/logo.png" alt="Nutritional Diet App logo" width={50} height={38} priority />
 
           <div className="space-y-5">
-            <h1 className="max-w-md text-[3.25rem] font-bold leading-[0.98] tracking-tight sm:max-w-2xl sm:text-5xl lg:text-[4.3rem] lg:leading-[0.98]">
+            <h1 className={`${montserratAlternates.className} max-w-md text-[80px] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl`}>
               Nutritional Diet App
             </h1>
             <p className="max-w-xl text-[2rem] leading-[1.18] text-accent sm:text-lg sm:leading-relaxed lg:text-[2rem] lg:leading-[1.3]">
