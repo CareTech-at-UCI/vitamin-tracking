@@ -1,10 +1,7 @@
-export function VitaminGoals(){
+export function VitaminGoals() {
     return (
-        <div>
-            <p> Vitamin Goals </p>
-            <form>
-                <input type="search" placeholder="Search"/>
-            </form>
+        <div className="flex-[832] border-2 border-[#26612F]/20 rounded-2xl py-8 px-8">
+            <h2 className="text-xl font-bold">Vitamin Goals</h2>
         </div>
-    )
+    );
 }
