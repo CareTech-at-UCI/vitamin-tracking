@@ -24,8 +24,8 @@ const infoCards = [
 
 export function HomeInfoSection() {
   return (
-    <section className="w-full bg-background pb-7 sm:py-14">
-      <div className="mx-auto w-full max-w-6xl px-7 sm:px-8 lg:h-screen">
+    <section className="w-full min-h-screen bg-background">
+      <div className="mx-auto h-full w-full min-h-screen">
         <div className="sm:hidden">
           <div className="h-px bg-border-subtle/80" />
           <div className="pt-2">
@@ -64,12 +64,12 @@ export function HomeInfoSection() {
           </div>
         </div>
 
-        <div className="hidden gap-8 sm:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-12">
-          <div className="space-y-5">
+        <div className="hidden flex-col items-center sm:grid lg:min-h-screen lg:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)]">
+          <div className="lg:ml-14 lg:mr-30 lg:space-y-16">
           {infoCards.map((card) => (
             <article
               key={card.title}
-              className="rounded-2xl border border-border-subtle bg-surface p-5 shadow-sm sm:p-6"
+              className="border border-border-subtle bg-surface p-5 shadow-sm sm:p-6"
             >
               <h2 className="text-xl font-semibold">{card.title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
@@ -79,7 +79,7 @@ export function HomeInfoSection() {
           ))}
           </div>
 
-          <aside className="flex h-full min-h-80 flex-col justify-between rounded-3xl border border-border-subtle bg-[linear-gradient(180deg,#ebf3e6_0%,#d0e6c8_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
+          <aside className="flex h-full min-h-80 w-full flex-col justify-between bg-[linear-gradient(180deg,#ebf3e6_0%,#d0e6c8_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent-warm">
                 Nutritional Diet App
