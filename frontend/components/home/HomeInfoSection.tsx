@@ -65,21 +65,22 @@ export function HomeInfoSection() {
         </div>
 
         <div className="hidden flex-col items-center sm:grid lg:min-h-screen lg:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)]">
-          <div className="lg:ml-14 lg:mr-30 lg:space-y-16">
+          <div className="lg:ml-18 lg:mr-40 lg:space-y-16">
           {infoCards.map((card) => (
             <article
               key={card.title}
-              className="border border-border-subtle bg-surface p-5 shadow-sm sm:p-6"
+              className="border-2 bg-surface p-5 shadow-md sm:p-6"
+              style={{ color: "rgba(38, 97, 47, 1)" }}
             >
-              <h2 className="text-xl font-semibold">{card.title}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+              <h2 className="[font-family:var(--font-home-title)] text-2xl font-semibold" style={{ color: "rgba(10, 51, 35, 1)" }}>{card.title}</h2>
+              <p className="[font-family:var(--font-home-body)] mt-3 text-sm leading-relaxed text-muted sm:text-base">
                 {card.body}
               </p>
             </article>
           ))}
           </div>
 
-          <aside className="flex h-full min-h-80 w-full flex-col justify-between bg-[linear-gradient(180deg,#ebf3e6_0%,#d0e6c8_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
+          <aside className="flex h-full min-h-80 w-full flex-col justify-between bg-[linear-gradient(180deg,#bdd3aa_0%,#26612f_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent-warm">
                 Nutritional Diet App

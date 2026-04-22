@@ -25,6 +25,8 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-home-title: var(--font-montserrat-alternates);
+  --font-home-body: var(--font-instrument-sans);
 }
 
 body {
