@@ -9,6 +9,29 @@ const montserratAlternates = Montserrat_Alternates({
 export function LoginFormCard() {
   return (
     <section className="w-full max-w-4xl py-1">
+      <div className="pointer-events-none absolute right-0 -top-[clamp(2rem,5vw,4rem)] z-0 w-[clamp(18rem,38vw,42.182rem)] aspect-[674.92/630.05] hidden lg:block">
+        <Image
+          src="/home-blob-1.png"
+          alt=""
+          fill
+          sizes="(min-width: 64rem) 42.182rem, 0vw"
+          className="object-contain"
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="pointer-events-none absolute -bottom-[clamp(1rem,2.5vw,2rem)] left-2/3 z-0 w-[clamp(20rem,42vw,41.9725rem)] aspect-[671.56/684.18] -translate-x-1/2 hidden lg:block">
+        <Image
+          src="/home-blob-2.png"
+          alt=""
+          fill
+          sizes="(min-width: 64rem) 41.9725rem, 0vw"
+          className="object-contain object-bottom"
+          aria-hidden="true"
+          quality={100}
+        />
+      </div>
+
       <header className="space-y-4">
         <Image src="/logo.png" alt="Nutritional Diet App logo" width={50} height={38} priority />
 
