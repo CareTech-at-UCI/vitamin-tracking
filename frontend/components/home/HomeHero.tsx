@@ -50,13 +50,13 @@ export function HomeHero() {
         />
       </div>
       
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 px-7 py-7 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:py-14 lg:h-screen">
+      <div className="relative z-10 mx-auto grid w-full gap-8 px-5 py-7 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:px-14 lg:py-14 lg:h-screen">
         <div className="space-y-6">
           <div className="space-y-5">
-            <h1 className={`${montserratAlternates.className} max-w-md text-[clamp(2.75rem,8vw,5rem)] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl`}>
+            <h1 className={`${montserratAlternates.className} lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl`}>
               Nutritional Diet App
             </h1>
-            <p className={`${instrumentSans.className} max-w-xl text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent`}>
+            <p className={`${instrumentSans.className} text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent`}>
               Track your nutritional intake and understand vitamin-related health
               impacts through a combination of {" "}
               <span className="text-accent-warm">food logging</span>, {" "}
@@ -90,7 +90,7 @@ export function HomeHero() {
         </div>
 
         <div className="hidden lg:grid lg:place-items-center">
-          <div className="grid aspect-4/5 w-full max-w-88 place-items-center bg-[#cfcfd1] text-center text-[clamp(1.75rem,4vw,3rem)] font-medium text-black">
+          <div className="grid aspect-4/5 w-full max-w-md place-items-center bg-[#cfcfd1] text-center text-[clamp(1.75rem,4vw,3rem)] font-medium text-black">
             Image
           </div>
         </div>
