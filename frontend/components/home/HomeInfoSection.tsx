@@ -27,6 +27,7 @@ export function HomeInfoSection() {
     <section className="w-full min-h-screen bg-background">
       <div className="mx-auto h-full w-full min-h-screen">
         <div className="sm:hidden px-6">
+          <Image src="/sample.png" alt="Sample photo of scan" width={121} height={121} className="my-4" />
           <div className="h-px border-b" />
           <div className="pt-2">
             {infoCards.map((card) => (
