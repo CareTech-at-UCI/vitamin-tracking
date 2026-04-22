@@ -61,7 +61,8 @@ export function HomeHero() {
               impacts through a combination of {" "}
               <span className="text-accent-warm">food logging</span>, {" "}
               <span className="text-accent-warm">visual analytics</span>, and {" "}
-              <span className="text-accent-warm">personalized recommendations.</span>
+              <span className="text-accent-warm">personalized recommendations</span>
+              .
             </p>
           </div>
 
