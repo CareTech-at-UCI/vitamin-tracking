@@ -41,7 +41,7 @@ export function HomeHero() {
       <div className="relative z-10 mx-auto grid w-full gap-8 px-5 pb-7 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:px-14 lg:py-14 lg:h-screen">
         <div className="space-y-6">
           <div className="space-y-5">
-            <h1 className="[font-family:var(--font-home-title)] lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl">
+            <h1 className="[font-family:var(--font-home-title)] lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold sm:font-extrabold leading-[100%] tracking-[-0.07em] sm:max-w-2xl">
               Nutritional Diet App
             </h1>
             <p className="[font-family:var(--font-home-body)] text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent">
@@ -57,10 +57,10 @@ export function HomeHero() {
           <div className="hidden flex-col gap-3 sm:flex sm:flex-row sm:items-center">
             <Link
               href="/login"
-              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-accent px-5 text-[clamp(0.95rem,2vw,1.2rem)] font-medium transition hover:brightness-95"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-[#26612F] px-5 text-[clamp(0.95rem,2vw,1.2rem)] font-medium transition hover:brightness-95"
               style={{ color: "rgba(253, 250, 231, 1)" }}
             >
-              Sign up
+              Sign-up
               <span className="relative block aspect-square w-[clamp(0.75rem,1.3vw,2rem)]" aria-hidden="true">
                 <Image src="/sign-up-button.png" alt="" fill sizes="(min-width: 64rem) 2rem, 0.75rem" className="object-contain" />
               </span>

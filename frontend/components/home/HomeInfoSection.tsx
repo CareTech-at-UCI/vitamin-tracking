@@ -27,18 +27,18 @@ export function HomeInfoSection() {
     <section className="w-full min-h-screen bg-background">
       <div className="mx-auto h-full w-full min-h-screen">
         <div className="sm:hidden px-6">
-          <div className="h-px bg-border-subtle/80" />
+          <div className="h-px border-b" />
           <div className="pt-2">
             {infoCards.map((card) => (
-              <div key={card.title} className="border-b border-border-subtle/80 py-2.5">
+              <div key={card.title} className="border-b py-2.5">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between gap-3 text-left"
+                  className="flex w-full items-center justify-between gap-3 text-[#0A3323] text-left"
                 >
-                  <span className="text-2xl font-medium leading-none text-foreground">
+                  <span className="[font-family:var(--font-home-body)] text-xl font-medium leading-none text-foreground">
                     {card.title}
                   </span>
-                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-accent-soft text-2xl font-semibold leading-none text-accent">
+                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#B1CC9F] text-2xl font-semibold leading-none text-accent" style={{ color: "rgba(10, 51, 35, 1)" }}>
                     +
                   </span>
                 </button>
@@ -46,20 +46,21 @@ export function HomeInfoSection() {
             ))}
           </div>
 
-          <div className="mt-7 space-y-3">
+          <div className="[font-family:var(--font-home-title)] mt-7 space-y-3 text-xl font-semibold">
             <Link
               href="/login"
-              className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full bg-accent px-6 text-[2rem] font-semibold leading-none text-white transition hover:brightness-95"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full bg-[#17522A] px-6 leading-none transition hover:brightness-95"
+              style={{ color: "rgba(253, 250, 231, 1)" }}
             >
               Sign-up
-              <Image src="/login.png" alt="" width={16} height={16} aria-hidden="true" />
+              <Image src="/sign-up-button.png" alt="" width={20} height={20} aria-hidden="true" />
             </Link>
             <Link
               href="/login"
-              className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-accent bg-transparent px-6 text-[2rem] font-semibold leading-none text-accent transition hover:bg-accent-soft/40"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full bg-[#F0E7CF] border border-accent px-6 leading-none text-accent transition hover:bg-accent-soft/40"
             >
               Login
-              <Image src="/login.png" alt="" width={16} height={16} aria-hidden="true" />
+              <Image src="/login-button.png" alt="" width={16} height={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
