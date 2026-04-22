@@ -25,14 +25,14 @@ export function OnboardingStepHeightWeight({
   const sliderProgress = ((activityLevel - 1) / (activityLevels.length - 1)) * 100;
 
   return (
-    <section className="flex max-w-4xl flex-col gap-12">
+    <section className="flex max-w-4xl flex-col gap-8 md:gap-12">
       <div className="space-y-4">
-        <h1 className="text-4xl leading-tight font-semibold tracking-[-0.04em] text-[#3b6b3c] md:text-5xl">
+        <h1 className="text-[2rem] leading-[1.1] font-semibold tracking-[-0.04em] text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
           Help us personalize your profile.
         </h1>
-        <div className="space-y-6">
+        <div className="space-y-10 md:space-y-8">
           <div className="space-y-3">
-            <p className="text-xl leading-8 text-[#4f6f49]">
+            <p className="text-base leading-7 text-[#4f6f49] md:text-xl md:leading-8">
               What&apos;s your{" "}
               <span className="font-medium text-[#ef7a3f]">height and weight</span>?
             </p>
@@ -51,13 +51,13 @@ export function OnboardingStepHeightWeight({
               />
             </div>
           </div>
-          <div className="space-y-5">
-            <p className="text-xl leading-8 text-[#4f6f49]">
+          <div className="space-y-4 md:space-y-5">
+            <p className="text-base leading-7 text-[#4f6f49] md:text-xl md:leading-8">
               How{" "}
               <span className="font-medium text-[#ef7a3f]">physically active</span>{" "}
               would you describe yourself as?
             </p>
-            <div className="max-w-3xl rounded-[30px] bg-white/45 p-5 shadow-[0_10px_30px_rgba(71,98,48,0.05)]">
+            <div className="max-w-3xl rounded-[30px] bg-white/45 p-4 shadow-[0_10px_30px_rgba(71,98,48,0.05)] md:p-5">
               <input
                 type="range"
                 min={1}
@@ -75,7 +75,7 @@ export function OnboardingStepHeightWeight({
                   } as CSSProperties
                 }
               />
-              <div className="mt-5 flex items-center justify-between gap-3 px-1">
+              <div className="mt-4 flex items-center justify-between gap-2 px-1 md:mt-5 md:gap-3">
                 {activityLevels.map((value) => {
                   const isHighlighted = value <= activityLevel;
 
@@ -88,7 +88,7 @@ export function OnboardingStepHeightWeight({
                       aria-label={`Set activity level to ${value}`}
                     >
                       <span
-                        className={`h-4 w-4 rounded-full border-2 transition ${
+                        className={`h-3.5 w-3.5 rounded-full border-2 transition md:h-4 md:w-4 ${
                           isHighlighted
                             ? "border-[#ef7a3f] bg-[#ef7a3f]"
                             : "border-[#d9ceb3] bg-[#f7f1df]"
@@ -118,12 +118,12 @@ function SelectField({
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="relative min-w-[180px]">
+    <label className="relative min-w-[140px] flex-1 sm:flex-initial">
       <span className="sr-only">{label}</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="min-h-14 w-full appearance-none rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-5 pr-12 text-lg text-[#3b6b3c] outline-none transition focus:border-[#ef7a3f]"
+        className="min-h-12 w-full appearance-none rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 pr-11 text-base text-[#3b6b3c] outline-none transition focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-12 md:text-lg"
       >
         <option value="">{label}</option>
         {options.map((option) => (
@@ -132,7 +132,7 @@ function SelectField({
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute top-1/2 right-5 h-3 w-3 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-[#5f7d59]" />
+      <span className="pointer-events-none absolute top-1/2 right-4 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-[#5f7d59] md:right-5 md:h-3 md:w-3" />
     </label>
   );
 }

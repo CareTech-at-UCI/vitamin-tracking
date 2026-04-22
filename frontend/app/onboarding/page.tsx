@@ -206,7 +206,8 @@ export default function OnboardingPage() {
         </section>
       ) : (
         <>
-          {currentStep === 0 ? (
+          {/* Mobile: all steps visible, scrollable */}
+          <div className="flex flex-col gap-16 md:hidden">
             <OnboardingStepNameAge
               name={form.name}
               age={form.age}
@@ -214,8 +215,6 @@ export default function OnboardingPage() {
               onNameChange={(value) => updateForm("name", value)}
               onAgeChange={(value) => updateForm("age", value)}
             />
-          ) : null}
-          {currentStep === 1 ? (
             <OnboardingStepHeightWeight
               height={form.height}
               weight={form.weight}
@@ -226,8 +225,6 @@ export default function OnboardingPage() {
               onWeightChange={(value) => updateForm("weight", value)}
               onActivityLevelChange={(value) => updateForm("activityLevel", value)}
             />
-          ) : null}
-          {currentStep === 2 ? (
             <OnboardingStepRestrictions
               searchValue={searchValue}
               selectedRestrictions={form.selectedRestrictions}
@@ -238,20 +235,69 @@ export default function OnboardingPage() {
               onToggleRestriction={toggleRestriction}
               onClearSearch={() => setSearchValue("")}
             />
-          ) : null}
-          {currentStep === 3 ? (
             <OnboardingStepAvatar
               selectedAvatar={form.selectedAvatar}
               avatars={AVATAR_OPTIONS}
               onAvatarChange={(value) => updateForm("selectedAvatar", value)}
             />
-          ) : null}
-          <OnboardingNav
-            currentStep={currentStep}
-            stepCount={stepCount}
-            onBack={handleBack}
-            onNext={handleNext}
-          />
+            <button
+              type="button"
+              onClick={() => setIsComplete(true)}
+              className="inline-flex min-h-12 items-center justify-center gap-1.5 self-stretch rounded-lg bg-[#ef7a3f] px-5 text-base font-medium text-[#fdf4df]"
+            >
+              Done
+            </button>
+          </div>
+
+          {/* Desktop: step-by-step */}
+          <div className="hidden md:flex md:flex-1 md:flex-col">
+            {currentStep === 0 ? (
+              <OnboardingStepNameAge
+                name={form.name}
+                age={form.age}
+                ageOptions={AGE_OPTIONS}
+                onNameChange={(value) => updateForm("name", value)}
+                onAgeChange={(value) => updateForm("age", value)}
+              />
+            ) : null}
+            {currentStep === 1 ? (
+              <OnboardingStepHeightWeight
+                height={form.height}
+                weight={form.weight}
+                activityLevel={form.activityLevel}
+                heightOptions={HEIGHT_OPTIONS}
+                weightOptions={WEIGHT_OPTIONS}
+                onHeightChange={(value) => updateForm("height", value)}
+                onWeightChange={(value) => updateForm("weight", value)}
+                onActivityLevelChange={(value) => updateForm("activityLevel", value)}
+              />
+            ) : null}
+            {currentStep === 2 ? (
+              <OnboardingStepRestrictions
+                searchValue={searchValue}
+                selectedRestrictions={form.selectedRestrictions}
+                suggestedRestrictions={unselectedRestrictions}
+                canAddCustomRestriction={canAddCustomRestriction}
+                onSearchChange={setSearchValue}
+                onAddCustomRestriction={addCustomRestriction}
+                onToggleRestriction={toggleRestriction}
+                onClearSearch={() => setSearchValue("")}
+              />
+            ) : null}
+            {currentStep === 3 ? (
+              <OnboardingStepAvatar
+                selectedAvatar={form.selectedAvatar}
+                avatars={AVATAR_OPTIONS}
+                onAvatarChange={(value) => updateForm("selectedAvatar", value)}
+              />
+            ) : null}
+            <OnboardingNav
+              currentStep={currentStep}
+              stepCount={stepCount}
+              onBack={handleBack}
+              onNext={handleNext}
+            />
+          </div>
         </>
       )}
     </OnboardingShell>

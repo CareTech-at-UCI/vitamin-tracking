@@ -5,7 +5,7 @@ export function CarrotMark() {
     <svg
       aria-hidden="true"
       viewBox="0 0 84 84"
-      className="h-12 w-12"
+      className="h-10 w-10 md:h-12 md:w-12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -56,7 +56,7 @@ export function AvatarFace({
     <svg
       aria-hidden="true"
       viewBox="0 0 124 124"
-      className="h-24 w-24 md:h-28 md:w-28"
+      className="h-20 w-20 md:h-24 md:w-24 lg:h-28 lg:w-28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
