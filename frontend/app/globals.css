@@ -8,8 +8,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-600: var(--primary_600);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
   --font-display: var(--font-montserrat-alternates);
   --font-body: var(--font-instrument-sans);
 }

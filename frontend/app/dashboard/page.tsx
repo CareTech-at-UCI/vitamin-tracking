@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { VitaminGoals, VitaminVisualization } from "@/components/dashboard";
 
@@ -7,7 +9,15 @@ export default function Dashboard() {
 
             {/* Header */}
             <div className="flex items-center justify-between">
-                <h1 className="text-5xl font-bold text-[#171717]">Dashboard</h1>
+                <h1
+                    className="font-semibold leading-none tracking-[-5.12px] text-[#0F3D2E]"
+                    style={{
+                        fontFamily: '"Montserrat Alternates"',
+                        fontSize: "64px",
+                    }}
+                >
+                    Dashboard
+                </h1>
                 <Link
                     href="/profile"
                     className="flex items-center gap-1 bg-[#26612F] text-[#FDFAE7] font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] px-6 py-2 rounded-full"
@@ -18,9 +28,16 @@ export default function Dashboard() {
             </div>
 
             {/* Two-box row */}
-            <div className="flex flex-col md:flex-row gap-10">
-                <VitaminGoals />
-                <VitaminVisualization />
+            <div className="flex flex-col md:flex-row gap-10 items-stretch">
+
+                <div className="flex-1 flex">
+                    <VitaminGoals />
+                </div>
+
+                <div className="flex-1 flex">
+                    <VitaminVisualization />
+                </div>
+
             </div>
 
             {/* Food Recommendations label */}
