@@ -26,7 +26,7 @@ export function HomeInfoSection() {
   return (
     <section className="w-full min-h-screen bg-background">
       <div className="mx-auto h-full w-full min-h-screen">
-        <div className="sm:hidden">
+        <div className="sm:hidden px-6">
           <div className="h-px bg-border-subtle/80" />
           <div className="pt-2">
             {infoCards.map((card) => (
@@ -35,7 +35,7 @@ export function HomeInfoSection() {
                   type="button"
                   className="flex w-full items-center justify-between gap-3 text-left"
                 >
-                  <span className="text-4xl font-medium leading-none text-foreground">
+                  <span className="text-2xl font-medium leading-none text-foreground">
                     {card.title}
                   </span>
                   <span className="inline-flex size-9 items-center justify-center rounded-full bg-accent-soft text-2xl font-semibold leading-none text-accent">

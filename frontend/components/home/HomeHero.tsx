@@ -26,7 +26,7 @@ export function HomeHero() {
         />
       </div>
 
-      <div className="absolute left-0 top-0 z-10 p-7 sm:p-8 lg:p-14">
+      <div className="relative z-10 px-5 pt-5 sm:absolute sm:left-0 sm:top-0 sm:px-8 sm:pt-8 lg:px-14 lg:pt-14">
         <Image
           src="/logo.png"
           alt="Nutritional Diet App logo"
@@ -38,7 +38,7 @@ export function HomeHero() {
         />
       </div>
       
-      <div className="relative z-10 mx-auto grid w-full gap-8 px-5 py-7 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:px-14 lg:py-14 lg:h-screen">
+      <div className="relative z-10 mx-auto grid w-full gap-8 px-5 pb-7 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:px-14 lg:py-14 lg:h-screen">
         <div className="space-y-6">
           <div className="space-y-5">
             <h1 className="[font-family:var(--font-home-title)] lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold leading-[100%] tracking-[-0.07em] sm:max-w-2xl">
