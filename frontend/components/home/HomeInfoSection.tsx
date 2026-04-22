@@ -80,14 +80,14 @@ export function HomeInfoSection() {
           ))}
           </div>
 
-          <aside className="flex h-full min-h-80 w-full flex-col justify-between bg-[linear-gradient(180deg,#bdd3aa_0%,#26612f_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
+          <aside className="text-right flex h-full min-h-80 w-full flex-col justify-between bg-[linear-gradient(180deg,#bdd3aa_0%,#26612f_100%)] p-6 shadow-sm sm:min-h-112 sm:p-8">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-accent-warm">
+              <p className="[font-family:var(--font-home-body)] text-lg font-semibold tracking-[0.16em] text-accent-warm">
                 Nutritional Diet App
               </p>
-              <h3 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">
+              <h1 className="[font-family:var(--font-home-title)] mt-3 font-bold leading-tight sm:text-4xl">
                 Simple slogan here.
-              </h3>
+              </h1>
             </div>
           </aside>
         </div>
