@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
+import DatePicker from "@/components/DatePicker";
 
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
@@ -234,20 +235,7 @@ export default function RecentFoodsPage() {
               </div>
 
               <div className="mb-8 flex items-start justify-between gap-6">
-                <div className="w-full max-w-[286px]">
-                  <label className="absolute ml-3 -mt-2 bg-background px-1 font-secondary text-xs text-secondary">
-                    Date
-                  </label>
-
-                  <div className="relative">
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                      className="w-full rounded-md border border-secondary bg-transparent px-4 py-2.5 pr-10 font-secondary text-[18px] font-medium text-secondary outline-none"
-                    />
-                  </div>
-                </div>
+                <DatePicker value={selectedDate} onChange={setSelectedDate} />
 
                 <button
                   type="button"

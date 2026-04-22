@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import VitaminRing from "@/components/VitaminRing";
 import Sidebar from "@/components/Sidebar";
+import DatePicker from "@/components/DatePicker";
 
 // ---------------------------------------------------------------------------
 // Dummy vitamin data
@@ -89,17 +90,7 @@ export default function VitaminDashboardPage() {
 
         <div className="px-12 pb-6 flex items-center justify-between">
           {/* Date Picker */}
-          <div className="relative">
-            <label className="absolute -top-2 left-3 bg-background px-1 text-xs font-secondary font-medium text-secondary">
-              Date
-            </label>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-64 border border-secondary rounded-md p-2 bg-transparent font-secondary font-medium text-secondary"
-            />
-          </div>
+          <DatePicker value={selectedDate} onChange={setSelectedDate} />
 
           {/* Toggle */}
           <div className="flex border border-primary rounded-lg overflow-hidden">
