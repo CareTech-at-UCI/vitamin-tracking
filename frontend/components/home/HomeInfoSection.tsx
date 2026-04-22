@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,6 +26,12 @@ const infoCards = [
 ];
 
 export function HomeInfoSection() {
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
+  const toggleCard = (title: string) => {
+    setExpandedCard(expandedCard === title ? null : title);
+  };
+
   return (
     <section className="w-full min-h-screen bg-background">
       <div className="mx-auto h-full w-full min-h-screen">
@@ -31,18 +40,24 @@ export function HomeInfoSection() {
           <div className="h-px border-b" />
           <div className="pt-2">
             {infoCards.map((card) => (
-              <div key={card.title} className="border-b py-2.5">
+              <div key={card.title} className="border-b">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between gap-3 text-[#0A3323] text-left"
+                  onClick={() => toggleCard(card.title)}
+                  className="flex w-full items-center justify-between gap-3 py-2.5 text-[#0A3323] text-left"
                 >
                   <span className="[font-family:var(--font-home-body)] text-xl font-medium leading-none text-foreground">
                     {card.title}
                   </span>
-                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#B1CC9F] text-2xl font-semibold leading-none text-accent" style={{ color: "rgba(10, 51, 35, 1)" }}>
+                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#B1CC9F] text-2xl font-semibold leading-none text-accent transition-transform" style={{ color: "rgba(10, 51, 35, 1)", transform: expandedCard === card.title ? "rotate(45deg)" : "rotate(0deg)" }}>
                     +
                   </span>
                 </button>
+                {expandedCard === card.title && (
+                  <div className="[font-family:var(--font-home-body)] pb-4 text-sm text-[#26612F] leading-relaxed text-foreground">
+                    {card.body}
+                  </div>
+                )}
               </div>
             ))}
           </div>
