@@ -125,7 +125,7 @@ function MealRow({ title, items }) {
             {title}
           </h3>
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center gap-6 lg:flex">
             <button
               type="button"
               onClick={() => scrollRow("left")}
@@ -168,7 +168,7 @@ function DaySection({ date, meals, onEdit, isEditing = false }) {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-primary text-[42px] font-semibold leading-none text-secondary sm:text-[48px]">
+        <h2 className="font-primary text-[34px] font-semibold leading-none text-secondary sm:text-[38px] lg:text-[40px]">
           {formatHeading(date)}
         </h2>
 
@@ -217,7 +217,7 @@ export default function RecentFoodsPage() {
         <div className="mx-auto max-w-[1180px]">
           {!isEditing && (
             <>
-              <div className="mb-5 flex items-start justify-between gap-4">
+              <div className="mb-5 flex items-start gap-4">
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
@@ -231,6 +231,23 @@ export default function RecentFoodsPage() {
                     Recent Foods
                   </h1>
                 </div>
+              </div>
+
+              <div className="mb-8 flex items-start justify-between gap-6">
+                <div className="w-full max-w-[286px]">
+                  <label className="absolute ml-3 -mt-2 bg-background px-1 font-secondary text-xs text-secondary">
+                    Date
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full rounded-md border border-secondary bg-transparent px-4 py-2.5 pr-10 font-secondary text-[18px] font-medium text-secondary outline-none"
+                    />
+                  </div>
+                </div>
 
                 <button
                   type="button"
@@ -238,21 +255,6 @@ export default function RecentFoodsPage() {
                 >
                   ✓ Categorize by Meal
                 </button>
-              </div>
-
-              <div className="mb-8 max-w-[286px]">
-                <label className="absolute ml-3 -mt-2 bg-background px-1 font-secondary text-xs text-secondary">
-                  Date
-                </label>
-
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full rounded-md border border-secondary bg-transparent px-4 py-2.5 pr-10 font-secondary text-[18px] font-medium text-secondary outline-none"
-                  />
-                </div>
               </div>
             </>
           )}
@@ -273,27 +275,27 @@ export default function RecentFoodsPage() {
               );
             })}
           </div>
-
-          {isEditing && (
-            <div className="mt-20 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="rounded-full border border-primary px-5 py-2 font-secondary text-sm font-medium leading-none text-primary transition hover:bg-primary/5"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="rounded-full bg-primary px-6 py-2 font-secondary text-sm font-medium leading-none text-white transition hover:opacity-90"
-              >
-                Save Changes
-              </button>
-            </div>
-          )}
         </div>
+
+        {isEditing && (
+          <div className="fixed bottom-[60px] right-[72px] z-30 flex gap-[14px]">
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="rounded-full border border-primary px-6 py-2.5 font-secondary text-[14px] font-medium leading-none text-primary transition hover:bg-primary/5"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="rounded-full bg-primary px-7 py-2.5 font-secondary text-[14px] font-medium leading-none text-white transition hover:opacity-90"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
 
         {!isEditing && (
           <>
