@@ -57,7 +57,11 @@ export function OnboardingStepHeightWeight({
               <span className="font-medium text-[#ef7a3f]">physically active</span>{" "}
               would you describe yourself as?
             </p>
-            <div className="max-w-3xl rounded-[30px] bg-white/45 p-4 shadow-[0_10px_30px_rgba(71,98,48,0.05)] md:p-5">
+            <div
+              className="max-w-3xl rounded-[30px] p-4 md:p-5"
+              // bg-white/45
+              // shadow-[0_10px_30px_rgba(71,98,48,0.05)]
+            >
               <input
                 type="range"
                 min={1}

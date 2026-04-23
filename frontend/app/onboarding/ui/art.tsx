@@ -110,6 +110,10 @@ function WatermelonAvatar() {
         fill="#f36f74"
       />
       <path
+        d="M38 95c8-7 16-11 24-11s16 4 24 11v6H38z"
+        fill="#2f8f4b"
+      />
+      <path
         d="M27 59c9 18 22 27 35 27s26-9 35-27l5 2c-9 23-24 35-40 35S31 84 22 61Z"
         fill="#2f8f4b"
       />
