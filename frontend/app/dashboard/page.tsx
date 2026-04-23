@@ -5,12 +5,7 @@ import { useState } from "react";
 import { VitaminGoals, VitaminVisualization } from "@/components/dashboard";
 
 export default function Dashboard() {
-    const [mobileTab, setMobileTab] = useState<"goals" | "visualization">("goals");
-
-    const tabClass = (active: boolean) =>
-        `flex-1 py-2 text-sm font-medium rounded-full transition-colors ${
-            active ? "bg-[#26612F] text-[#FDFAE7]" : "text-[#26612F]"
-        }`;
+    const [mobileTab, setMobileTab] = useState<"goals" | "visualization">("visualization");
 
     return (
         <main className="min-h-screen bg-[#FFFDEE] px-4 py-4 md:px-8 md:py-6 lg:px-16 lg:py-8 flex flex-col gap-4 md:gap-6">
@@ -32,28 +27,19 @@ export default function Dashboard() {
                 </Link>
             </div>
 
-            {/* Mobile toggle — hidden on md and up */}
-            <div className="flex md:hidden border border-[#26612F] rounded-full p-1">
-                <button className={tabClass(mobileTab === "goals")} onClick={() => setMobileTab("goals")}>
-                    Vitamin Goals
-                </button>
-                <button className={tabClass(mobileTab === "visualization")} onClick={() => setMobileTab("visualization")}>
-                    Visualization
-                </button>
-            </div>
-
             {/* Two-box row — desktop shows both, mobile shows one at a time */}
             <div className="flex flex-col md:flex-row gap-10 items-stretch">
 
                 <div className={`md:flex-[832] md:min-w-0 flex w-full md:w-auto ${mobileTab === "goals" ? "flex" : "hidden"} md:flex`}>
-                    <VitaminGoals />
+                    <VitaminGoals onToggle={() => setMobileTab("visualization")} />
                 </div>
 
                 <div className={`md:flex-[473] md:min-w-0 flex w-full md:w-auto ${mobileTab === "visualization" ? "flex" : "hidden"} md:flex`}>
-                    <VitaminVisualization />
+                    <VitaminVisualization onToggle={() => setMobileTab("goals")} />
                 </div>
 
             </div>
+
 
             {/* Food Recommendations label */}
             <h2 className="font-display text-xl md:text-2xl lg:text-[2.5rem] font-semibold leading-none tracking-[-0.08em] text-[#0A3323]">Food Recommendations</h2>

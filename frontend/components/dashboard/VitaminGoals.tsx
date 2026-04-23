@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ProgressBar } from "./ProgressBar";
 import { SearchBar } from "./SearchBar";
 
-export function VitaminGoals() {
+export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
     const [filter, setFilter] = useState<"all" | "low">("all");
     const [search, setSearch] = useState("");
 
@@ -75,6 +75,15 @@ export function VitaminGoals() {
                         />
                     ))}
                 </div>
+
+                {onToggle && (
+                    <div className="flex justify-end md:hidden mt-2">
+                        <button onClick={onToggle} className="flex items-center gap-1 text-[#0A3323] font-body font-medium text-base tracking-[-0.05em]">
+                            View more details
+                            <img src="/curly-arrow-icon.svg" alt="" width={20} height={15} />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

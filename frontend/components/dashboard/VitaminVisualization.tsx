@@ -11,7 +11,7 @@ const vitamins = [
     { name: "Vitamin E", percentage: 42 },
 ];
 
-export function VitaminVisualization() {
+export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
 
@@ -57,6 +57,15 @@ export function VitaminVisualization() {
                     />
                 ))}
             </div>
+
+            {onToggle && (
+                <div className="w-full flex justify-end md:hidden">
+                    <button onClick={onToggle} className="flex items-center gap-1 text-[#0A3323] font-body font-medium text-base tracking-[-0.05em]">
+                        View goals
+                        <img src="/curly-arrow-icon.svg" alt="" width={20} height={15} />
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
