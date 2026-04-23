@@ -15,11 +15,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
 
         <div className="flex items-center gap-4">
         <div
-            className="flex items-start border-2 border-[#26612F] rounded-[16px] overflow-hidden"
-            style={{
-                width: "701px",
-                height: "28px",
-            }}
+            className="flex items-start border-2 border-[#26612F] rounded-[16px] overflow-hidden w-full h-7"
         >
             <div
                 className="rounded-[16px] bg-[#26612F] h-full"

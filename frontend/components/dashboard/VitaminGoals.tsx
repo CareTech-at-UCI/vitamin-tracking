@@ -14,16 +14,15 @@ export function VitaminGoals() {
     return (
         <div className="flex-[832] border-2 border-[#26612F] rounded-2xl py-8 px-8">
             <h2
-                className="font-semibold leading-none tracking-[-3.2px] text-[#0A3323] mb-4"
+                className="font-semibold leading-none tracking-[-3.2px] text-[#0A3323] mb-4 w-full"
                 style={{
                     fontFamily: '"Montserrat Alternates"',
                     fontSize: "40px",
-                    width: "748px",
                 }}
             >
                 Vitamin Goals
             </h2>
-            <div className="w-[701px]">
+            <div className="w-full">
                 <SearchBar height="medium" />
                 <div className="flex flex-row items-center gap-4 mb-4">
                     <button

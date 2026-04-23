@@ -5,16 +5,13 @@ import { VitaminGoals, VitaminVisualization } from "@/components/dashboard";
 
 export default function Dashboard() {
     return (
-        <main className="min-h-screen bg-[#FFFDEE] px-16 py-8 flex flex-col gap-6">
+        <main className="min-h-screen bg-[#FFFDEE] px-4 py-4 md:px-8 md:py-6 lg:px-16 lg:py-8 flex flex-col gap-4 md:gap-6">
 
             {/* Header */}
             <div className="flex items-center justify-between">
                 <h1
-                    className="font-semibold leading-none tracking-[-5.12px] text-[#0F3D2E]"
-                    style={{
-                        fontFamily: '"Montserrat Alternates"',
-                        fontSize: "64px",
-                    }}
+                    className="font-semibold leading-none tracking-tight text-[#0F3D2E] text-3xl md:text-5xl lg:text-[64px]"
+                    style={{ fontFamily: '"Montserrat Alternates"' }}
                 >
                     Dashboard
                 </h1>
@@ -41,7 +38,7 @@ export default function Dashboard() {
             </div>
 
             {/* Food Recommendations label */}
-            <h2 className="text-2xl font-bold">Food Recommendations</h2>
+            <h2 className="font-display text-xl md:text-2xl lg:text-[2.5rem] font-semibold leading-none tracking-[-0.08em] text-[#0A3323]">Food Recommendations</h2>
 
             {/* Recent Food button — bottom right */}
             <div className="flex justify-end">
