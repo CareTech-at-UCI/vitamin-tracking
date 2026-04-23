@@ -14,7 +14,10 @@ export function CircularProgressBar({ percentage, vitaminName }: CircularProgres
 
     return (
         <div className="flex flex-col items-center gap-2">
-            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+            <svg
+                viewBox={`0 0 ${size} ${size}`}
+                style={{ width: "min(116px, 28vw)", height: "min(116px, 28vw)" }}
+            >
                 {/* Track */}
                 <circle
                     cx={size / 2}

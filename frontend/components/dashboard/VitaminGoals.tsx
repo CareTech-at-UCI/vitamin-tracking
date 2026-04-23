@@ -33,7 +33,7 @@ export function VitaminGoals() {
         }`;
 
     return (
-        <div className="flex-[832] border-2 border-[#26612F] rounded-2xl py-[1.5vw] px-8">
+        <div className="w-full border-2 border-[#26612F] rounded-2xl py-[1.5vw] px-8">
             <h2
                 className="font-semibold leading-none tracking-[-3.2px] text-[#0A3323] mb-4 w-full"
                 style={{
