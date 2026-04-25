@@ -27,6 +27,8 @@ class ProfilePictureType(str, Enum):
 class UserUpdate(BaseModel):
     """Request body for `PATCH /api/v1/users/{user_id}`"""
 
+    model_config = ConfigDict(extra="forbid")
+
     first_name: str | None = Field(default=None, min_length=1, max_length=20)
     last_name: str | None = Field(default=None, min_length=1, max_length=20)
     date_of_birth: date | None = None
@@ -42,8 +44,6 @@ class UserUpdate(BaseModel):
 
 class UserResponse(BaseModel):
     """Response body for `GET /api/v1/users/` and `GET /api/v1/users/{user_id}`"""
-
-    model_config = ConfigDict(extra="ignore")
 
     id: UUID
     first_name: str 
@@ -70,6 +70,8 @@ class ListUserResponse(BaseModel):
 
 class UserCreate(BaseModel):
     """Request body for `POST /api/v1/users/`"""
+
+    model_config = ConfigDict(extra="forbid")
 
     first_name: str = Field(min_length=1, max_length=20)
     last_name: str = Field(min_length=1, max_length=20)
