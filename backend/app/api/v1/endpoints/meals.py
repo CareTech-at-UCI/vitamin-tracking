@@ -75,7 +75,7 @@ async def get_meal(
     try:
         response = (
             supabase.table("meals")
-            .select("*").eq("meal_id", meal_id).single()
+            .select("*").eq("id", meal_id).single()
             .execute()
         )
     except Exception as exc:
@@ -109,7 +109,7 @@ async def update_meal(
     try:
         response = (
             supabase.table("meals")
-            .update(update_data).eq("meal_id", meal_id)
+            .update(update_data).eq("id", meal_id)
             .execute()
         )
     except Exception as exc:
@@ -132,7 +132,7 @@ async def delete_meal(
     try:
         response = (
             supabase.table("meals")
-            .delete().eq("meal_id", meal_id)
+            .delete().eq("id", meal_id)
             .execute()
         )
     except Exception as exc:

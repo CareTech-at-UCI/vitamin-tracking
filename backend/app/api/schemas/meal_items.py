@@ -11,24 +11,27 @@ from datetime import datetime
 
 class MealItemCreate(BaseModel):
     """Request body for POST /api/v1/meal_items/"""
+    model_config = ConfigDict(extra="forbid")
     meal_id: int = Field(..., gt=0)
     weight: int = Field(..., gt=0)
+    item_name: str = Field(..., min_length=1)
 
 
 class MealItemUpdate(BaseModel):
     """Request body for PUT /api/v1/meal_items/{item_id}"""
+    model_config = ConfigDict(extra="forbid")
     meal_id: int | None = Field(default=None, gt=0)
     weight: int | None = Field(default=None, gt=0)
+    item_name: str | None = Field(default=None)
 
 
 class MealItemRow(BaseModel):
     """One row from meal_items"""
 
-    model_config = ConfigDict(extra="ignore")
-
-    item_id: int
+    id: int
     meal_id: int
     weight: int
+    item_name: str
     created_at: datetime
     updated_at: datetime
 

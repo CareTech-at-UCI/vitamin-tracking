@@ -48,6 +48,7 @@ async def create_meal_item(
             .insert({
                 "meal_id": body.meal_id,
                 "weight": body.weight,
+                "item_name": body.item_name,
             })
             .execute()
         )
@@ -71,7 +72,7 @@ async def get_meal_item(
     try:
         response = (
             supabase.table("meal_items")
-            .select("*").eq("item_id", item_id).single()
+            .select("*").eq("id", item_id).single()
             .execute()
         )
     except Exception as exc:
@@ -98,6 +99,8 @@ async def update_meal_item(
         update_data["meal_id"] = body.meal_id
     if body.weight is not None:
         update_data["weight"] = body.weight
+    if body.item_name is not None:
+        update_data["item_name"] = body.item_name
 
     if not update_data:
         raise HTTPException(status_code=400, detail="Provide at least one field to update")
@@ -105,7 +108,7 @@ async def update_meal_item(
     try:
         response = (
             supabase.table("meal_items")
-            .update(update_data).eq("item_id", item_id)
+            .update(update_data).eq("id", item_id)
             .execute()
         )
     except Exception as exc:
@@ -128,7 +131,7 @@ async def delete_meal_item(
     try:
         response = (
             supabase.table("meal_items")
-            .delete().eq("item_id", item_id)
+            .delete().eq("id", item_id)
             .execute()
         )
     except Exception as exc:

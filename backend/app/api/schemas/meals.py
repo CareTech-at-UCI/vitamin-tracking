@@ -22,6 +22,7 @@ class MealType(str, Enum):
 
 class MealCreate(BaseModel):
     """Request body for POST /api/v1/meals/"""
+    model_config = ConfigDict(extra="forbid")
     user_id: UUID
     consumed_at: datetime
     type: MealType
@@ -30,6 +31,7 @@ class MealCreate(BaseModel):
 
 class MealUpdate(BaseModel):
     """Request body for PUT /api/v1/meals/{meal_id}"""
+    model_config = ConfigDict(extra="forbid")
     consumed_at: datetime | None = Field(default=None)
     type: MealType | None = Field(default=None)
     notes: str | None = Field(default=None)
@@ -38,10 +40,8 @@ class MealUpdate(BaseModel):
 class MealRow(BaseModel):
     """One row from meals"""
 
-    model_config = ConfigDict(extra="ignore")
-
-    meal_id: int
-    user_id: UUID
+    id: int
+    user_id: UUID | None
     consumed_at: datetime
     type: MealType
     notes: str | None
