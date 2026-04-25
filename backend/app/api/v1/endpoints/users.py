@@ -17,6 +17,26 @@ from app.api.schemas.users import (
 
 router = APIRouter()
 
+@router.get("/", response_model=ListUserResponse) 
+async def get_users(
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """
+    Retrives all users - for admin / dev use.
+    """
+    try:
+        response = (
+            supabase.table("users")
+            .select("*")
+            .execute()
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {e}") from e
+
+    return {"count": len(response.data or []), "items": response.data or []}
+
+
+
 
 def _raise_user_write_error(exc: Exception, operation: str) -> None:
     """Map known DB constraint errors to cleaner API responses."""
