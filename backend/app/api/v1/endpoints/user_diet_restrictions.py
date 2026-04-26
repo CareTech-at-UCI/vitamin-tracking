@@ -13,6 +13,26 @@ from app.api.schemas.user_diet_restrictions import *
 router = APIRouter()
 
 
+def _ensure_user_exists(supabase: Client, user_id: UUID) -> None:
+    """Raise 404 when the user_id does not exist in `users`"""
+    try:
+        response = (
+            supabase.table("users")
+            .select("id")
+            .eq("id", str(user_id))
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Supabase user lookup failed: {exc}",
+        ) from exc
+
+    if not (response.data or []):
+        raise HTTPException(status_code=404, detail="User not found")
+
+
 @router.get("/", response_model=ListUserDietRestrictionsResponse)
 async def get_user_diet_restrictions(
     
@@ -63,6 +83,8 @@ async def get_user_diet_restriction(
     Get all diet restrictions for a specific user 
     Returns: user_id, diet_id, is_custom, name
     """
+    _ensure_user_exists(supabase, user_id)
+
     try:
         response = (
             supabase.table("user_diet_restrictions")
@@ -98,6 +120,8 @@ async def create_user_diet_restriction(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Insert one row, return the new row as JSON."""
+    _ensure_user_exists(supabase, body.user_id)
+
     try:
         response = (
             supabase.table("user_diet_restrictions")
@@ -122,6 +146,8 @@ async def create_user_diet_restrictions_batch(
     body: UserDietRestrictionsBatchCreate,
     supabase: Client = Depends(get_supabase_admin),
 ):
+    _ensure_user_exists(supabase, body.user_id)
+
     try:
         payload = [
             {"user_id": str(body.user_id), "diet_id": diet_id}
@@ -146,6 +172,8 @@ async def delete_user_diet_restriction(
     diet_id: int,
     supabase: Client = Depends(get_supabase_admin),
 ):
+    _ensure_user_exists(supabase, user_id)
+
     try:
         response = (
             supabase.table("user_diet_restrictions")
@@ -183,6 +211,7 @@ async def sync_user_diet_restrictions(
     """
     Overwrite a user's entire diet restriction list and return inserted rows.
     """
+    _ensure_user_exists(supabase, user_id)
 
     try:
         supabase.table("user_diet_restrictions") \

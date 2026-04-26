@@ -12,12 +12,14 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class UserDietRestrictionsCreate(BaseModel):
     """Request body for `POST /api/v1/user_diet_restrictions/`"""
+    model_config = ConfigDict(extra="forbid")
     user_id: UUID
     diet_id: int
 
 
 class UserDietRestrictionsBatchCreate(BaseModel):
     """Request body for `POST /api/v1/user_diet_restrictions/batch`"""
+    model_config = ConfigDict(extra="forbid")
     user_id: UUID
     diet_ids: List[int] = Field(..., min_items=1)
 
@@ -53,4 +55,5 @@ class UserDietRestrictionsDelete(BaseModel):
 
 class UserDietRestrictionsPut(BaseModel):
     """Request body for `PUT /api/v1/user_diet_restrictions/user/{user_id}/sync"""
+    model_config = ConfigDict(extra="forbid")
     diet_ids: List[int] = Field(..., min_items=1)
