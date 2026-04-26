@@ -8,10 +8,11 @@ Includes all endpoint routers in one place.
 
 from fastapi import APIRouter
 
-from .endpoints import meals, users, todos
+from .endpoints import meal_items, meals, users, todos
 
 router = APIRouter()
 
 router.include_router(users.router, prefix="/users", tags=["users"])
 router.include_router(meals.router, prefix="/meals", tags=["meals"])
+router.include_router(meal_items.router, prefix="/meal_items", tags=["meal_items"])
 router.include_router(todos.router, prefix="/todos", tags=["todos"])
