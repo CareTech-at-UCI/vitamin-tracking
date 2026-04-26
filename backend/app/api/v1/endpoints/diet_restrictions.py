@@ -38,9 +38,9 @@ async def get_diet_restrictions(
     return {"count": len(response.data or []), "items": response.data or []}
 
 
-@router.get("/{diet_id}", response_model=DietRestrictionRow)
+@router.get("/{id}", response_model=DietRestrictionRow)
 async def get_diet_restriction(
-    diet_id: int,
+    id: int,
     supabase: Client = Depends(get_supabase_admin),
 ):
     """
@@ -50,7 +50,7 @@ async def get_diet_restriction(
         response = (
             supabase.table("diet_restrictions")
             .select("*")
-            .eq("diet_id", diet_id)
+            .eq("id", id)
             .execute()
         )
     except Exception as exc:
@@ -83,9 +83,9 @@ async def create_diet_restriction(
     return rows[0]
 
 
-@router.patch("/{diet_id}", response_model=DietRestrictionRow)
+@router.patch("/{id}", response_model=DietRestrictionRow)
 async def update_diet_restriction(
-    diet_id: int,
+    id: int,
     body: DietRestrictionUpdate,  # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
 ):
@@ -102,7 +102,7 @@ async def update_diet_restriction(
         response = (
             supabase.table("diet_restrictions")
             .update(update_data)
-            .eq("diet_id", diet_id)
+            .eq("id", id)
             .execute()
         )
     except Exception as exc:
@@ -114,9 +114,9 @@ async def update_diet_restriction(
     return rows[0]
 
 
-@router.delete("/{diet_id}", response_model=DietRestrictionDeleteResponse)
+@router.delete("/{id}", response_model=DietRestrictionDeleteResponse)
 async def delete_diet_restriction(
-    diet_id: int,
+    id: int,
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Delete one row by id."""
@@ -124,7 +124,7 @@ async def delete_diet_restriction(
         response = (
             supabase.table("diet_restrictions")
             .delete()
-            .eq("diet_id", diet_id)
+            .eq("id", id)
             .execute()
         )
     except Exception as exc:
@@ -133,4 +133,4 @@ async def delete_diet_restriction(
     rows = response.data or []
     if not rows:
         raise HTTPException(status_code=404, detail="Diet restriction not found")
-    return {"deleted": True, "diet_id": diet_id}
+    return {"deleted": True, "id": id}

@@ -23,9 +23,9 @@ class DietRestrictionRow(BaseModel):
     """One row from `public.diet_restrictions`"""
     model_config = ConfigDict(extra="ignore")
 
-    diet_id: int
+    id: int
     name: str
-    is_custom: bool
+    is_custom: bool | None
 
 
 class ListDietRestrictionsResponse(BaseModel):
@@ -34,7 +34,7 @@ class ListDietRestrictionsResponse(BaseModel):
     items: list[DietRestrictionRow]
 
 
-class DietRestrictionDeleteResponse(BaseModel):
+class DietRestrictionDeleteResponse(BaseModel):()
     """Response from `DELETE /api/v1/diet_restrictions/{diet_id}` when implemented"""
     deleted: bool
-    diet_id: int
+    id: int

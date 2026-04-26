@@ -1,7 +1,7 @@
 """
 User Diet Restrictions schemas
 
-Pydantic models for workshop todo requests and responses (reference for other resources).
+Pydantic models for user diet restriction API requests and responses.
 """
 
 from uuid import UUID
@@ -36,7 +36,7 @@ class UserDietRestrictionItem(BaseModel):
     user_id: UUID
     diet_id: int
     name: str | None
-    is_custom: bool
+    is_custom: bool | None
 
 
 class ListUserDietRestrictionsResponse(BaseModel):
