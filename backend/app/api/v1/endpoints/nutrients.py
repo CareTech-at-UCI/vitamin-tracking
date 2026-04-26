@@ -68,7 +68,7 @@ async def get_nutrient(
         response = (
             supabase.table("nutrients")
             .select("*")
-            .eq("nutrient_id", nutrient_id)
+            .eq("id", nutrient_id)
             .limit(1)
             .execute()
         )
@@ -97,7 +97,7 @@ async def update_nutrient(
         response = (
             supabase.table("nutrients")
             .update(payload)
-            .eq("nutrient_id", nutrient_id)
+            .eq("id", nutrient_id)
             .execute()
         )
     except Exception as exc:
@@ -119,8 +119,8 @@ async def delete_nutrient(
     try:
         existing = (
             supabase.table("nutrients")
-            .select("nutrient_id")
-            .eq("nutrient_id", nutrient_id)
+            .select("id")
+            .eq("id", nutrient_id)
             .limit(1)
             .execute()
         )
@@ -131,7 +131,7 @@ async def delete_nutrient(
         raise HTTPException(status_code=404, detail="Nutrient not found")
 
     try:
-        supabase.table("nutrients").delete().eq("nutrient_id", nutrient_id).execute()
+        supabase.table("nutrients").delete().eq("id", nutrient_id).execute()
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Supabase delete failed: {exc}") from exc
 

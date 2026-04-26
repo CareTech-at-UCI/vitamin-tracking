@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class MealNutrientCreate(BaseModel):
     """Request body for `POST /api/v1/meal-nutrients/`"""
+    model_config = ConfigDict(extra="forbid")
 
     item_id: int = Field(..., gt=0)
     nutrient_id: int = Field(..., gt=0)
@@ -17,6 +18,7 @@ class MealNutrientCreate(BaseModel):
 
 class MealNutrientInput(BaseModel):
     """One nutrient entry in a batch create request."""
+    model_config = ConfigDict(extra="forbid")
 
     nutrient_id: int = Field(..., gt=0)
     quantity: float = Field(..., ge=0)
@@ -24,6 +26,7 @@ class MealNutrientInput(BaseModel):
 
 class MealNutrientBatchCreate(BaseModel):
     """Request body for `POST /api/v1/meal-nutrients/batch`"""
+    model_config = ConfigDict(extra="forbid")
 
     item_id: int = Field(..., gt=0)
     nutrients: list[MealNutrientInput] = Field(..., min_length=1)

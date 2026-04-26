@@ -12,6 +12,8 @@ from pydantic import BaseModel, ConfigDict, Field
 class NutrientGoalInput(BaseModel):
     """One goal entry in a sync request."""
 
+    model_config = ConfigDict(extra="forbid")
+
     nutrient_id: int = Field(..., gt=0)
     quantity: float = Field(..., ge=0)
 
@@ -24,6 +26,8 @@ class NutrientGoalSyncCreate(BaseModel):
 
 class NutrientGoalUpdate(BaseModel):
     """Request body for `PATCH /api/v1/nutrient-goals/user/{user_id}/nutrient/{nutrient_id}`"""
+
+    model_config = ConfigDict(extra="forbid")
 
     quantity: float = Field(..., ge=0)
 

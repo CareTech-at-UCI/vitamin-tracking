@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class NutrientCreate(BaseModel):
     """Request body for `POST /api/v1/nutrients/`"""
+    model_config = ConfigDict(extra="forbid")
 
     name: str = Field(..., min_length=1, max_length=200)
     symbol: str | None = Field(default=None, max_length=50)
@@ -17,7 +18,8 @@ class NutrientCreate(BaseModel):
 
 class NutrientUpdate(BaseModel):
     """Request body for `PATCH /api/v1/nutrients/{nutrient_id}`"""
-
+    model_config = ConfigDict(extra="forbid")
+    
     name: str | None = Field(default=None, min_length=1, max_length=200)
     symbol: str | None = Field(default=None, max_length=50)
     unit: str | None = Field(default=None, max_length=50)
@@ -28,7 +30,7 @@ class NutrientRow(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-    nutrient_id: int
+    id: int
     name: str
     symbol: str | None = None
     unit: str | None = None
