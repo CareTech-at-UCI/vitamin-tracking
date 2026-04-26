@@ -32,6 +32,11 @@ At CareTech, our main mission is to build projects to promote early-disease dete
 - **Machine Learning Libraries and Tools:** TensorFlow, YOLO, Roboflow
 - **Dataset**: UEC256 + Original Roboflow Dataset (yusuf.abraham@ui.ac.id)
 
+## Database Schema Notes
+
+- `supabase/migrations/` is the source of truth for database changes and is what `supabase db push` applies
+- `db/schema/` is kept as reference SQL only and should not be treated as the canonical migration history
+
 ## Installation
 
 ### 0. Prerequisites

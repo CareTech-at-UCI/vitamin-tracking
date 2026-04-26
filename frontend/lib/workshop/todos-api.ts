@@ -1,7 +1,7 @@
 /**
  * Workshop: all HTTP calls to FastAPI -> Supabase live here
  *
- * `listTodos` is implemented — copy its pattern for the rest. OpenAPI: `{base}/docs`
+ * OpenAPI: `{base}/docs`
  */
 
 import {
@@ -27,53 +27,47 @@ export async function listTodos(limit = 20): Promise<ListTodosResponse> {
   return res.json() as Promise<ListTodosResponse>;
 }
 
-/**
- * `POST /api/v1/todos/` — body `{ "name": string }`, returns one row
- *
- * WORKSHOP: implement (copy `listTodos`, then adjust method/body). Example:
- *
- *   const base = getWorkshopApiBaseUrl();
- *   const res = await fetch(`${base}/api/v1/todos/`, {
- *     method: "POST",
- *     headers: { "Content-Type": "application/json" },
- *     body: JSON.stringify({ name }),
- *   });
- *   if (!res.ok) throw new Error(await res.text());
- *   return res.json() as Promise<TodoRow>;
- */
-export async function createTodo(_name: string): Promise<TodoRow> {
-  throw new Error(
-    "Workshop: implement createTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+/** `POST /api/v1/todos/` — body `{ "name": string }`, returns one row */
+export async function createTodo(name: string): Promise<TodoRow> {
+  const base = getWorkshopApiBaseUrl();
+  const res = await fetch(`${base}/api/v1/todos/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`POST /api/v1/todos/ failed (${res.status}): ${text}`);
+  }
+  return res.json() as Promise<TodoRow>;
 }
 
-/**
- * `PATCH /api/v1/todos/{id}` — body `{ "name": string }`, returns updated row
- *
- *   const base = getWorkshopApiBaseUrl();
- *   const res = await fetch(`${base}/api/v1/todos/${id}`, {
- *     method: "PATCH",
- *     headers: { "Content-Type": "application/json" },
- *     body: JSON.stringify({ name }),
- *   });
- *   if (!res.ok) throw new Error(await res.text());
- *   return res.json() as Promise<TodoRow>;
- */
-export async function updateTodo(_id: string, _name: string): Promise<TodoRow> {
-  throw new Error(
-    "Workshop: implement updateTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+/** `PATCH /api/v1/todos/{id}` — body `{ "name": string }`, returns updated row */
+export async function updateTodo(id: string, name: string): Promise<TodoRow> {
+  const base = getWorkshopApiBaseUrl();
+  const res = await fetch(`${base}/api/v1/todos/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`PATCH /api/v1/todos/${id} failed (${res.status}): ${text}`);
+  }
+  return res.json() as Promise<TodoRow>;
 }
 
-/**
- * `DELETE /api/v1/todos/{id}`
- *
- *   const base = getWorkshopApiBaseUrl();
- *   const res = await fetch(`${base}/api/v1/todos/${id}`, { method: "DELETE" });
- *   if (!res.ok) throw new Error(await res.text());
- */
-export async function deleteTodo(_id: string): Promise<void> {
-  throw new Error(
-    "Workshop: implement deleteTodo() in lib/workshop/todos-api.ts (see comment above + listTodos)",
-  );
+/** `DELETE /api/v1/todos/{id}` */
+export async function deleteTodo(id: string): Promise<void> {
+  const base = getWorkshopApiBaseUrl();
+  const res = await fetch(`${base}/api/v1/todos/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`DELETE /api/v1/todos/${id} failed (${res.status}): ${text}`);
+  }
 }

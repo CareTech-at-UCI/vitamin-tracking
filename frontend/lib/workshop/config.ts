@@ -1,6 +1,6 @@
 /**
  * Workshop: base URL + shared types. HTTP examples live in `lib/workshop/todos-api.ts`
- * (`listTodos` is implemented; other methods are stubs)
+ * (see `todos-api.ts` for HTTP helpers)
  */
 
 const DEFAULT_BASE = "http://127.0.0.1:8000";

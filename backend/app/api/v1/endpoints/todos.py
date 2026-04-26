@@ -1,12 +1,4 @@
-"""
-Todo endpoints (workshop)
-
-`GET /` is implemented - use it as the reference for Supabase + FastAPI
-Implement `create_todo`, `update_todo`, and `delete_todo` for a full-stack exercise
-
-If you only run the frontend track, uncomment the bodies below (or replace `501` stubs
-with the examples in each function’s docstring)
-"""
+"""Todo endpoints: list, create, update, delete via Supabase."""
 
 from uuid import UUID
 
@@ -48,60 +40,48 @@ async def get_todos(
 
 @router.post("/", response_model=TodoRow)
 async def create_todo(
-    body: TodoCreate, # The parsed request (dictionary)
+    body: TodoCreate,  # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
 ):
-    """
-    WORKSHOP: insert one row, return the new row as JSON
-
-    Hint (Supabase Python client):
-
+    """Insert one row, return the new row as JSON."""
+    try:
         response = (
             supabase.table("todos")
-            .???({"name": ???})     # Update the ??? with the correct information! Hint: You have to use the 'body' argument for one of them.
+            .insert({"name": body.name})
             .execute()
         )
-        rows = response.data or []
-        if not rows:
-            raise HTTPException(status_code=500, detail="Insert returned no row")
-        return rows[0]
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase insert failed: {exc}") from exc
 
-    On failure, map exceptions to HTTP 500 with a useful `detail` string.
-    """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement create_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    rows = response.data or []
+    if not rows:
+        raise HTTPException(status_code=500, detail="Insert returned no row")
+    return rows[0]
 
 
 @router.patch("/{todo_id}", response_model=TodoRow)
 async def update_todo(
     todo_id: UUID,
-    body: TodoUpdate, # The parsed request (dictionary)
+    body: TodoUpdate,  # The parsed request (dictionary)
     supabase: Client = Depends(get_supabase_admin),
 ):
-    """
-    WORKSHOP: update `name` for one row; return the updated row.
-
-    Hint:
-
-        if body.name is None:
-            raise HTTPException(status_code=400, detail="Provide at least one field to update")
+    """Update `name` for one row; return the updated row."""
+    if body.name is None:
+        raise HTTPException(status_code=400, detail="Provide at least one field to update")
+    try:
         response = (
             supabase.table("todos")
-            .???({"name": ???})   # Update the ??? with the correct command! Hint: The second ??? is the same as the one used in POST.
+            .update({"name": body.name})
             .eq("id", str(todo_id))
             .execute()
         )
-        rows = response.data or []
-        if not rows:
-            raise HTTPException(status_code=404, detail="Todo not found")
-        return rows[0]
-    """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement update_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase update failed: {exc}") from exc
+
+    rows = response.data or []
+    if not rows:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return rows[0]
 
 
 @router.delete("/{todo_id}", response_model=TodoDeleteResponse)
@@ -109,23 +89,18 @@ async def delete_todo(
     todo_id: UUID,
     supabase: Client = Depends(get_supabase_admin),
 ):
-    """
-    WORKSHOP: delete one row by id.
-
-    Hint — return 404 if nothing was deleted (use `.select("id")` so `response.data` tells you):
-
+    """Delete one row by id."""
+    try:
         response = (
             supabase.table("todos")
-            .???()                      # Update the ??? with the correct command!
+            .delete()
             .eq("id", str(todo_id))
             .execute()
         )
-        rows = response.data or []
-        if not rows:
-            raise HTTPException(status_code=404, detail="Todo not found")
-        return {"deleted": True, "id": str(todo_id)}
-    """
-    raise HTTPException(
-        status_code=501,
-        detail="Workshop: implement delete_todo() in endpoints/todos.py (see docstring + get_todos)",
-    )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase delete failed: {exc}") from exc
+
+    rows = response.data or []
+    if not rows:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return {"deleted": True, "id": str(todo_id)}
