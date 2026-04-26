@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS weekly_nutrition_view;
+
 CREATE OR REPLACE VIEW weekly_nutrition_view AS
 
 SELECT
@@ -10,7 +12,7 @@ SELECT
     DATE_TRUNC('week', m.consumed_at AT TIME ZONE 'UTC')::DATE - INTERVAL '1 day'
     + INTERVAL '6 days' AS week_end,
 
-    n.nutrient_id,
+    n.id,
     n.name AS nutrient_name,
     n.symbol,
     n.unit,
@@ -18,14 +20,19 @@ SELECT
     COALESCE(SUM(mn.quantity), 0) AS total_quantity
 
 FROM meals m
-JOIN meal_items mi ON mi.meal_id = m.meal_id
-JOIN meal_nutrients mn ON mn.item_id = mi.item_id
-JOIN nutrients n ON n.nutrient_id = mn.nutrient_id
+JOIN meal_items mi ON mi.meal_id = m.id
+JOIN meal_nutrients mn ON mn.item_id = mi.id
+JOIN nutrients n ON n.id = mn.nutrient_id
 
 GROUP BY
     m.user_id,
-    DATE_TRUNC('week', m.consumed_at AT TIME ZONE 'UTC')::DATE,
-    n.nutrient_id,
+    week_start,
+    week_end,
+    n.id,
     n.name,
     n.symbol,
-    n.unit;
+    n.unit
+
+ORDER BY
+  week_start DESC,
+  n.name ASC;
