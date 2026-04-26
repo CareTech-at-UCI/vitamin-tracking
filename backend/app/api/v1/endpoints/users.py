@@ -1,19 +1,40 @@
 """
 User endpoints.
 """
+from typing import Any
 from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException
 from supabase import Client
 
 from app.api.deps.supabase import get_supabase_admin
 from app.api.schemas.users import (
     UserCreate,
-    UserUpdate,
     UserResponse,
-    ListUserResponse
+    UserUpdate,
+    ListUserResponse,
 )
 
 router = APIRouter()
+
+
+def _raise_user_write_error(exc: Exception, operation: str) -> None:
+    """Map known DB constraint errors to cleaner API responses."""
+    first_arg: Any = exc.args[0] if exc.args else None
+    if isinstance(first_arg, dict):
+        if first_arg.get("code") == "23514":
+            raise HTTPException(
+                status_code=400,
+                detail="is_pregnant can only be true when sex is female",
+            ) from exc
+        message = first_arg.get("message")
+        if message:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Supabase {operation} failed: {message}",
+            ) from exc
+    raise HTTPException(status_code=500, detail=f"Supabase {operation} failed") from exc
+
 
 @router.get("/", response_model=ListUserResponse) 
 async def get_users(
@@ -76,7 +97,7 @@ async def create_user(
             .execute()
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Supabase insert failed: {e}") from e
+        _raise_user_write_error(e, operation="insert")
 
     rows = response.data or []
     if not rows:
@@ -95,6 +116,7 @@ async def update_user(
     data = body.model_dump(mode="json", exclude_unset=True)
     if not data:
         raise HTTPException(status_code=400, detail="Provide at least one field to update")
+
     try:
         response = (
             supabase.table("users")
@@ -103,7 +125,7 @@ async def update_user(
             .execute()
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Supabase update failed: {e}") from e
+        _raise_user_write_error(e, operation="update")
 
     rows = response.data or []
     if not rows:
