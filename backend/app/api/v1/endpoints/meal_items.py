@@ -63,6 +63,44 @@ async def create_meal_item(
     return rows[0]
 
 
+@router.get("/meal/{meal_id}", response_model=ListMealItemsResponse)
+async def get_meal_items_by_meal(
+    meal_id: int,
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """List all meal items for one meal id."""
+    try:
+        meal_response = (
+            supabase.table("meals")
+            .select("id")
+            .eq("id", meal_id)
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase meal lookup failed: {exc}") from exc
+
+    if not (meal_response.data or []):
+        raise HTTPException(status_code=404, detail="Meal not found")
+
+    try:
+        response = (
+            supabase.table("meal_items")
+            .select("*")
+            .eq("meal_id", meal_id)
+            .order("id")
+            .range(offset, offset + limit - 1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+
+    items = response.data or []
+    return {"count": len(items), "items": items}
+
+
 @router.get("/{item_id}", response_model=MealItemRow)
 async def get_meal_item(
     item_id: int,
@@ -72,17 +110,20 @@ async def get_meal_item(
     try:
         response = (
             supabase.table("meal_items")
-            .select("*").eq("id", item_id).single()
+            .select("*")
+            .eq("id", item_id)
+            .limit(1)
             .execute()
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
 
-    if not response.data:
+    rows = response.data or []
+    if not rows:
         raise HTTPException(status_code=404, detail="Meal item not found")
     
     # gets meal item
-    return response.data
+    return rows[0]
 
 
 @router.put("/{item_id}", response_model=MealItemRow)
