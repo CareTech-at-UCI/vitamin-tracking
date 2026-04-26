@@ -2,7 +2,9 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.18.3",
   "scripts": {
+    "preinstall": "node -e \"if (!process.env.npm_config_user_agent?.includes('pnpm')) { console.error('Use pnpm to install dependencies.'); process.exit(1); }\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
