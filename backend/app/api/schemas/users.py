@@ -9,7 +9,7 @@ from decimal import Decimal
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class SexType(str, Enum):
@@ -40,6 +40,20 @@ class UserUpdate(BaseModel):
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
     recommendations: list[str] | None = None
+
+    @model_validator(mode="after")
+    def validate_pregnancy_requires_female(self):
+        """
+        For partial updates, only validate when both fields are present in payload.
+        Full merged-state validation is handled in endpoint logic.
+        """
+        if (
+            self.is_pregnant is True
+            and self.sex is not None
+            and self.sex != SexType.female
+        ):
+            raise ValueError("is_pregnant can only be true when sex is female")
+        return self
 
 
 class UserResponse(BaseModel):
@@ -84,3 +98,10 @@ class UserCreate(BaseModel):
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
     recommendations: list[str] | None = None
+
+    @model_validator(mode="after")
+    def validate_pregnancy_requires_female(self):
+        """Prevent invalid pregnancy state at request-validation stage."""
+        if self.is_pregnant is True and self.sex != SexType.female:
+            raise ValueError("is_pregnant can only be true when sex is female")
+        return self
