@@ -19,12 +19,48 @@ from app.api.schemas.nutrient_goals import (
 router = APIRouter()
 
 
+async def _ensure_user_exists(user_id: UUID, supabase: Client) -> None:
+    """Return 404 when user foreign key does not exist."""
+    try:
+        user_response = (
+            supabase.table("users")
+            .select("id")
+            .eq("id", str(user_id))
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase user lookup failed: {exc}") from exc
+
+    if not (user_response.data or []):
+        raise HTTPException(status_code=404, detail="User not found")
+
+
+async def _ensure_nutrient_exists(nutrient_id: int, supabase: Client) -> None:
+    """Return 404 when nutrient foreign key does not exist."""
+    try:
+        nutrient_response = (
+            supabase.table("nutrients")
+            .select("id")
+            .eq("id", nutrient_id)
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase nutrient lookup failed: {exc}") from exc
+
+    if not (nutrient_response.data or []):
+        raise HTTPException(status_code=404, detail=f"Nutrient {nutrient_id} not found")
+
+
 @router.get("/user/{user_id}", response_model=ListNutrientGoalsResponse)
 async def get_nutrient_goals(
     user_id: UUID,
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Retrieve all daily nutrient targets for a user."""
+    await _ensure_user_exists(user_id, supabase)
+
     try:
         response = (
             supabase.table("nutrient_goals")
@@ -46,6 +82,10 @@ async def sync_nutrient_goals(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Overwrite all nutrient goals for a user — deletes existing, inserts new set."""
+    await _ensure_user_exists(user_id, supabase)
+    for goal in body.goals:
+        await _ensure_nutrient_exists(goal.nutrient_id, supabase)
+
     try:
         supabase.table("nutrient_goals").delete().eq("user_id", str(user_id)).execute()
     except Exception as exc:
@@ -77,6 +117,9 @@ async def update_nutrient_goal(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Adjust the quantity of a specific nutrient goal."""
+    await _ensure_user_exists(user_id, supabase)
+    await _ensure_nutrient_exists(nutrient_id, supabase)
+
     try:
         response = (
             supabase.table("nutrient_goals")
@@ -102,6 +145,9 @@ async def delete_nutrient_goal(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Remove a specific nutrient goal by user and nutrient id."""
+    await _ensure_user_exists(user_id, supabase)
+    await _ensure_nutrient_exists(nutrient_id, supabase)
+
     try:
         response = (
             supabase.table("nutrient_goals")
