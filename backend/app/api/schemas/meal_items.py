@@ -20,7 +20,6 @@ class MealItemCreate(BaseModel):
 class MealItemUpdate(BaseModel):
     """Request body for PUT /api/v1/meal_items/{item_id}"""
     model_config = ConfigDict(extra="forbid")
-    meal_id: int | None = Field(default=None, gt=0)
     weight: int | None = Field(default=None, gt=0)
     item_name: str | None = Field(default=None)
 

@@ -93,10 +93,8 @@ async def update_meal_item(
 ):
     """Update a meal item"""
 
-    # meal id and weight
+    # only mutable fields are accepted; meal_id is immutable after create
     update_data = {}
-    if body.meal_id is not None:
-        update_data["meal_id"] = body.meal_id
     if body.weight is not None:
         update_data["weight"] = body.weight
     if body.item_name is not None:
