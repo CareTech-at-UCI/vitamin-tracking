@@ -2,6 +2,9 @@
 Meal endpoints.
 """
 
+from datetime import datetime
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from supabase import Client
 
@@ -34,6 +37,49 @@ async def get_meals(
         raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
 
     return {"count": len(response.data or []), "items": response.data or []}
+
+
+@router.get("/user/{user_id}", response_model=ListMealsResponse)
+async def get_user_meals(
+    user_id: UUID,
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    start_date: datetime | None = Query(default=None),
+    end_date: datetime | None = Query(default=None),
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """List meals for one user with optional date filtering."""
+    try:
+        user_response = (
+            supabase.table("users")
+            .select("id")
+            .eq("id", str(user_id))
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase user lookup failed: {exc}") from exc
+
+    if not (user_response.data or []):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    try:
+        query = (
+            supabase.table("meals")
+            .select("*")
+            .eq("user_id", str(user_id))
+            .order("consumed_at", desc=True)
+        )
+        if start_date is not None:
+            query = query.gte("consumed_at", start_date.isoformat())
+        if end_date is not None:
+            query = query.lte("consumed_at", end_date.isoformat())
+        response = query.range(offset, offset + limit - 1).execute()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+
+    items = response.data or []
+    return {"count": len(items), "items": items}
 
 
 @router.post("/", response_model=MealRow)
