@@ -11,10 +11,28 @@ from app.api.schemas.meal_items import (
     MealItemCreate,
     MealItemDeleteResponse,
     MealItemRow,
+    MealItemSyncCreate,
     MealItemUpdate,
 )
 
 router = APIRouter()
+
+
+def _ensure_meal_exists(supabase: Client, meal_id: int) -> None:
+    """Raise 404 when the meal_id does not exist in `meals`."""
+    try:
+        response = (
+            supabase.table("meals")
+            .select("id")
+            .eq("id", meal_id)
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase meal lookup failed: {exc}") from exc
+
+    if not (response.data or []):
+        raise HTTPException(status_code=404, detail="Meal not found")
 
 
 @router.get("/", response_model=ListMealItemsResponse)
@@ -71,19 +89,7 @@ async def get_meal_items_by_meal(
     supabase: Client = Depends(get_supabase_admin),
 ):
     """List all meal items for one meal id."""
-    try:
-        meal_response = (
-            supabase.table("meals")
-            .select("id")
-            .eq("id", meal_id)
-            .limit(1)
-            .execute()
-        )
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Supabase meal lookup failed: {exc}") from exc
-
-    if not (meal_response.data or []):
-        raise HTTPException(status_code=404, detail="Meal not found")
+    _ensure_meal_exists(supabase, meal_id)
 
     try:
         response = (
@@ -99,6 +105,99 @@ async def get_meal_items_by_meal(
 
     items = response.data or []
     return {"count": len(items), "items": items}
+
+
+@router.put("/meal/{meal_id}/sync", response_model=ListMealItemsResponse)
+async def sync_meal_items(
+    meal_id: int,
+    body: MealItemSyncCreate,
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """Overwrite a meal's item list while preserving existing item IDs when possible."""
+    _ensure_meal_exists(supabase, meal_id)
+
+    seen_ids: set[int] = set()
+    requested_ids: list[int] = []
+    for item in body.items:
+        if item.id is None:
+            continue
+        if item.id in seen_ids:
+            raise HTTPException(status_code=400, detail=f"Duplicate meal item id in request: {item.id}")
+        seen_ids.add(item.id)
+        requested_ids.append(item.id)
+
+    try:
+        existing_response = (
+            supabase.table("meal_items")
+            .select("*")
+            .eq("meal_id", meal_id)
+            .order("id")
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+
+    existing_rows = existing_response.data or []
+    existing_by_id = {row["id"]: row for row in existing_rows}
+
+    for item_id in requested_ids:
+        if item_id not in existing_by_id:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Meal item {item_id} does not belong to meal {meal_id}",
+            )
+
+    existing_ids = set(existing_by_id)
+    ids_to_delete = sorted(existing_ids - set(requested_ids))
+
+    if ids_to_delete:
+        try:
+            supabase.table("meal_items").delete().in_("id", ids_to_delete).execute()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Supabase delete failed: {exc}") from exc
+
+    for item in body.items:
+        if item.id is None:
+            continue
+
+        update_data = {
+            "weight": item.weight,
+            "item_name": item.item_name,
+        }
+        try:
+            supabase.table("meal_items").update(update_data).eq("id", item.id).execute()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Supabase update failed: {exc}") from exc
+
+    payload = [
+        {
+            "meal_id": meal_id,
+            "weight": item.weight,
+            "item_name": item.item_name,
+        }
+        for item in body.items
+        if item.id is None
+    ]
+
+    if payload:
+        try:
+            supabase.table("meal_items").insert(payload).execute()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Supabase insert failed: {exc}") from exc
+
+    try:
+        response = (
+            supabase.table("meal_items")
+            .select("*")
+            .eq("meal_id", meal_id)
+            .order("id")
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
+
+    rows = response.data or []
+    return {"count": len(rows), "items": rows}
 
 
 @router.get("/{item_id}", response_model=MealItemRow)
