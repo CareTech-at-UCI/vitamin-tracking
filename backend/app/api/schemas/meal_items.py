@@ -24,6 +24,22 @@ class MealItemUpdate(BaseModel):
     item_name: str | None = Field(default=None)
 
 
+class MealItemSyncInput(BaseModel):
+    """One meal item entry in a sync request."""
+    model_config = ConfigDict(extra="forbid")
+
+    id: int | None = Field(default=None, gt=0)
+    weight: int = Field(..., gt=0)
+    item_name: str = Field(..., min_length=1)
+
+
+class MealItemSyncCreate(BaseModel):
+    """Request body for `PUT /api/v1/meal_items/meal/{meal_id}/sync`"""
+    model_config = ConfigDict(extra="forbid")
+
+    items: list[MealItemSyncInput] = Field(default_factory=list)
+
+
 class MealItemRow(BaseModel):
     """One row from meal_items"""
 

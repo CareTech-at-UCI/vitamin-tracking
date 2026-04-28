@@ -121,17 +121,20 @@ async def get_meal(
     try:
         response = (
             supabase.table("meals")
-            .select("*").eq("id", meal_id).single()
+            .select("*")
+            .eq("id", meal_id)
+            .limit(1)
             .execute()
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
 
-    if not response.data:
-        raise HTTPException(status_code=404, detail="meal not found")
+    rows = response.data or []
+    if not rows:
+        raise HTTPException(status_code=404, detail="Meal not found")
     
     # gets the meal
-    return response.data
+    return rows[0]
 
 
 @router.put("/{meal_id}", response_model=MealRow)
