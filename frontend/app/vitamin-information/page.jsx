@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import Sidebar from "@/components/Sidebar";
-import VitaminDropdown from "@/components/VitaminDropdown";
+import Sidebar from "@/components/recent-foods/Sidebar";
+import VitaminDropdown from "@/components/recent-foods/VitaminDropdown";
 
 export default function VitaminInfoPage() {
   const searchParams = useSearchParams();

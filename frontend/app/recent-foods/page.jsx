@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import DatePicker from "@/components/DatePicker";
+import { useMemo, useState } from "react";
+import Sidebar from "@/components/recent-foods/Sidebar";
+import DatePicker from "@/components/recent-foods/DatePicker";
+import DaySection from "@/components/recent-foods/DaySection";
 
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
@@ -75,130 +76,6 @@ function getRecentDates(selectedDate, count = 2) {
   return dates;
 }
 
-function formatHeading(dateStr) {
-  const d = new Date(`${dateStr}T00:00:00`);
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "numeric",
-    day: "numeric",
-    year: "2-digit",
-  });
-}
-
-function FoodCard({ item }) {
-  return (
-    <button
-      type="button"
-      className="relative aspect-square w-full overflow-hidden rounded-2xl text-left shadow-sm transition hover:scale-[1.02] lg:h-[104px] lg:w-[104px] lg:shrink-0"
-    >
-      <img
-        src={item.image}
-        alt={item.name}
-        className="h-full w-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
-      <div className="absolute bottom-2 left-2 right-2">
-        <p className="font-secondary text-[13px] leading-[1.05] text-white">
-          {item.name}
-        </p>
-      </div>
-    </button>
-  );
-}
-
-function MealRow({ title, items }) {
-  const rowRef = useRef(null);
-
-  const scrollRow = (direction) => {
-    if (!rowRef.current) return;
-    const amount = 180;
-    rowRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <section>
-      <div className="mb-2 lg:w-fit">
-        <div className="mb-2 flex items-center justify-between">
-          <h3 className="font-primary text-[28px] font-semibold leading-none text-accent">
-            {title}
-          </h3>
-
-          <div className="hidden items-center gap-6 lg:flex">
-            <button
-              type="button"
-              onClick={() => scrollRow("left")}
-              className="text-[32px] leading-none text-[#E5C9B8] transition hover:text-accent"
-              aria-label={`Scroll ${title} left`}
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollRow("right")}
-              className="text-[32px] leading-none text-accent transition hover:opacity-80"
-              aria-label={`Scroll ${title} right`}
-            >
-              ›
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3 lg:hidden">
-          {items.map((item) => (
-            <FoodCard key={item.id} item={item} />
-          ))}
-        </div>
-
-        <div
-          ref={rowRef}
-          className="hidden gap-2.5 overflow-x-auto pb-1 lg:flex lg:w-fit"
-        >
-          {items.map((item) => (
-            <FoodCard key={item.id} item={item} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DaySection({ date, meals, onEdit, isEditing = false }) {
-  return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-primary text-[34px] font-semibold leading-none text-secondary sm:text-[38px] lg:text-[40px]">
-          {formatHeading(date)}
-        </h2>
-
-        {!isEditing && (
-          <button
-            type="button"
-            onClick={onEdit}
-            className="hidden rounded-full bg-primary px-4 py-1.5 font-secondary text-sm font-medium leading-none text-white lg:block"
-          >
-            Edit
-          </button>
-        )}
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-16">
-        <div className="space-y-5">
-          <MealRow title="Breakfast" items={meals.breakfast} />
-          <MealRow title="Lunch" items={meals.lunch} />
-        </div>
-
-        <div className="space-y-5">
-          <MealRow title="Dinner" items={meals.dinner} />
-          <MealRow title="Snacks" items={meals.snacks} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function RecentFoodsPage() {
   const [selectedDate, setSelectedDate] = useState("2026-02-07");
   const [isEditing, setIsEditing] = useState(false);
@@ -215,7 +92,7 @@ export default function RecentFoodsPage() {
       </div>
 
       <main className="w-full px-6 pb-24 pt-8 sm:px-8 lg:flex-1 lg:px-14 lg:pt-14">
-        <div className="mx-auto max-w-[1180px]">
+        <div className="mx-auto max-w-295">
           {!isEditing && (
             <>
               <div className="mb-5 flex items-start gap-4">
@@ -239,7 +116,7 @@ export default function RecentFoodsPage() {
 
                 <button
                   type="button"
-                  className="hidden rounded-full bg-accent px-5 py-2 font-secondary text-sm font-medium leading-none text-white lg:block"
+                  className="hidden rounded-full bg-accent px-5 py-2 font-secondary text-sm font-medium leading-none text-white lg:block cursor-pointer"
                 >
                   ✓ Categorize by Meal
                 </button>
@@ -266,7 +143,7 @@ export default function RecentFoodsPage() {
         </div>
 
         {isEditing && (
-          <div className="fixed bottom-[60px] right-[72px] z-30 flex gap-[14px]">
+          <div className="fixed bottom-15 right-18 z-30 flex gap-3.5">
             <button
               type="button"
               onClick={() => setIsEditing(false)}

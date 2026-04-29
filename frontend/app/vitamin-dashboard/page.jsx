@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import VitaminRing from "@/components/VitaminRing";
-import Sidebar from "@/components/Sidebar";
-import DatePicker from "@/components/DatePicker";
+import VitaminRing from "@/components/recent-foods/VitaminRing";
+import Sidebar from "@/components/recent-foods/Sidebar";
+import DatePicker from "@/components/recent-foods/DatePicker";
 
 // ---------------------------------------------------------------------------
 // Dummy vitamin data
