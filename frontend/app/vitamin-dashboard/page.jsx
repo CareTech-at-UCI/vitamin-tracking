@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
 import VitaminRing from "@/components/recent-foods/VitaminRing";
 import Sidebar from "@/components/recent-foods/Sidebar";
 import DatePicker from "@/components/recent-foods/DatePicker";
@@ -72,16 +73,14 @@ export default function VitaminDashboardPage() {
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
   const handleInfoClick = (vitaminId) => {
-    router.push(`/vitamin-information?vitamin=${vitaminId}`);
+    router.push(ROUTES.vitaminDetails(vitaminId));
   };
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
 
-      {/* Main Content */}
       <div className="flex-1 px-8">
-        {/* Header */}
         <div className="px-12 pt-14 pb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <h1 className="text-5xl font-primary font-semibold text-primary">
             Vitamin Breakdown
@@ -89,10 +88,8 @@ export default function VitaminDashboardPage() {
         </div>
 
         <div className="px-12 pb-6 flex items-center justify-between">
-          {/* Date Picker */}
           <DatePicker value={selectedDate} onChange={setSelectedDate} />
 
-          {/* Toggle */}
           <div className="flex border border-primary rounded-lg overflow-hidden">
             {["daily", "weekly"].map((v) => (
               <button
@@ -110,7 +107,6 @@ export default function VitaminDashboardPage() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="px-12 pb-16 space-y-16">
           {dates.map((date) => {
             const vitamins = DATA_BY_DATE[date] || VITAMINS;
