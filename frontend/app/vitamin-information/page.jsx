@@ -28,18 +28,15 @@ export default function VitaminInfoPage() {
       <Sidebar />
 
       <div className="flex-1 px-20 pt-14 pb-16">
-        {/* Title */}
         <h1 className="text-5xl font-primary text-secondary font-semibold mb-10">
           What are vitamins and why are they important?
         </h1>
 
-        {/* Description */}
         <p className="text-secondary font-medium font-secondary mb-10">
           Vitamins are micronutrients that we need in small amounts for various
           metabolic processes and bodily functions.
         </p>
 
-        {/* List */}
         <div className="space-y-2">
           {vitamins.map((v, i) => (
             <VitaminDropdown

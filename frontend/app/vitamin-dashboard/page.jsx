@@ -7,9 +7,6 @@ import VitaminRing from "@/components/recent-foods/VitaminRing";
 import Sidebar from "@/components/recent-foods/Sidebar";
 import DatePicker from "@/components/recent-foods/DatePicker";
 
-// ---------------------------------------------------------------------------
-// Dummy vitamin data
-// ---------------------------------------------------------------------------
 const VITAMINS = [
   { id: "vitamin-a", label: "Vitamin A", percent: 28 },
   { id: "vitamin-b1", label: "Vitamin B1", percent: 55 },

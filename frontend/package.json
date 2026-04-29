@@ -13,9 +13,11 @@
     "@supabase/supabase-js": "^2.101.1",
     "next": "16.2.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-icons": "^5.6.0"
   },
   "devDependencies": {
+    "@tailwindcss/oxide-darwin-arm64": "^4.2.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -24,6 +26,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "tailwindcss": "^4",
+    "tapable": "^2.3.3",
     "typescript": "^5"
   }
 }

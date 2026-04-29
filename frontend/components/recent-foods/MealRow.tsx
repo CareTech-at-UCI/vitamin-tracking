@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import FoodCard, { FoodItem } from "./FoodCard";
 
 type Props = {
@@ -30,16 +31,16 @@ export default function MealRow({ title, items }: Props) {
             <button
               type="button"
               onClick={() => scrollRow("left")}
-              className="text-[32px] leading-none text-[#E5C9B8] transition hover:text-accent"
+              className="text-[32px] leading-none text-[#E5C9B8] transition hover:text-accent cursor-pointer"
             >
-              ‹
+              <HiChevronLeft />
             </button>
             <button
               type="button"
               onClick={() => scrollRow("right")}
-              className="text-[32px] leading-none text-accent transition hover:opacity-80"
+              className="text-[32px] leading-none text-accent transition hover:opacity-80 cursor-pointer"
             >
-              ›
+              <HiChevronRight />
             </button>
           </div>
         </div>

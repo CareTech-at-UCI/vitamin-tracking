@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Sidebar from "@/components/recent-foods/Sidebar";
 import DatePicker from "@/components/recent-foods/DatePicker";
 import DaySection from "@/components/recent-foods/DaySection";
+import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
@@ -102,7 +103,7 @@ export default function RecentFoodsPage() {
                     className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:text-[44px]"
                     aria-label="Go back"
                   >
-                    ‹
+                    <HiChevronLeft />
                   </button>
 
                   <h1 className="font-primary text-4xl font-semibold leading-none text-secondary sm:text-5xl lg:text-[64px]">
@@ -116,9 +117,10 @@ export default function RecentFoodsPage() {
 
                 <button
                   type="button"
-                  className="hidden rounded-full bg-accent px-5 py-2 font-secondary text-sm font-medium leading-none text-white lg:block cursor-pointer"
+                  className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
                 >
-                  ✓ Categorize by Meal
+                  <HiCheck />
+                  Categorize by Meal
                 </button>
               </div>
             </>
@@ -170,7 +172,7 @@ export default function RecentFoodsPage() {
                 className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-4xl text-white shadow-lg"
                 aria-label="Add food"
               >
-                +
+                <HiPlus />
               </button>
               <button
                 type="button"
@@ -178,7 +180,7 @@ export default function RecentFoodsPage() {
                 className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-white shadow-lg"
                 aria-label="Edit foods"
               >
-                ✎
+                <HiPencil />
               </button>
             </div>
 
