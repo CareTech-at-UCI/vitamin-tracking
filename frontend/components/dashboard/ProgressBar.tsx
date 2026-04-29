@@ -32,7 +32,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
             </span>
         </div>
 
-        <div className="hidden md:flex items-baseline gap-1 min-w-[70px] justify-end">
+        <div className="hidden md:flex items-baseline gap-0.5 min-w-[70px] justify-end">
             <span
                 className="text-black"
                 style={{
@@ -47,9 +47,9 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
             <span
                 className="text-black"
                 style={{
-                fontFamily: "Inter",
-                fontSize: "24px",
-                fontWeight: 400,
+                fontFamily: '"Instrument Sans"',
+                fontSize: "20px",
+                fontWeight: 500,
                 }}
             >
                 %
