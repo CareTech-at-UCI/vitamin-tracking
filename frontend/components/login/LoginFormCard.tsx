@@ -29,7 +29,7 @@ export function LoginFormCard() {
       <header className="space-y-4">
         <Image src="/logo.png" alt="Nutritional Diet App logo" width={50} height={38} priority />
 
-        <div className="[font-family:var(--font-home-title)]" style={{ color: "rgba(38, 97, 47, 1)" }}>
+        <div className="font-home-title" style={{ color: "rgba(38, 97, 47, 1)" }}>
           <p
             className="w-full max-w-84 text-[36px] leading-none tracking-[-0.08em] lg:max-w-none lg:text-[3.35rem] lg:tracking-tight"
           >
@@ -41,7 +41,7 @@ export function LoginFormCard() {
         </div>
       </header>
 
-      <form className="[font-family:var(--font-home-title)] text-[2rem] md:text-[1rem] mt-6 max-w-lg space-y-4 sm:mt-8 lg:mt-10" style={{ color: "rgba(38, 97, 47, 1)" }}>
+      <form className="font-home-title text-[2rem] md:text-[1rem] mt-6 max-w-lg space-y-4 sm:mt-8 lg:mt-10" style={{ color: "rgba(38, 97, 47, 1)" }}>
         <label className="block font-medium leading-none" htmlFor="email">
           Username
         </label>
