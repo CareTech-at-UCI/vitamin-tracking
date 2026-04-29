@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { HiChevronDown, HiChevronRight } from "react-icons/hi";
 
 export default function VitaminDropdown({ id, title, isActive = false }) {
   const [open, setOpen] = useState(isActive);
@@ -24,7 +25,7 @@ export default function VitaminDropdown({ id, title, isActive = false }) {
         </h3>
 
         <span className="text-4xl text-secondary group-hover:text-accent">
-          {open ? "⌄" : "›"}
+          {open ? <HiChevronDown /> : <HiChevronRight />}
         </span>
       </div>
 
