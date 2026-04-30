@@ -37,7 +37,7 @@ export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
             <div
                 ref={scrollRef}
                 onScroll={onScroll}
-                className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar w-full"
+                className="flex overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory no-scrollbar w-full"
             >
                 {vitamins.map((v) => (
                     <div key={v.name} className="snap-center shrink-0 w-full flex justify-center">

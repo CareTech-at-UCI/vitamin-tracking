@@ -8,7 +8,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
     <div className="flex flex-col gap-2 mb-[1vh]">
       
         <div className="flex items-center gap-1">
-            <span className="font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] text-[#0A3323]">
+            <span className="font-body font-medium text-[13.88px] md:text-[1.25rem] leading-none tracking-[-0.05em] text-[#0A3323]">
                 {vitaminName}
             </span>
         </div>
@@ -16,7 +16,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
         <div className="flex items-center gap-4">
 
         <div
-            className="relative flex items-start border-2 border-[#26612F] rounded-[16px] overflow-hidden w-full h-7"
+            className="relative flex items-start border-2 border-[#26612F] rounded-[16px] overflow-hidden w-full h-5 md:h-7"
         >
             <div
                 className="rounded-[16px] bg-[#26612F] h-full"
@@ -27,7 +27,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
             />
 
             {/* Mobile: percentage inside bar */}
-            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-sm font-medium md:hidden">
+            <span className="absolute left-[11px] top-1/2 -translate-y-1/2 text-[#FFFDEE] text-xs font-normal md:hidden">
                 {percentage}%
             </span>
         </div>

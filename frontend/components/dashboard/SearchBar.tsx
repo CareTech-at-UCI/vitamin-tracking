@@ -6,19 +6,19 @@ interface SearchBarProps {
 
 export function SearchBar({ height = "medium", value, onChange }: SearchBarProps) {
   const sizeStyles = {
-    medium: "py-[1vh] px-[1vw] text-base",
+    medium: "py-1.5 px-3 md:py-[1vh] md:px-[1vw] text-xs md:text-base",
   };
 
   return (
     <div
-      className={`flex items-center rounded-[32px] border border-black w-full ${sizeStyles[height]} mb-[2vh]`}
+      className={`flex items-center rounded-[32px] border border-black w-full ${sizeStyles[height]} mb-3 md:mb-[2vh]`}
     >
         <input
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Search"
-            className="flex-1 outline-none bg-transparent text-black placeholder:text-black"
+            className="flex-1 outline-none bg-transparent text-[#0A3323] placeholder:text-[#0A3323]"
         />
     </div>
   );

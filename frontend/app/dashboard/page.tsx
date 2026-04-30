@@ -8,7 +8,7 @@ export default function Dashboard() {
     const [mobileTab, setMobileTab] = useState<"goals" | "visualization">("visualization");
 
     return (
-        <main className="min-h-screen bg-[#FFFDEE] px-4 py-4 md:px-8 md:py-6 lg:px-16 lg:py-8 flex flex-col gap-4 md:gap-6">
+        <main className="min-h-screen bg-[#FFFDEE] px-6 py-4 md:px-8 md:py-6 lg:px-16 lg:py-8 flex flex-col gap-4 md:gap-6">
 
             {/* Header */}
             <div className="flex items-center justify-between">

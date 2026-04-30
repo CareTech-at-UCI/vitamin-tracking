@@ -25,7 +25,7 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
     });
 
     const buttonClass = (active: boolean) =>
-        `flex items-center gap-[10px] px-[1.5vw] py-[0.5vh] rounded-[32px] transition
+        `flex items-center gap-[10px] text-sm md:text-base px-3 md:px-[1.5vw] py-1.5 md:py-[0.5vh] rounded-[32px] transition
         ${
             active
                 ? "bg-[#F16F33] text-white"
@@ -33,13 +33,9 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
         }`;
 
     return (
-        <div className="w-full border-2 border-[#26612F] rounded-2xl py-[1.5vw] px-8">
+        <div className="w-full border-2 border-[#26612F] rounded-2xl py-4 md:py-[1.5vw] px-6 md:px-8">
             <h2
-                className="font-semibold leading-none tracking-[-3.2px] text-[#0A3323] mb-4 w-full"
-                style={{
-                    fontFamily: '"Montserrat Alternates"',
-                    fontSize: "40px",
-                }}
+                className="font-display text-2xl md:text-2xl lg:text-[40px] font-semibold leading-none tracking-[-0.08em] text-[#0A3323] mb-4 w-full"
             >
                 Vitamin Goals
             </h2>
@@ -51,7 +47,7 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
                     onChange={setSearch}
                 />
 
-                <div className="flex flex-row items-center gap-[1vw] mb-[1vw]">
+                <div className="flex flex-row items-center gap-2 md:gap-[1vw] mb-3 md:mb-[1vw]">
                     <button
                         onClick={() => setFilter("all")}
                         className={buttonClass(filter === "all")}
