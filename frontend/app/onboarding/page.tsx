@@ -129,6 +129,7 @@ export default function OnboardingPage() {
   return (
     <OnboardingShell currentStep={currentStep} stepCount={stepCount}>
       <>
+        {/* Mobile: all steps visible, scrollable */}
         <div className="flex flex-col gap-16 md:hidden">
           <OnboardingStepNameAge
             name={form.name}
@@ -175,6 +176,7 @@ export default function OnboardingPage() {
           </button>
         </div>
 
+        {/* Desktop: step-by-step */}
         <div className="hidden md:flex md:flex-1 md:flex-col">
           {currentStep === 0 ? (
             <OnboardingStepNameAge
