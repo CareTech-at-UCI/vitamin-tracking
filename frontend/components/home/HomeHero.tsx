@@ -26,7 +26,7 @@ export function HomeHero() {
         />
       </div>
 
-      <div className="relative z-10 px-5 pt-5 sm:absolute sm:left-0 sm:top-0 sm:px-8 sm:pt-8 lg:px-14 lg:pt-14">
+      <div className="relative z-10 px-5 pt-5 sm:px-8 sm:pt-8 lg:absolute lg:left-0 lg:top-0 lg:px-14 lg:pt-14">
         <Image
           src="/logo.png"
           alt="Nutritional Diet App logo"
