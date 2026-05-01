@@ -1,47 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #FDFAE7;
   --foreground: #171717;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-onboarding-display: var(--font-geist-sans);
-  --font-onboarding-body: var(--font-geist-sans);
-  --color-onboarding-cream-50: #fffbed;
-  --color-onboarding-cream-100: #f9f0d7;
-  --color-onboarding-cream-150: #f6ebd2;
+  --font-sans: var(--font-instrument-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-onboarding-display: var(--font-montserrat-alternates);
+  --font-onboarding-body: var(--font-instrument-sans);
   --color-onboarding-cream-200: #fff7ea;
   --color-onboarding-cream-300: #fff6e3;
   --color-onboarding-cream-400: #fdf4df;
   --color-onboarding-cream-500: #f7f1df;
-  --color-onboarding-cream-600: #f7f2df;
   --color-onboarding-cream-700: #efe4c8;
   --color-onboarding-cream-800: #ece1c6;
   --color-onboarding-green-700: #557b52;
-  --color-onboarding-green-750: #527154;
   --color-onboarding-green-800: #4f6f49;
   --color-onboarding-green-850: #3b6b3c;
-  --color-onboarding-green-900: #2f6a3d;
-  --color-onboarding-green-950: #2d7b44;
   --color-onboarding-sage-500: #718568;
-  --color-onboarding-sage-600: #6a8360;
   --color-onboarding-sage-700: #6b8d61;
   --color-onboarding-sage-800: #5f7d59;
   --color-onboarding-orange-500: #ef7a3f;
-  --color-onboarding-orange-550: #f47d34;
   --color-onboarding-orange-600: #c85f27;
-  --color-onboarding-orange-200: #ffd9b2;
   --color-onboarding-orange-100: #fff1e6;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #FDFAE7;
     --foreground: #ededed;
   }
 }
@@ -49,11 +39,22 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-instrument-sans), Arial, Helvetica, sans-serif;
 }
 
 * {
   box-sizing: border-box;
+}
+
+input:not([type="range"]),
+select,
+textarea {
+  background-image: linear-gradient(
+    90deg,
+    #F0E7CF 0%,
+    #F0E7CF 25%,
+    #fff6e3 100%
+  );
 }
 
 .onboarding-range::-webkit-slider-runnable-track {

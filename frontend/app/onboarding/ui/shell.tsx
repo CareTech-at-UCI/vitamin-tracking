@@ -39,10 +39,10 @@ export function OnboardingShell({
   }, []);
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fffbed_0%,_#f9f0d7_55%,_#f6ebd2_100%)] text-[#3b6b3c]">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1240px] flex-col px-4 py-6 md:px-12 md:py-10 lg:px-16 lg:py-12">
+    <main className="min-h-screen bg-[#FDFAE7] text-[#3b6b3c]">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1240px] flex-col px-4 py-6 md:px-12 md:py-8 lg:px-16">
         <OnboardingProgress currentStep={currentStep} stepCount={stepCount} />
-        <div className="flex flex-1 flex-col pt-8 pb-20 md:pt-16 md:pb-0">{children}</div>
+        <div className="flex flex-1 flex-col pt-8 pb-20 md:pt-10 md:pb-0 lg:pt-12">{children}</div>
       </div>
       <ScrollToTopButton />
       {showScrollShadow ? (

@@ -22,7 +22,7 @@ export function OnboardingStepRestrictions({
   return (
     <section className="flex max-w-4xl flex-col gap-6 md:gap-8">
       <div className="space-y-4 md:space-y-5">
-        <h1 className="text-[2rem] leading-[1.1] font-semibold tracking-[-0.04em] text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
+        <h1 className="font-onboarding-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
           Do you have any{" "}
           <span className="text-[#ef7a3f]">dietary restrictions</span>?
         </h1>
@@ -35,7 +35,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#557b52] px-4 text-sm font-medium text-[#fdf4df] md:min-h-11 md:px-5 md:text-base"
+                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#557b52] bg-[#557b52] px-6 py-[11.85px] text-sm font-medium text-[#fdf4df] md:text-base"
                 >
                   <span>{restriction}</span>
                   <span className="text-base leading-none md:text-lg">×</span>
@@ -72,7 +72,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="inline-flex min-h-10 items-center rounded-lg border border-[#6b8d61] px-4 text-sm font-medium text-[#557b52] transition hover:bg-white/70 md:min-h-11 md:px-5 md:text-base"
+                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#6b8d61] px-6 py-[11.85px] text-sm font-medium text-[#557b52] transition hover:bg-white/70 md:text-base"
                 >
                   {restriction}
                 </button>
@@ -86,7 +86,7 @@ export function OnboardingStepRestrictions({
               <button
                 type="button"
                 onClick={onAddCustomRestriction}
-                className="inline-flex min-h-10 items-center rounded-lg border border-dashed border-[#ef7a3f] bg-[#fff1e6] px-4 text-sm font-medium text-[#c85f27] transition hover:bg-[#ffe5d1] md:min-h-11 md:px-5 md:text-base"
+                className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-dashed border-[#ef7a3f] bg-[#fff1e6] px-6 py-[11.85px] text-sm font-medium text-[#c85f27] transition hover:bg-[#ffe5d1] md:text-base"
               >
                 Add Custom Option
               </button>
