@@ -41,10 +41,10 @@ export function HomeHero() {
       <div className="relative z-10 mx-auto grid w-full gap-8 px-5 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-10 lg:px-14 lg:py-14 lg:h-screen">
         <div className="space-y-6">
           <div className="space-y-5">
-            <h1 className="[font-family:var(--font-home-title)] lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold sm:font-extrabold leading-[100%] tracking-[-0.07em] sm:max-w-2xl">
+            <h1 className="font-home-title lg:whitespace-nowrap text-[clamp(2.75rem,8vw,5rem)] font-semibold sm:font-extrabold leading-[100%] tracking-[-0.07em] sm:max-w-2xl">
               Nutritional Diet App
             </h1>
-            <p className="[font-family:var(--font-home-body)] text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent">
+            <p className="font-home-body text-[clamp(1.1rem,3.2vw,2rem)] leading-[100%] tracking-[-0.05em] text-accent">
               Track your nutritional intake and understand vitamin-related health
               impacts through a combination of {" "}
               <span className="text-accent-warm">food logging</span>, {" "}
