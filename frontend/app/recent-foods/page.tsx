@@ -1,250 +1,155 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Sidebar from "@/components/recent-foods/Sidebar";
+import DatePicker from "@/components/recent-foods/DatePicker";
+import DaySection from "@/components/recent-foods/DaySection";
+import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 
-// TYPES
-type FoodItem = {
-  id: number;
-  name: string;
-  image: string;
-};
-
-type Meals = {
-  breakfast: FoodItem[];
-  lunch: FoodItem[];
-  dinner: FoodItem[];
-  snacks: FoodItem[];
-};
-
-// DATA
-// CHANGE HERE: changed image to closer match the reference food cards
 const FOOD_IMAGE =
-  "https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c?auto=format&fit=crop&w=600&q=80";
+  "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
 
-const makeFoods = (startId: number) =>
-  Array(4)
-    .fill(null)
-    .map((_, i) => ({ id: startId + i, name: "Food\nName", image: FOOD_IMAGE }));
-
-// CHANGE HERE: added a second day so the page scrolls/looks like the reference
-const RECENT_FOOD_DATA: Record<string, Meals> = {
+const RECENT_FOOD_DATA = {
   "2026-02-07": {
-    breakfast: makeFoods(0),
-    lunch: makeFoods(10),
-    dinner: makeFoods(20),
-    snacks: makeFoods(30),
+    breakfast: [
+      { id: 1, name: "Food Name", image: FOOD_IMAGE },
+      { id: 2, name: "Food Name", image: FOOD_IMAGE },
+      { id: 3, name: "Food Name", image: FOOD_IMAGE },
+      { id: 4, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    lunch: [
+      { id: 5, name: "Food Name", image: FOOD_IMAGE },
+      { id: 6, name: "Food Name", image: FOOD_IMAGE },
+      { id: 7, name: "Food Name", image: FOOD_IMAGE },
+      { id: 8, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    dinner: [
+      { id: 9, name: "Food Name", image: FOOD_IMAGE },
+      { id: 10, name: "Food Name", image: FOOD_IMAGE },
+      { id: 11, name: "Food Name", image: FOOD_IMAGE },
+      { id: 12, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    snacks: [
+      { id: 13, name: "Food Name", image: FOOD_IMAGE },
+      { id: 14, name: "Food Name", image: FOOD_IMAGE },
+      { id: 15, name: "Food Name", image: FOOD_IMAGE },
+      { id: 16, name: "Food Name", image: FOOD_IMAGE },
+    ],
   },
   "2026-02-06": {
-    breakfast: makeFoods(40),
-    lunch: makeFoods(50),
-    dinner: makeFoods(60),
-    snacks: makeFoods(70),
+    breakfast: [
+      { id: 17, name: "Food Name", image: FOOD_IMAGE },
+      { id: 18, name: "Food Name", image: FOOD_IMAGE },
+      { id: 19, name: "Food Name", image: FOOD_IMAGE },
+      { id: 20, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    lunch: [
+      { id: 21, name: "Food Name", image: FOOD_IMAGE },
+      { id: 22, name: "Food Name", image: FOOD_IMAGE },
+      { id: 23, name: "Food Name", image: FOOD_IMAGE },
+      { id: 24, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    dinner: [
+      { id: 25, name: "Food Name", image: FOOD_IMAGE },
+      { id: 26, name: "Food Name", image: FOOD_IMAGE },
+      { id: 27, name: "Food Name", image: FOOD_IMAGE },
+      { id: 28, name: "Food Name", image: FOOD_IMAGE },
+    ],
+    snacks: [
+      { id: 29, name: "Food Name", image: FOOD_IMAGE },
+      { id: 30, name: "Food Name", image: FOOD_IMAGE },
+      { id: 31, name: "Food Name", image: FOOD_IMAGE },
+      { id: 32, name: "Food Name", image: FOOD_IMAGE },
+    ],
   },
 };
 
-// HELPERS
-function formatHeading(dateStr: string) {
-  const d = new Date(`${dateStr}T00:00:00`);
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "numeric",
-    day: "numeric",
-    year: "2-digit",
-  });
+function getRecentDates(selectedDate: string, count = 2) {
+  const dates: string[] = [];
+  const [year, month, day] = selectedDate.split("-").map(Number);
+
+  for (let i = 0; i < count; i++) {
+    const d = new Date(year, month - 1, day);
+    d.setDate(d.getDate() - i);
+    dates.push(d.toLocaleDateString("en-CA"));
+  }
+
+  return dates;
 }
 
-// COMPONENTS
-function FoodCard({ item }: { item: FoodItem }) {
-  return (
-    <button
-      type="button"
-      // CHANGE HERE: fixed card size to match reference instead of stretching full width
-      className="relative h-[106px] w-[106px] shrink-0 overflow-hidden rounded-lg shadow-sm transition hover:scale-[1.02] hover:cursor-pointer"
-    >
-      <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-      {/* CHANGE HERE: allow Food Name to break into 2 lines like the reference */}
-      <p className="absolute bottom-3 left-3 whitespace-pre-line text-left text-[16px] leading-[18px] text-white">
-        {item.name}
-      </p>
-    </button>
-  );
-}
-
-function MealRow({ title, items }: { title: string; items: FoodItem[] }) {
-  const rowRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollRow = (dir: "left" | "right") => {
-    if (!rowRef.current) return;
-    rowRef.current.scrollBy({
-      left: dir === "left" ? -200 : 200,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    // CHANGE HERE: smaller vertical spacing between meal title and cards
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        {/* CHANGE HERE: larger orange meal heading */}
-        <h3 className="text-[32px] font-bold leading-none text-accent">{title}</h3>
-
-        {/* CHANGE HERE: arrows use orange colors and sit closer to reference */}
-        <div className="hidden items-center gap-8 pr-2 lg:flex">
-          <button
-            onClick={() => scrollRow("left")}
-            className="text-[34px] leading-none text-accent/25 hover:cursor-pointer"
-          >
-            ‹
-          </button>
-          <button
-            onClick={() => scrollRow("right")}
-            className="text-[34px] leading-none text-accent hover:cursor-pointer"
-          >
-            ›
-          </button>
-        </div>
-      </div>
-
-      <div
-        ref={rowRef}
-        // CHANGE HERE: reference cards have bigger horizontal gaps and hidden scrollbar
-        className="flex gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {items.map((item) => (
-          <FoodCard key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DaySection({
-  date,
-  meals,
-  onEdit,
-  isEditing,
-}: {
-  date: string;
-  meals: Meals;
-  onEdit: () => void;
-  isEditing: boolean;
-}) {
-  return (
-    // CHANGE HERE: tighter section spacing to match vertical rhythm in reference
-    <section className="space-y-5">
-      <div className="flex items-center justify-between">
-        {/* CHANGE HERE: bigger dark green date heading */}
-        <h2 className="text-[40px] font-bold leading-none text-primary">
-          {formatHeading(date)}
-        </h2>
-
-        {!isEditing && (
-          <button
-            onClick={onEdit}
-            // CHANGE HERE: adjusted edit button size/position style
-            className="hidden rounded-full bg-primary px-6 py-2 text-[16px] text-white hover:cursor-pointer lg:block"
-          >
-            Edit
-          </button>
-        )}
-      </div>
-
-      {/* CHANGE HERE: columns and row gaps adjusted to match reference */}
-      <div className="grid gap-x-[70px] gap-y-5 lg:grid-cols-2">
-        <MealRow title="Breakfast" items={meals.breakfast} />
-        <MealRow title="Dinner" items={meals.dinner} />
-        <MealRow title="Lunch" items={meals.lunch} />
-        <MealRow title="Snacks" items={meals.snacks} />
-      </div>
-    </section>
-  );
-}
-
-// PAGE
 export default function RecentFoodsPage() {
   const [selectedDate, setSelectedDate] = useState("2026-02-07");
   const [isEditing, setIsEditing] = useState(false);
 
-  // CHANGE HERE: when editing, only show the selected day like the edit reference
-  const dates = useMemo(() => {
-    const d = new Date(`${selectedDate}T00:00:00`);
-    const prev = new Date(d);
-    prev.setDate(d.getDate() - 1);
-
-    const selected = d.toISOString().slice(0, 10);
-    const previous = prev.toISOString().slice(0, 10);
-
-    if (isEditing) return [selected]; // CHANGE HERE
-    return [selected, previous];
-  }, [selectedDate, isEditing]); // CHANGE HERE
+  const recentDates = useMemo(() => {
+    if (isEditing) return [selectedDate];
+    return getRecentDates(selectedDate, 2);
+  }, [selectedDate, isEditing]);
 
   return (
-    // CHANGE HERE: exact page background and flex layout for sidebar
-    <div className="min-h-screen bg-background lg:flex">
-      <Sidebar />
+    <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
+      <div className="hidden lg:flex lg:min-h-screen lg:shrink-0 lg:bg-primary">
+        <Sidebar />
+      </div>
 
-      {/* CHANGE HERE: content width/left padding adjusted to start like reference */}
-      <main className="w-full px-14 py-14 lg:px-[56px] lg:py-[58px]">
-        {/* CHANGE HERE: hide the normal header/date controls while editing */}
-        {!isEditing && (
-          <>
-            {/* CHANGE HERE: added back arrow and made title larger/dark green */}
-            <div className="flex items-center gap-5">
-              <button className="text-[54px] leading-none text-primary hover:cursor-pointer">
-                ‹
-              </button>
-              <h1 className="text-[52px] font-bold leading-none tracking-[-0.04em] text-primary">
-                Recent Foods
-              </h1>
-            </div>
+      <main className="w-full px-6 pb-24 pt-8 sm:px-8 lg:flex-1 lg:px-14 lg:pt-14">
+        <div className="mx-auto max-w-295">
+          {!isEditing && (
+            <>
+              <div className="mb-5 flex items-start gap-4">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:text-[44px]"
+                    aria-label="Go back"
+                  >
+                    <HiChevronLeft />
+                  </button>
 
-            {/* CHANGE HERE: adjusted top controls position */}
-            <div className="mt-9 flex items-center justify-between">
-              {/* CHANGE HERE: wrapped date input to create Figma-style label border */}
-              <label className="relative block w-[285px] rounded border border-primary bg-background px-3 pb-2 pt-4 text-primary">
-                <span className="absolute -top-2 left-3 bg-background px-1 text-xs text-primary">
-                  Date
-                </span>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSelectedDate(e.target.value)
-                  }
-                  className="w-full bg-transparent text-[17px] font-semibold text-primary outline-none"
+                  <h1 className="font-primary text-4xl font-bold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
+                    Recent Foods
+                  </h1>
+                </div>
+              </div>
+
+              <div className="mb-8 flex items-start justify-between gap-6">
+                <DatePicker value={selectedDate} onChange={setSelectedDate} />
+
+                <button
+                  type="button"
+                  className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
+                >
+                  <HiCheck />
+                  Categorize by Meal
+                </button>
+              </div>
+            </>
+          )}
+
+          <div className="space-y-10 lg:space-y-12">
+            {recentDates.map((date) => {
+              const meals =
+                RECENT_FOOD_DATA[date] || RECENT_FOOD_DATA["2026-02-07"];
+
+              return (
+                <DaySection
+                  key={date}
+                  date={date}
+                  meals={meals}
+                  isEditing={isEditing}
+                  onEdit={() => setIsEditing(true)}
                 />
-              </label>
-
-              {/* CHANGE HERE: adjusted button size and added checkmark */}
-              <button className="rounded-full bg-accent px-6 py-3 text-[16px] font-medium text-white hover:cursor-pointer">
-                ✓ Categorize by Meal
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* CHANGE HERE: edit mode starts closer to the top, like the edit reference */}
-        <div className={`${isEditing ? "mt-0" : "mt-10"} space-y-9`}>
-          {dates.map((d) => (
-            <DaySection
-              key={d}
-              date={d}
-              meals={RECENT_FOOD_DATA[d] ?? RECENT_FOOD_DATA["2026-02-07"]}
-              onEdit={() => setIsEditing(true)}
-              isEditing={isEditing}
-            />
-          ))}
+              );
+            })}
+          </div>
         </div>
 
         {isEditing && (
-          // CHANGE HERE: bottom action buttons match the edit reference
-          <div className="fixed bottom-16 right-16 z-30 flex gap-4">
+          <div className="fixed bottom-15 right-18 z-30 flex gap-3.5">
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="rounded-full border border-primary bg-background px-7 py-2.5 text-[14px] font-medium text-primary hover:cursor-pointer hover:bg-primary/5"
+              className="rounded-full border border-primary px-6 py-2.5 font-secondary text-[14px] font-medium leading-none text-primary transition hover:bg-primary/5"
             >
               Cancel
             </button>
@@ -252,11 +157,35 @@ export default function RecentFoodsPage() {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="rounded-full bg-primary px-7 py-2.5 text-[14px] font-medium text-white hover:cursor-pointer hover:opacity-90"
+              className="rounded-full bg-primary px-7 py-2.5 font-secondary text-[14px] font-medium leading-none text-white transition hover:opacity-90"
             >
               Save Changes
             </button>
           </div>
+        )}
+
+        {!isEditing && (
+          <>
+            <div className="fixed bottom-6 right-5 z-20 flex flex-col gap-3 lg:hidden">
+              <button
+                type="button"
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-4xl text-white shadow-lg"
+                aria-label="Add food"
+              >
+                <HiPlus />
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-white shadow-lg"
+                aria-label="Edit foods"
+              >
+                <HiPencil />
+              </button>
+            </div>
+
+            <div className="fixed bottom-0 left-0 right-0 h-10 bg-primary lg:hidden" />
+          </>
         )}
       </main>
     </div>
