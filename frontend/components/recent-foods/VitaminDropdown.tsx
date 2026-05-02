@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import { HiChevronDown, HiChevronRight } from "react-icons/hi";
 
-export default function VitaminDropdown({ id, title, isActive = false }) {
+type VitaminDropdownProps = { 
+  id: string; 
+  title: string; 
+  isActive?: boolean; 
+};
+
+export default function VitaminDropdown({ id, title, isActive = false }: VitaminDropdownProps): JSX.Element {
   const [open, setOpen] = useState(isActive);
 
   useEffect(() => {

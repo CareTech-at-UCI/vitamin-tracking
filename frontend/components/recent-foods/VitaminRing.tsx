@@ -1,10 +1,16 @@
 "use client";
 
+type VitaminRingProps = { 
+  label?: string; 
+  percent?: number; 
+  onClick?: () => void; 
+};
+
 export default function VitaminRing({
   label = "Vitamin A",
   percent = 0,
   onClick,
-}) {
+}: VitaminRingProps): JSX.Element {
   const size = 110;
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;

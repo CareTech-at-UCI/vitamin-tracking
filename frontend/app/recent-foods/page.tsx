@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Sidebar from "@/components/Sidebar";
-
+import Sidebar from "@/components/recent-foods/Sidebar";
 //TYPES
 type FoodItem = {
   id: number;
