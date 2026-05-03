@@ -44,20 +44,30 @@ export function HomeInfoSection() {
                 <button
                   type="button"
                   onClick={() => toggleCard(card.title)}
-                  className="flex w-full items-center justify-between gap-3 py-2.5 text-[#0A3323] text-left"
+                  aria-expanded={expandedCard === card.title}
+                  className="flex w-full items-start justify-between gap-3 py-2.5 text-left text-[#0A3323]"
                 >
-                  <span className="[font-family:var(--font-home-body)] text-xl font-medium leading-none text-foreground">
+                  <span className="min-w-0 flex-1 [font-family:var(--font-home-body)] text-xl font-medium leading-snug text-foreground">
                     {card.title}
                   </span>
-                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-[#B1CC9F] text-2xl font-semibold leading-none text-accent transition-transform" style={{ color: "rgba(10, 51, 35, 1)", transform: expandedCard === card.title ? "rotate(45deg)" : "rotate(0deg)" }}>
+                  <span
+                    className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-[#B1CC9F] text-2xl font-semibold leading-none text-accent transition-transform duration-300 ease-out"
+                    style={{ color: "rgba(10, 51, 35, 1)", transform: expandedCard === card.title ? "rotate(45deg)" : "rotate(0deg)" }}
+                  >
                     +
                   </span>
                 </button>
-                {expandedCard === card.title && (
-                  <div className="[font-family:var(--font-home-body)] pb-4 text-sm text-[#26612F] leading-relaxed text-foreground">
-                    {card.body}
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+                    expandedCard === card.title ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <div className="[font-family:var(--font-home-body)] pb-4 text-sm text-[#26612F] leading-relaxed text-foreground">
+                      {card.body}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
