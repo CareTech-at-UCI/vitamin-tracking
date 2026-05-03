@@ -35,7 +35,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-lg border-[1.61px] border-[#557b52] bg-[#FDFAE7] px-6 py-[11.85px] text-sm font-medium text-[#557b52] md:text-base"
+                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[30px] border-[1.61px] border-[#557b52] bg-primary px-6 py-[11.85px] text-sm font-body text-[#FDFAE7] md:text-base"
                 >
                   <span>{restriction}</span>
                   <span className="text-base leading-none md:text-lg">×</span>
@@ -54,7 +54,7 @@ export function OnboardingStepRestrictions({
               value={searchValue}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search Restrictions"
-              className="min-h-12 w-full rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 pr-12 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-14 md:text-lg"
+              className="min-h-12 w-full rounded-[30px] border border-[#efe4c8] bg-[#fff6e3] px-4 pr-12 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-14 md:text-lg"
             />
             <button
               type="button"
@@ -72,7 +72,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#6b8d61] px-6 py-[11.85px] text-sm font-medium text-[#557b52] transition hover:bg-white/70 md:text-base"
+                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[30px] border-[1.61px] border-[#6b8d61] px-6 py-[11.85px] text-sm font-body font-medium text-[#557b52] transition hover:bg-white/70 md:text-base"
                 >
                   {restriction}
                 </button>
@@ -86,7 +86,7 @@ export function OnboardingStepRestrictions({
               <button
                 type="button"
                 onClick={onAddCustomRestriction}
-                className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-dashed border-[#ef7a3f] bg-[#fff1e6] px-6 py-[11.85px] text-sm font-medium text-[#c85f27] transition hover:bg-[#ffe5d1] md:text-base"
+                className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-dashed border-[#ef7a3f] bg-[#fff1e6] px-6 py-[11.85px] text-sm font-body font-medium text-[#c85f27] transition hover:bg-[#ffe5d1] md:text-base"
               >
                 Add Custom Option
               </button>
