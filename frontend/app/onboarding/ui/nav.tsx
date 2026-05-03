@@ -1,4 +1,4 @@
-import { ButtonArrowIcon } from "@/components/button-arrow-icon";
+import Image from "next/image";
 
 type OnboardingNavProps = {
   currentStep: number;
@@ -24,9 +24,13 @@ export function OnboardingNav({
         disabled={isFirstStep}
         className="inline-flex min-h-12 items-center gap-1.5 rounded-full border border-[#6b8d61] bg-transparent px-5 text-base font-medium text-[#3b6b3c] transition disabled:pointer-events-none disabled:opacity-40 md:min-h-14 md:gap-2 md:px-7 md:text-[1.05rem]"
       >
-        <ButtonArrowIcon
-          direction="left"
-          className="h-6 w-6 shrink-0 text-[#3b6b3c] md:h-7 md:w-7"
+        <Image
+          src="/assets/avatars/arrow-left.svg"
+          alt=""
+          aria-hidden="true"
+          width={28}
+          height={28}
+          className="h-6 w-6 shrink-0 md:h-7 md:w-7"
         />
         <span className="hidden sm:inline">Go Back</span>
         <span className="sm:hidden">Back</span>
@@ -39,7 +43,14 @@ export function OnboardingNav({
         }`}
       >
         <span>{isFinalStep ? "Finish" : "Next"}</span>
-        <ButtonArrowIcon className="h-6 w-6 shrink-0 text-current md:h-7 md:w-7" />
+        <Image
+          src="/assets/avatars/arrow-right.svg"
+          alt=""
+          aria-hidden="true"
+          width={28}
+          height={28}
+          className="h-6 w-6 shrink-0 md:h-7 md:w-7"
+        />
       </button>
     </div>
   );

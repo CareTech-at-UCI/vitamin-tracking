@@ -35,7 +35,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#557b52] bg-[#557b52] px-6 py-[11.85px] text-sm font-medium text-[#fdf4df] md:text-base"
+                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-lg border-[1.61px] border-[#557b52] bg-[#FDFAE7] px-6 py-[11.85px] text-sm font-medium text-[#557b52] md:text-base"
                 >
                   <span>{restriction}</span>
                   <span className="text-base leading-none md:text-lg">×</span>

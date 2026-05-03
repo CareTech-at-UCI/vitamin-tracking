@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OnboardingStepAvatar } from "@/app/onboarding/ui/avatar";
 import { OnboardingStepHeightWeight } from "@/app/onboarding/ui/height-weight";
 import { OnboardingNav } from "@/app/onboarding/ui/nav";
@@ -126,51 +126,136 @@ export default function OnboardingPage() {
     setCurrentStep((previous) => Math.max(previous - 1, 0));
   }
 
+  // Mobile snap scroll: track which section has been "completed" so we only
+  // auto-snap forward (never backwards when the user scrolls up).
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [completedSections, setCompletedSections] = useState<Set<number>>(
+    new Set(),
+  );
+
+  const isSection0Complete = form.name.trim().length > 0 && form.age !== "";
+  const isSection1Complete =
+    form.heightFeet !== "" &&
+    form.heightInches !== "" &&
+    form.weight.trim().length > 0 &&
+    form.sex !== "";
+  const isSection2Complete = form.selectedRestrictions.length > 0;
+
+  const snapToSection = useCallback((index: number) => {
+    sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  // Auto-snap forward when a section is newly completed
+  useEffect(() => {
+    const checks = [isSection0Complete, isSection1Complete, isSection2Complete];
+
+    for (let i = 0; i < checks.length; i++) {
+      if (checks[i] && !completedSections.has(i)) {
+        setCompletedSections((prev) => new Set(prev).add(i));
+        // Small delay so the user sees the last field fill before snapping
+        setTimeout(() => snapToSection(i + 1), 400);
+        break; // only snap one section at a time
+      }
+    }
+  }, [
+    isSection0Complete,
+    isSection1Complete,
+    isSection2Complete,
+    completedSections,
+    snapToSection,
+  ]);
+
+  // Update step counter based on which mobile section is in view
+  useEffect(() => {
+    const refs = sectionRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (refs.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const index = refs.indexOf(entry.target as HTMLDivElement);
+            if (index !== -1) {
+              setCurrentStep(index);
+            }
+          }
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    for (const ref of refs) {
+      observer.observe(ref);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <OnboardingShell currentStep={currentStep} stepCount={stepCount}>
       <>
-        {/* Mobile: all steps visible, scrollable */}
-        <div className="flex flex-col gap-16 md:hidden">
-          <OnboardingStepNameAge
-            name={form.name}
-            age={form.age}
-            ageOptions={AGE_OPTIONS}
-            onNameChange={(value) => updateForm("name", value)}
-            onAgeChange={(value) => updateForm("age", value)}
-          />
-          <OnboardingStepHeightWeight
-            heightFeet={form.heightFeet}
-            heightInches={form.heightInches}
-            weight={form.weight}
-            sex={form.sex}
-            activityLevel={form.activityLevel}
-            heightFeetOptions={HEIGHT_FEET_OPTIONS}
-            heightInchOptions={HEIGHT_INCH_OPTIONS}
-            sexOptions={SEX_OPTIONS}
-            onHeightFeetChange={(value) => updateForm("heightFeet", value)}
-            onHeightInchesChange={(value) => updateForm("heightInches", value)}
-            onWeightChange={(value) => updateForm("weight", value)}
-            onSexChange={(value) => updateForm("sex", value)}
-            onActivityLevelChange={(value) => updateForm("activityLevel", value)}
-          />
-          <OnboardingStepRestrictions
-            searchValue={searchValue}
-            selectedRestrictions={form.selectedRestrictions}
-            suggestedRestrictions={unselectedRestrictions}
-            canAddCustomRestriction={canAddCustomRestriction}
-            onSearchChange={setSearchValue}
-            onAddCustomRestriction={addCustomRestriction}
-            onToggleRestriction={toggleRestriction}
-            onClearSearch={() => setSearchValue("")}
-          />
-          <OnboardingStepAvatar
-            selectedAvatar={form.selectedAvatar}
-            avatars={AVATAR_OPTIONS}
-            onAvatarChange={(value) => updateForm("selectedAvatar", value)}
-          />
+        {/* Mobile: all sections visible with snap scrolling */}
+        <div className="flex flex-col md:hidden">
+          <div
+            ref={(el) => { sectionRefs.current[0] = el; }}
+            className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
+          >
+            <OnboardingStepNameAge
+              name={form.name}
+              age={form.age}
+              ageOptions={AGE_OPTIONS}
+              onNameChange={(value) => updateForm("name", value)}
+              onAgeChange={(value) => updateForm("age", value)}
+            />
+          </div>
+          <div
+            ref={(el) => { sectionRefs.current[1] = el; }}
+            className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
+          >
+            <OnboardingStepHeightWeight
+              heightFeet={form.heightFeet}
+              heightInches={form.heightInches}
+              weight={form.weight}
+              sex={form.sex}
+              activityLevel={form.activityLevel}
+              heightFeetOptions={HEIGHT_FEET_OPTIONS}
+              heightInchOptions={HEIGHT_INCH_OPTIONS}
+              sexOptions={SEX_OPTIONS}
+              onHeightFeetChange={(value) => updateForm("heightFeet", value)}
+              onHeightInchesChange={(value) => updateForm("heightInches", value)}
+              onWeightChange={(value) => updateForm("weight", value)}
+              onSexChange={(value) => updateForm("sex", value)}
+              onActivityLevelChange={(value) => updateForm("activityLevel", value)}
+            />
+          </div>
+          <div
+            ref={(el) => { sectionRefs.current[2] = el; }}
+            className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
+          >
+            <OnboardingStepRestrictions
+              searchValue={searchValue}
+              selectedRestrictions={form.selectedRestrictions}
+              suggestedRestrictions={unselectedRestrictions}
+              canAddCustomRestriction={canAddCustomRestriction}
+              onSearchChange={setSearchValue}
+              onAddCustomRestriction={addCustomRestriction}
+              onToggleRestriction={toggleRestriction}
+              onClearSearch={() => setSearchValue("")}
+            />
+          </div>
+          <div
+            ref={(el) => { sectionRefs.current[3] = el; }}
+            className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
+          >
+            <OnboardingStepAvatar
+              selectedAvatar={form.selectedAvatar}
+              avatars={AVATAR_OPTIONS}
+              onAvatarChange={(value) => updateForm("selectedAvatar", value)}
+            />
+          </div>
           <button
             type="button"
-            className="inline-flex min-h-12 items-center justify-center gap-1.5 self-stretch rounded-lg bg-[#ef7a3f] px-5 text-base font-medium text-[#fdf4df]"
+            className="mb-8 inline-flex min-h-12 snap-start items-center justify-center gap-1.5 self-stretch rounded-lg bg-[#ef7a3f] px-5 text-base font-medium text-[#fdf4df]"
           >
             Finish
           </button>
