@@ -57,45 +57,6 @@ async def get_users(
 
 
 
-def _raise_user_write_error(exc: Exception, operation: str) -> None:
-    """Map known DB constraint errors to cleaner API responses."""
-    first_arg: Any = exc.args[0] if exc.args else None
-    if isinstance(first_arg, dict):
-        if first_arg.get("code") == "23514":
-            raise HTTPException(
-                status_code=400,
-                detail="is_pregnant can only be true when sex is female",
-            ) from exc
-        message = first_arg.get("message")
-        if message:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Supabase {operation} failed: {message}",
-            ) from exc
-    raise HTTPException(status_code=500, detail=f"Supabase {operation} failed") from exc
-
-
-@router.get("/", response_model=ListUserResponse) 
-async def get_users(
-    supabase: Client = Depends(get_supabase_admin),
-):
-    """
-    Retrives all users - for admin / dev use.
-    """
-    try:
-        response = (
-            supabase.table("users")
-            .select("*")
-            .execute()
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Supabase query failed: {e}") from e
-
-    return {"count": len(response.data or []), "items": response.data or []}
-
-
-
-
 @router.get("/{user_id}", response_model=UserResponse)
 async def get_user(
     user_id: UUID,
