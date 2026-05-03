@@ -37,7 +37,7 @@ export function OnboardingStepHeightWeight({
   return (
     <section className="flex max-w-4xl flex-col">
       <div className="space-y-4 md:space-y-5">
-        <h1 className="font-onboarding-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-[2.65rem] md:leading-tight lg:text-[3rem]">
+        <h1 className="font-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-[2.65rem] md:leading-tight lg:text-[3rem]">
           Help us personalize your profile.
         </h1>
         <div className="space-y-8 md:space-y-5 lg:space-y-6">

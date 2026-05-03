@@ -17,7 +17,7 @@ export function OnboardingNav({
   const isFinalStep = currentStep === stepCount - 1;
 
   return (
-    <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-6 md:gap-5">
+    <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-6 font-body md:gap-5">
       <button
         type="button"
         onClick={onBack}

@@ -12,7 +12,7 @@ export function OnboardingProgress({
   const percent = ((currentStep + 1) / stepCount) * 100;
 
   return (
-    <header className="sticky top-0 z-10 space-y-5 bg-[#FDFAE7] pb-2 md:static md:pb-0 md:space-y-7">
+    <header className="sticky top-0 z-10 space-y-5 bg-[#FDFAE7] pb-2 font-body md:static md:pb-0 md:space-y-7">
       <CarrotMark />
       <div className="space-y-2.5 md:space-y-3">
         <p className="text-sm font-medium text-[#557b52] md:text-base">

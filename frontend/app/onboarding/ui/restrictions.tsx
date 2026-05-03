@@ -22,7 +22,7 @@ export function OnboardingStepRestrictions({
   return (
     <section className="flex max-w-4xl flex-col gap-6 md:gap-8">
       <div className="space-y-4 md:space-y-5">
-        <h1 className="font-onboarding-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
+        <h1 className="font-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
           Do you have any{" "}
           <span className="text-[#ef7a3f]">dietary restrictions</span>?
         </h1>

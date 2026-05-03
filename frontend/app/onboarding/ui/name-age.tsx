@@ -14,7 +14,7 @@ export function OnboardingStepNameAge({
   return (
     <section className="flex max-w-5xl flex-col gap-6 md:gap-8">
       <div className="space-y-4 md:space-y-5">
-        <h1 className="max-w-4xl font-onboarding-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-5xl md:leading-[0.98] lg:text-7xl">
+        <h1 className="max-w-4xl font-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-5xl md:leading-[0.98] lg:text-7xl">
           Welcome to VitaMind!
         </h1>
         <div className="space-y-4 md:space-y-5">

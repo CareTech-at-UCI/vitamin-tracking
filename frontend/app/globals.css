@@ -18,6 +18,11 @@
   --font-body: var(--font-instrument-sans);
   --font-primary: var(--font-montserrat);
   --font-secondary: var(--font-instrument);
+
+  --color-onboarding-cream-200: #fff7ea;
+  --color-onboarding-cream-400: #fdf4df;
+  --color-onboarding-cream-800: #ece1c6;
+  --color-onboarding-orange-500: #ef7a3f;
 }
 
 @media (prefers-color-scheme: dark) {
