@@ -1,7 +1,6 @@
 type OnboardingStepNameAgeProps = {
   name: string;
   age: string;
-  ageOptions: string[];
   onNameChange: (value: string) => void;
   onAgeChange: (value: string) => void;
 };
@@ -9,7 +8,6 @@ type OnboardingStepNameAgeProps = {
 export function OnboardingStepNameAge({
   name,
   age,
-  ageOptions,
   onNameChange,
   onAgeChange,
 }: OnboardingStepNameAgeProps) {
@@ -37,21 +35,20 @@ export function OnboardingStepNameAge({
                 className="min-h-12 w-full rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:text-lg"
               />
             </label>
-            <label className="relative w-[110px] shrink-0 sm:w-[140px]">
+            <label className="w-[110px] shrink-0 sm:w-[140px]">
               <span className="sr-only">Age</span>
-              <select
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
                 value={age}
-                onChange={(event) => onAgeChange(event.target.value)}
-                className="min-h-12 w-full appearance-none rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 pr-11 text-base text-[#3b6b3c] outline-none transition focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-12 md:text-lg"
-              >
-                <option value="">Age</option>
-                {ageOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute top-1/2 right-4 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-[#5f7d59] md:right-5 md:h-3 md:w-3" />
+                onChange={(event) => {
+                  const digits = event.target.value.replace(/\D/g, "").slice(0, 3);
+                  onAgeChange(digits);
+                }}
+                placeholder="Age"
+                className="min-h-12 w-full rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:text-lg"
+              />
             </label>
           </div>
         </div>

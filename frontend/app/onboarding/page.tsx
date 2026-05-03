@@ -8,8 +8,6 @@ import { OnboardingStepNameAge } from "@/app/onboarding/ui/name-age";
 import { OnboardingStepRestrictions } from "@/app/onboarding/ui/restrictions";
 import { OnboardingShell } from "@/app/onboarding/ui/shell";
 
-const AGE_OPTIONS = Array.from({ length: 83 }, (_, index) => String(index + 18));
-
 const HEIGHT_FEET_OPTIONS = ["3 ft", "4 ft", "5 ft", "6 ft", "7 ft", "8 ft"];
 
 const HEIGHT_INCH_OPTIONS = Array.from(
@@ -133,7 +131,13 @@ export default function OnboardingPage() {
     new Set(),
   );
 
-  const isSection0Complete = form.name.trim().length > 0 && form.age !== "";
+  const ageNum = Number(form.age);
+  const isSection0Complete =
+    form.name.trim().length > 0 &&
+    form.age !== "" &&
+    Number.isFinite(ageNum) &&
+    ageNum >= 1 &&
+    ageNum <= 120;
   const isSection1Complete =
     form.heightFeet !== "" &&
     form.heightInches !== "" &&
@@ -203,7 +207,6 @@ export default function OnboardingPage() {
             <OnboardingStepNameAge
               name={form.name}
               age={form.age}
-              ageOptions={AGE_OPTIONS}
               onNameChange={(value) => updateForm("name", value)}
               onAgeChange={(value) => updateForm("age", value)}
             />
@@ -267,7 +270,6 @@ export default function OnboardingPage() {
             <OnboardingStepNameAge
               name={form.name}
               age={form.age}
-              ageOptions={AGE_OPTIONS}
               onNameChange={(value) => updateForm("name", value)}
               onAgeChange={(value) => updateForm("age", value)}
             />
