@@ -11,22 +11,10 @@
   --font-sans: var(--font-instrument-sans);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-onboarding-display: var(--font-montserrat-alternates);
-  --font-onboarding-body: var(--font-instrument-sans);
   --color-onboarding-cream-200: #fff7ea;
-  --color-onboarding-cream-300: #fff6e3;
   --color-onboarding-cream-400: #fdf4df;
-  --color-onboarding-cream-500: #f7f1df;
-  --color-onboarding-cream-700: #efe4c8;
   --color-onboarding-cream-800: #ece1c6;
-  --color-onboarding-green-700: #557b52;
-  --color-onboarding-green-800: #4f6f49;
-  --color-onboarding-green-850: #3b6b3c;
-  --color-onboarding-sage-500: #718568;
-  --color-onboarding-sage-700: #6b8d61;
-  --color-onboarding-sage-800: #5f7d59;
   --color-onboarding-orange-500: #ef7a3f;
-  --color-onboarding-orange-600: #c85f27;
-  --color-onboarding-orange-100: #fff1e6;
 }
 
 @media (prefers-color-scheme: dark) {
