@@ -57,7 +57,7 @@ function formatDateHeading(dateStr) {
   });
 }
 
-export default function VitaminDashboardPage() {
+export default function VitaminBreakdownPage() {
   const router = useRouter();
   const getToday = () => {
     const today = new Date();
