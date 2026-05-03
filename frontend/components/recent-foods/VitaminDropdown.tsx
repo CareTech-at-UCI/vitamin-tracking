@@ -22,11 +22,7 @@ export default function VitaminDropdown({ id, title, isActive = false }: Vitamin
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center cursor-pointer group"
       >
-        <h3
-          className={`text-4xl font-primary font-semibold transition-colors ${
-            open ? "text-accent" : "text-secondary group-hover:text-accent"
-          }`}
-        >
+        <h3 className="text-4xl font-primary font-semibold text-[#000000]">
           {title}
         </h3>
 

@@ -8,7 +8,7 @@ export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
     <div className="flex flex-col gap-2 mb-[1vh]">
       
         <div className="flex items-center gap-1">
-            <span className="font-body font-medium text-[13.88px] md:text-[1.25rem] leading-none tracking-[-0.05em] text-[#0A3323]">
+            <span className="font-body font-medium text-[13.88px] md:text-[1.25rem] leading-none tracking-[-0.05em] text-[#000000]">
                 {vitaminName}
             </span>
         </div>

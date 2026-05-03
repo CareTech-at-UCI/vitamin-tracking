@@ -37,7 +37,7 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
             <h2
                 className="font-display text-2xl md:text-2xl lg:text-[40px] font-semibold leading-none tracking-[-0.08em] text-[#0A3323] mb-4 w-full"
             >
-                Vitamin Goals
+                Weekly Vitamin Goals
             </h2>
 
             <div className="w-full">

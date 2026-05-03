@@ -57,8 +57,8 @@ export default function VitaminRing({
       </div>
 
       {/* Label + info */}
-      <div className="flex items-center gap-1 text-secondary">
-        <span className="text-md font-secondary font-medium">{label}</span>
+      <div className="flex items-center gap-1">
+        <span className="text-md font-secondary font-medium text-[#000000]">{label}</span>
         <button
           onClick={onClick}
           className="text-xl font-secondary text-secondary hover:text-accent transition-colors cursor-pointer"

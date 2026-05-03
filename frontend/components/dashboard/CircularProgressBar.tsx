@@ -60,7 +60,7 @@ export function CircularProgressBar({ percentage, vitaminName }: CircularProgres
 
             {/* Vitamin name + info link */}
             <div className="flex items-center gap-1">
-                <span className="font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] text-[#0A3323]">
+                <span className="font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] text-[#000000]">
                     {vitaminName}
                 </span>
                 <Link href="/vitamin-info" className="flex items-center">
