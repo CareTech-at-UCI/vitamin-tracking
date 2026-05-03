@@ -1,4 +1,4 @@
-import { CarrotMark } from "@/app/onboarding/ui/art";
+import { CarrotMark } from "@/app/onboarding/_components/art";
 
 type OnboardingProgressProps = {
   currentStep: number;

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
-import VitaminRing from "@/components/recent-foods/VitaminRing";
-import Sidebar from "@/components/recent-foods/Sidebar";
-import DatePicker from "@/components/recent-foods/DatePicker";
+import VitaminRing from "@/app/recent-foods/_components/VitaminRing";
+import Sidebar from "@/app/recent-foods/_components/Sidebar";
+import DatePicker from "@/app/recent-foods/_components/DatePicker";
 
 const VITAMINS = [
   { id: "vitamin-a", label: "Vitamin A", percent: 28 },

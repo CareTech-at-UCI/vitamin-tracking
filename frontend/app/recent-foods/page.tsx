@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import Sidebar from "@/components/recent-foods/Sidebar";
-import DatePicker from "@/components/recent-foods/DatePicker";
-import DaySection from "@/components/recent-foods/DaySection";
+import Sidebar from "@/app/recent-foods/_components/Sidebar";
+import DatePicker from "@/app/recent-foods/_components/DatePicker";
+import DaySection from "@/app/recent-foods/_components/DaySection";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 
 const FOOD_IMAGE =

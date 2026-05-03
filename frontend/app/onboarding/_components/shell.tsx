@@ -1,6 +1,6 @@
 "use client";
 
-import { OnboardingProgress } from "@/app/onboarding/ui/progress";
+import { OnboardingProgress } from "@/app/onboarding/_components/progress";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 

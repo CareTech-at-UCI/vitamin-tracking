@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { VitaminGoals, VitaminVisualization } from "@/components/dashboard";
+import { VitaminGoals, VitaminVisualization } from "@/app/dashboard/_components";
 
 export default function Dashboard() {
     const [mobileTab, setMobileTab] = useState<"goals" | "visualization">("visualization");

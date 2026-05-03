@@ -1,4 +1,4 @@
-import { AvatarFace } from "@/app/onboarding/ui/art";
+import { AvatarFace } from "@/app/onboarding/_components/art";
 
 type AvatarOption = {
   id: "tomato" | "blueberry" | "watermelon" | "grape";
