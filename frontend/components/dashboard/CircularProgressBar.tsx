@@ -1,11 +1,17 @@
 import Link from "next/link";
+import { ROUTES } from "@/constants/routes";
 
 interface CircularProgressBarProps {
     percentage: number;
     vitaminName: string;
+    vitaminId: string;
 }
 
-export function CircularProgressBar({ percentage, vitaminName }: CircularProgressBarProps) {
+export function CircularProgressBar({
+    percentage,
+    vitaminName,
+    vitaminId,
+}: CircularProgressBarProps) {
     const size = 116;
     const strokeWidth = 14;
     const radius = size / 2 - strokeWidth / 2;
@@ -63,8 +69,12 @@ export function CircularProgressBar({ percentage, vitaminName }: CircularProgres
                 <span className="font-body font-medium text-[1.25rem] leading-none tracking-[-0.05em] text-[#000000]">
                     {vitaminName}
                 </span>
-                <Link href="/vitamin-info" className="flex items-center">
-                    <img src="/info-icon.svg" alt="Vitamin info" width={16} height={16} />
+                <Link
+                    href={ROUTES.vitaminDetails(vitaminId)}
+                    className="flex items-center"
+                    aria-label={`Vitamin info for ${vitaminName}`}
+                >
+                    <img src="/info-icon.svg" alt="" width={16} height={16} />
                 </Link>
             </div>
         </div>

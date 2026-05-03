@@ -3,12 +3,13 @@
 import { useRef, useState } from "react";
 import { CircularProgressBar } from "./CircularProgressBar";
 
+/** IDs match `app/vitamin-information/page.jsx` query param `vitamin=` */
 const vitamins = [
-    { name: "Vitamin A", percentage: 28 },
-    { name: "Vitamin B12", percentage: 54 },
-    { name: "Vitamin C", percentage: 65 },
-    { name: "Vitamin D", percentage: 90 },
-    { name: "Vitamin E", percentage: 42 },
+    { id: "vitamin-a", name: "Vitamin A", percentage: 28 },
+    { id: "vitamin-b12", name: "Vitamin B12", percentage: 54 },
+    { id: "vitamin-c", name: "Vitamin C", percentage: 65 },
+    { id: "vitamin-d", name: "Vitamin D", percentage: 90 },
+    { id: "vitamin-e", name: "Vitamin E", percentage: 42 },
 ];
 
 export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
@@ -40,8 +41,12 @@ export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
                 className="flex overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory no-scrollbar w-full"
             >
                 {vitamins.map((v) => (
-                    <div key={v.name} className="snap-center shrink-0 w-full flex justify-center">
-                        <CircularProgressBar percentage={v.percentage} vitaminName={v.name} />
+                    <div key={v.id} className="snap-center shrink-0 w-full flex justify-center">
+                        <CircularProgressBar
+                            percentage={v.percentage}
+                            vitaminName={v.name}
+                            vitaminId={v.id}
+                        />
                     </div>
                 ))}
             </div>

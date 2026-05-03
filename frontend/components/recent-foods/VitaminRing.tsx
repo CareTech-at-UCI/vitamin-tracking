@@ -1,5 +1,7 @@
 "use client";
 
+import infoIcon from "@/public/info-icon.svg";
+
 type VitaminRingProps = { 
   label?: string; 
   percent?: number; 
@@ -63,7 +65,7 @@ export default function VitaminRing({
           onClick={onClick}
           className="text-xl font-secondary text-secondary hover:text-accent transition-colors cursor-pointer"
         >
-          &#9432;
+          <img src={infoIcon.src} alt="Info Icon  " width={16} height={16} />
         </button>
       </div>
     </div>
