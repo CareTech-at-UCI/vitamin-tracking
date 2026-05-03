@@ -37,9 +37,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${montserratAlternates.variable} ${instrumentSans.variable} min-h-screen antialiased`}
     >
-      <body className="h-screen overflow-hidden flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">{children}</body>
     </html>
   );
 }
