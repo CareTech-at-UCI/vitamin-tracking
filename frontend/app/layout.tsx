@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat_Alternates, Instrument_Sans } from "next/font/google";
+import { Montserrat_Alternates, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat_Alternates({

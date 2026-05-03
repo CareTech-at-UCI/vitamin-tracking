@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import Sidebar from "@/components/recent-foods/Sidebar";
 import DatePicker from "@/components/recent-foods/DatePicker";
@@ -98,13 +99,13 @@ export default function RecentFoodsPage() {
             <>
               <div className="mb-5 flex items-start gap-4">
                 <div className="flex items-center gap-3">
-                  <button
-                    type="button"
+                  <Link
+                    href="/dashboard"
                     className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:text-[44px]"
                     aria-label="Go back"
                   >
                     <HiChevronLeft />
-                  </button>
+                  </Link>
 
                   <h1 className="font-primary text-4xl font-bold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
                     Recent Foods
