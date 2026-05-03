@@ -22,7 +22,7 @@ export function OnboardingNav({
         type="button"
         onClick={onBack}
         disabled={isFirstStep}
-        className="inline-flex min-h-12 items-center gap-1.5 rounded-full border border-[#6b8d61] bg-transparent px-5 text-base font-medium text-[#3b6b3c] transition disabled:pointer-events-none disabled:opacity-40 md:min-h-14 md:gap-2 md:px-7 md:text-[1.05rem]"
+        className="cursor-pointer inline-flex min-h-12 items-center gap-1.5 rounded-full border border-[#6b8d61] bg-transparent px-5 text-base font-medium text-[#3b6b3c] transition disabled:pointer-events-none disabled:opacity-40 md:min-h-14 md:gap-2 md:px-7 md:text-[1.05rem]"
       >
         <Image
           src="/assets/avatars/arrow-left.svg"
@@ -38,7 +38,7 @@ export function OnboardingNav({
       <button
         type="button"
         onClick={onNext}
-        className={`inline-flex min-h-12 items-center gap-1.5 rounded-full px-5 text-base font-medium text-[#fdf4df] md:min-h-14 md:gap-2 md:px-7 md:text-[1.05rem] ${
+        className={`cursor-pointer inline-flex min-h-12 items-center gap-1.5 rounded-full px-5 text-base font-medium text-[#fdf4df] md:min-h-14 md:gap-2 md:px-7 md:text-[1.05rem] ${
           isFinalStep ? "bg-[#ef7a3f]" : "bg-[#3b6b3c]"
         }`}
       >

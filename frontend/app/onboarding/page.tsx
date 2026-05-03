@@ -59,7 +59,7 @@ const INITIAL_FORM: OnboardingForm = {
   weight: "",
   sex: "",
   activityLevel: 3,
-  selectedRestrictions: ["Vegetarian", "No Peanuts"],
+  selectedRestrictions: [],
   selectedAvatar: "tomato",
 };
 

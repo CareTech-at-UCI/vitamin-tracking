@@ -35,7 +35,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-lg border-[1.61px] border-[#557b52] bg-[#FDFAE7] px-6 py-[11.85px] text-sm font-medium text-[#557b52] md:text-base"
+                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-lg border-[1.61px] border-[#557b52] bg-[#FDFAE7] px-6 py-[11.85px] text-sm font-medium text-[#557b52] md:text-base"
                 >
                   <span>{restriction}</span>
                   <span className="text-base leading-none md:text-lg">×</span>
@@ -59,7 +59,7 @@ export function OnboardingStepRestrictions({
             <button
               type="button"
               onClick={onClearSearch}
-              className="absolute top-1/2 right-3 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-xl leading-none text-[#557b52] md:right-4 md:h-8 md:w-8 md:text-2xl"
+              className="cursor-pointer absolute top-1/2 right-3 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-xl leading-none text-[#557b52] md:right-4 md:h-8 md:w-8 md:text-2xl"
               aria-label="Clear search"
             >
               ×
@@ -72,7 +72,7 @@ export function OnboardingStepRestrictions({
                   key={restriction}
                   type="button"
                   onClick={() => onToggleRestriction(restriction)}
-                  className="inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#6b8d61] px-6 py-[11.85px] text-sm font-medium text-[#557b52] transition hover:bg-white/70 md:text-base"
+                  className="cursor-pointer inline-flex min-h-[47.71px] items-center gap-[5.93px] rounded-[47.41px] border-[1.61px] border-[#6b8d61] px-6 py-[11.85px] text-sm font-medium text-[#557b52] transition hover:bg-white/70 md:text-base"
                 >
                   {restriction}
                 </button>

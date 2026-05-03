@@ -32,7 +32,7 @@ export function OnboardingStepAvatar({
               key={avatar.id}
               type="button"
               onClick={() => onAvatarChange(avatar.id)}
-              className={`group flex flex-col items-center justify-center gap-3 rounded-[30px] border px-3 py-3 transition-transform hover:-translate-y-1 md:px-4 md:py-4 ${
+              className={`group hover:cursor-pointer flex flex-col items-center justify-center gap-3 rounded-[30px] border px-3 py-3 transition-transform hover:-translate-y-1 md:px-4 md:py-4 ${
                 isSelected
                   ? "border-[#ef7a3f] bg-white/80 shadow-[0_14px_40px_rgba(239,122,63,0.16)]"
                   : "border-transparent bg-transparent"
