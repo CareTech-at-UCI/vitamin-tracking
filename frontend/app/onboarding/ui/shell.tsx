@@ -17,6 +17,7 @@ export function OnboardingShell({
 }: OnboardingShellProps) {
   const mainRef = useRef<HTMLElement>(null);
   const [showScrollShadow, setShowScrollShadow] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
     const el = mainRef.current;
@@ -27,6 +28,7 @@ export function OnboardingShell({
       const scrolledToBottom =
         el.scrollHeight - el.scrollTop - el.clientHeight < 50;
       setShowScrollShadow(!scrolledToBottom);
+      setShowScrollToTop(el.scrollTop > 48);
     }
 
     handleScroll();
@@ -39,6 +41,10 @@ export function OnboardingShell({
     };
   }, []);
 
+  function scrollMainToTop() {
+    mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <>
       <main ref={mainRef} className="h-screen snap-y snap-proximity overflow-y-auto bg-[#FDFAE7] text-[#3b6b3c] md:min-h-screen md:h-auto md:snap-none md:overflow-visible">
@@ -47,6 +53,30 @@ export function OnboardingShell({
           <div className="flex flex-1 flex-col pt-8 pb-0 md:pt-10 lg:pt-12">{children}</div>
         </div>
       </main>
+      {showScrollToTop ? (
+        <button
+          type="button"
+          aria-label="Scroll to top"
+          onClick={scrollMainToTop}
+          className="fixed right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-onboarding-orange-500 text-onboarding-cream-400 shadow-md transition hover:opacity-95 active:scale-[0.97] md:hidden"
+          style={{
+            top: "max(7.5rem, calc(env(safe-area-inset-top, 0px) + 5.5rem))",
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 15l-6-6-6 6" />
+          </svg>
+        </button>
+      ) : null}
       {showScrollShadow ? (
         <div
           className="pointer-events-none fixed bottom-0 left-0 right-0 h-24 md:hidden"
