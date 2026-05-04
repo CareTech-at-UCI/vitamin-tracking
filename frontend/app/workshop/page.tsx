@@ -4,7 +4,7 @@ import {
   WorkshopListPanel,
   WorkshopPageHeader,
   WorkshopTodoRows,
-} from "@/components/workshop";
+} from "@/app/workshop/_components";
 import type { TodoRow } from "@/lib/workshop/config";
 import {
   createTodo,

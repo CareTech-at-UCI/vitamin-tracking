@@ -1,0 +1,19 @@
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="150" height="150" rx="75" fill="#FFE0BA"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M66.2148 115.107C82.3747 112.536 110.354 113.431 127.256 128.903C113.759 141.962 95.3746 150 75.1113 150C56.8 150 40.0225 143.436 27 132.535C34.1237 123.237 46.3071 115.511 66.2148 115.107Z" fill="#206754"/>
+<path d="M137.847 59H13.551C8.57134 59 4.77765 63.5185 6.10212 68.3188C18.7707 114.233 58.6733 127.33 78.1654 128C115.726 125.402 136.727 91.7714 145.054 68.7005C146.811 63.8325 143.022 59 137.847 59Z" fill="#4C855F"/>
+<path d="M131.374 59H21.0321C16.0588 59 12.2651 63.5126 13.601 68.3031C25.1348 109.661 59.8291 122 78.4549 122C110.982 117.725 130.52 89.2275 138.456 68.6391C140.314 63.8181 136.541 59 131.374 59Z" fill="#FF887B"/>
+<ellipse cx="60.8571" cy="82.5" rx="9.85714" ry="11.5" fill="#FFFDEE"/>
+<ellipse cx="62.4995" cy="84.5533" rx="5.75" ry="6.16071" fill="#330505"/>
+<ellipse cx="59.2134" cy="82.0892" rx="3.28571" ry="3.69643" fill="#FFFDEE"/>
+<path d="M66 100C67.8333 102 73.1 104.8 79.5 100" stroke="#9D1E20" stroke-width="2" stroke-linecap="round"/>
+<ellipse cx="82.2141" cy="82.5" rx="9.85714" ry="11.5" fill="#FFFDEE"/>
+<ellipse cx="83.8574" cy="84.5533" rx="5.75" ry="6.16071" fill="#330505"/>
+<circle cx="80.7772" cy="81.8837" r="3.49107" fill="#FFFDEE"/>
+<ellipse cx="98" cy="90.5" rx="2" ry="2.5" transform="rotate(180 98 90.5)" fill="#330505"/>
+<ellipse cx="102" cy="95.5" rx="2" ry="2.5" transform="rotate(180 102 95.5)" fill="#330505"/>
+<ellipse cx="106" cy="90.5" rx="2" ry="2.5" transform="rotate(180 106 90.5)" fill="#330505"/>
+<ellipse cx="38" cy="89.5" rx="2" ry="2.5" transform="rotate(180 38 89.5)" fill="#330505"/>
+<ellipse cx="42" cy="94.5" rx="2" ry="2.5" transform="rotate(180 42 94.5)" fill="#330505"/>
+<ellipse cx="46" cy="89.5" rx="2" ry="2.5" transform="rotate(180 46 89.5)" fill="#330505"/>
+</svg>
