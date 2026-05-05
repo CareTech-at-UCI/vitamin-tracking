@@ -1,13 +1,13 @@
 "use client";
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
 
 export function GoogleOAuth() {
-    const supabase = createClient('https://ehafrfkdbexdycwuvaef.supabase.co', 'sb_publishable_AhpPsVh0V1rYr81LaNX0Hg_qtbhvjGV')
+    const supabase = createClient();
 
     
-    function handleSignInWithGoogle() {
-        const { data, error } = supabase.auth.signInWithOAuth({
+    async function handleSignInWithGoogle() {
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 queryParams: {
@@ -15,7 +15,11 @@ export function GoogleOAuth() {
                 prompt: 'consent',
                 },
             },
-        })
+        });
+
+        if (error) {
+            console.error("Google OAuth sign-in failed:", error.message);
+        }
     }
 
     return (
