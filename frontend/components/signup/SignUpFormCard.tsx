@@ -19,7 +19,7 @@ export function SignUpFormCard() {
             email,
             password,
             options: {
-                emailRedirectTo: `${window.location.origin}/onboarding`,
+                emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
             },
         });
 

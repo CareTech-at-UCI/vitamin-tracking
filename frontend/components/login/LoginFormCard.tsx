@@ -13,7 +13,7 @@ export function LoginFormCard() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessage("");
 

@@ -56,7 +56,7 @@ export function HomeHero() {
 
           <div className="hidden flex-col gap-3 sm:flex sm:flex-row sm:items-center">
             <Link
-              href="/login"
+              href="/signup"
               className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-[#26612F] px-5 text-[clamp(0.95rem,2vw,1.2rem)] font-medium transition hover:brightness-95"
               style={{ color: "rgba(253, 250, 231, 1)" }}
             >
