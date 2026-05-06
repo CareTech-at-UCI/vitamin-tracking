@@ -5,9 +5,10 @@ import { useState } from "react"
 interface DrawerProps {
   trigger: React.ReactNode
   children: React.ReactNode
+  onAction?: () => void
 }
 
-export default function Drawer({ trigger, children }: DrawerProps) {
+export default function Drawer({ trigger, children, onAction }: DrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -59,7 +60,15 @@ export default function Drawer({ trigger, children }: DrawerProps) {
             <div className='text-black font-[Instrument Sans] text-[16px] font-medium tracking-[-0.8px]'>
                 Servings: 20
             </div>
-            <button className="w-[125px] h-[40px] rounded-[20px] bg-[#26612F] text-white font-[Instrument Sans] text-[16px] font-bold tracking-[-0.8px]">
+            <button
+                onClick={
+                    () => {
+                        setIsOpen(false)
+                        onAction?.()
+                    }
+                }
+                className="w-[125px] h-[40px] rounded-[20px] bg-[#26612F] text-white font-[Instrument Sans] text-[16px] font-bold tracking-[-0.8px]"
+            >
                 Add Meal
             </button>
         </div>
