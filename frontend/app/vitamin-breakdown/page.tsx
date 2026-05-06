@@ -89,6 +89,8 @@ export default function VitaminBreakdownPage() {
 
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
+  const [snap, setSnap] = useState<number | string | null>(0.75);
+
   const handleInfoClick = (vitaminId: string) => {
     if (window.innerWidth < 1024) {
       setDrawerVitaminId(vitaminId);
@@ -213,10 +215,13 @@ export default function VitaminBreakdownPage() {
         <Drawer.Root
           open={!!drawerVitaminId}
           onOpenChange={(open) => !open && setDrawerVitaminId(null)}
+          snapPoints={[0.75, 1]}
+          activeSnapPoint={snap}
+          setActiveSnapPoint={setSnap}
         >
           <Drawer.Portal>
             <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
-            <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-background lg:hidden">
+            <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-background lg:hidden h-full">
               <Drawer.Title className="sr-only">
                 Vitamin Information
               </Drawer.Title>
