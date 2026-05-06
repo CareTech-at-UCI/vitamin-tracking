@@ -4,9 +4,11 @@ import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { GoogleOAuth } from "@/components/login/GoogleOAuth"; 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function LoginFormCard() {
   const supabase = createClient();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,6 +26,8 @@ export function LoginFormCard() {
       setErrorMessage(error.message);
       return;
     }
+
+    router.push("/onboarding");
   }
 
   return (
