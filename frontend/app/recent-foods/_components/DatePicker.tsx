@@ -32,7 +32,7 @@ export default function DatePicker({
         max={max}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        className="w-64 border border-secondary rounded-md p-2 bg-transparent font-secondary font-medium text-secondary"
+        className="w-full border border-secondary rounded-md p-2 bg-transparent font-secondary font-medium text-secondary"
       />
     </div>
   );

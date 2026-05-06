@@ -65,6 +65,8 @@ const RECENT_FOOD_DATA = {
   },
 };
 
+
+
 function getRecentDates(selectedDate: string, count = 2) {
   const dates: string[] = [];
   const [year, month, day] = selectedDate.split("-").map(Number);
@@ -86,6 +88,17 @@ export default function RecentFoodsPage() {
     if (isEditing) return [selectedDate];
     return getRecentDates(selectedDate, 2);
   }, [selectedDate, isEditing]);
+
+  const changeDateByDays = (amount: number) => {
+    const [year, month, day] = selectedDate.split("-").map(Number);
+    const nextDate = new Date(year, month - 1, day);
+  
+    nextDate.setDate(nextDate.getDate() + amount);
+    setSelectedDate(nextDate.toLocaleDateString("en-CA"));
+  };
+  
+  const goToPreviousDate = () => changeDateByDays(-1);
+  const goToNextDate = () => changeDateByDays(1);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
@@ -113,8 +126,10 @@ export default function RecentFoodsPage() {
                 </div>
               </div>
 
-              <div className="mb-8 flex items-start justify-between gap-6">
-                <DatePicker value={selectedDate} onChange={setSelectedDate} />
+              <div className="mb-8 flex items-center justify-between gap-3">
+                <div className="w-full md:w-auto">
+                  <DatePicker value={selectedDate} onChange={setSelectedDate} />
+                </div>
 
                 <button
                   type="button"
@@ -139,6 +154,8 @@ export default function RecentFoodsPage() {
                   meals={meals}
                   isEditing={isEditing}
                   onEdit={() => setIsEditing(true)}
+                  onPreviousDate={goToPreviousDate}
+                  onNextDate={goToNextDate}
                 />
               );
             })}

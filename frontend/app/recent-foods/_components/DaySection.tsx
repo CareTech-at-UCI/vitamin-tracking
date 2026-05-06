@@ -1,3 +1,4 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import MealRow from "./MealRow";
 
 type FoodItem = {
@@ -18,6 +19,8 @@ type Props = {
   meals: Meals;
   onEdit: () => void;
   isEditing?: boolean;
+  onPreviousDate: () => void;
+  onNextDate: () => void;
 };
 
 function formatHeading(dateStr: string) {
@@ -35,19 +38,43 @@ export default function DaySection({
   meals,
   onEdit,
   isEditing = false,
+  onPreviousDate,
+  onNextDate,
 }: Props) {
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-primary text-[34px] font-semibold leading-none text-secondary sm:text-[38px] lg:text-[40px]">
+      <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 lg:grid-cols-[1fr_auto]">
+        {!isEditing && (
+          <button
+            type="button"
+            onClick={onPreviousDate}
+            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary/40 transition hover:text-secondary lg:hidden"
+            aria-label="Previous date"
+          >
+            <HiChevronLeft />
+          </button>
+        )}
+
+        <h2 className="whitespace-nowrap text-center font-primary text-[24px] font-semibold leading-none text-secondary sm:text-[38px] lg:text-left lg:text-[40px]">
           {formatHeading(date)}
         </h2>
 
         {!isEditing && (
           <button
             type="button"
+            onClick={onNextDate}
+            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary transition hover:text-accent lg:hidden"
+            aria-label="Next date"
+          >
+            <HiChevronRight />
+          </button>
+        )}
+
+        {!isEditing && (
+          <button
+            type="button"
             onClick={onEdit}
-            className="hidden rounded-full bg-primary px-4 py-1.5 font-secondary text-sm font-medium text-white lg:block cursor-pointer"
+            className="hidden cursor-pointer rounded-full bg-primary px-4 py-1.5 font-secondary text-sm font-medium text-white lg:block"
           >
             Edit
           </button>

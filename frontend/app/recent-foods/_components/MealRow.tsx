@@ -45,9 +45,14 @@ export default function MealRow({ title, items }: Props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 lg:hidden">
+        <div
+          className="flex gap-3 overflow-x-auto pb-1 lg:hidden"
+          style={{ scrollbarWidth: "none" }}
+        >
           {items.map((item) => (
-            <FoodCard key={item.id} item={item} />
+            <div key={item.id} className="w-[calc((100%-1.5rem)/3)] shrink-0">
+              <FoodCard item={item} />
+            </div>
           ))}
         </div>
 
