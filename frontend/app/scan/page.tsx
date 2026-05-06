@@ -28,8 +28,9 @@ export default function Scan() {
                     </div>
                 </Drawer>
             )}
-
+            {/* Move the below page to a separate component, placeholder for slides rn - Adarsh */}
             {step === "overlay" && (
+                
                 <>
                     {/* background overlay */}
                     <div
