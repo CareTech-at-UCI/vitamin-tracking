@@ -27,6 +27,7 @@ export default function FoodServing({ name }: FoodServingProps) {
               onBlur={() => setIsEditing(false)}
               autoFocus
               className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates'] outline-none"
+              aria-label = "Food Serving"
             />
           ) : (
             <h1 className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates']">

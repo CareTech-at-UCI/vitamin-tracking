@@ -45,8 +45,8 @@ export default function Scan() {
                             {/* top pill */}
                             <div className="flex w-[8vh] h-[8vh] items-center justify-center rounded-full bg-[#6FAF6B]">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="23" viewBox="0 0 27 23" fill="none">
-                                    <path d="M1 14.8102L8.20216 20.8535" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M8.59082 21.3002L25.6247 0.999993" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M1 14.8102L8.20216 20.8535" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                    <path d="M8.59082 21.3002L25.6247 0.999993" stroke="white" strokeWidth="2" strokeLinecap="round" />
                                 </svg>
                             </div>
 
