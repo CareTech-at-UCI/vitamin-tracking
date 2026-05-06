@@ -6,7 +6,10 @@ import { ROUTES } from "@/constants/routes";
 import VitaminRing from "@/app/recent-foods/_components/VitaminRing";
 import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
+import VitaminDropdown from "@/app/recent-foods/_components/VitaminDropdown";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+
+import { Drawer } from "vaul";
 
 type ViewMode = "daily" | "weekly";
 
@@ -193,7 +196,7 @@ export default function VitaminBreakdownPage() {
                   {formatDateHeading(date)}
                 </h2>
 
-                <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 xl:grid-cols-8">
+                <div className="grid grid-cols-3 gap-x-12 gap-y-8 md:grid-cols-5 xl:grid-cols-8">
                   {vitamins.map((vitamin) => (
                     <VitaminRing
                       key={vitamin.id}
@@ -207,6 +210,40 @@ export default function VitaminBreakdownPage() {
             );
           })}
         </div>
+        <Drawer.Root
+          open={!!drawerVitaminId}
+          onOpenChange={(open) => !open && setDrawerVitaminId(null)}
+        >
+          <Drawer.Portal>
+            <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
+            <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-background lg:hidden">
+              <Drawer.Title className="sr-only">
+                Vitamin Information
+              </Drawer.Title>
+
+              <div className="mx-auto mb-6 mt-4 h-1 w-10 rounded-full bg-gray-300" />
+              <div className="overflow-y-auto px-6 pb-10 max-h-[90vh]">
+                <h2 className="font-primary text-2xl font-semibold text-secondary mb-4">
+                  What are vitamins and why are they important?
+                </h2>
+                <p className="font-secondary font-medium text-secondary mb-6 text-sm">
+                  Vitamins are micronutrients that we need in small amounts for
+                  various metabolic processes and bodily functions.
+                </p>
+                <div className="space-y-2">
+                  {VITAMINS.map((v) => (
+                    <VitaminDropdown
+                      key={v.id}
+                      id={v.id}
+                      title={v.label}
+                      isActive={v.id === drawerVitaminId}
+                    />
+                  ))}
+                </div>
+              </div>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
       </div>
     </div>
   );
