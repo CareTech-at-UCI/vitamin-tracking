@@ -14,6 +14,7 @@ export function GoogleOAuth() {
                     access_type: 'offline',
                     prompt: 'consent',
                 },
+                redirectTo: `${window.location.origin}/onboarding`,
             },
         });
 
