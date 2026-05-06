@@ -32,7 +32,7 @@ export default function Drawer({ trigger, children }: DrawerProps) {
           bg-[#FFFDEE] shadow-2xl rounded-t-2xl
           transition-transform duration-300
           ${isOpen ? "translate-y-0" : "translate-y-[85%]"}
-          h-[70vh]
+          h-[85vh]
         `}
       >
         {/* Drag / collapse bar */}
@@ -51,10 +51,19 @@ export default function Drawer({ trigger, children }: DrawerProps) {
         </div>
 
         {/* Content */}
-        <div className="px-4 pb-6 overflow-y-auto h-full">
-          {children}
+        <div className="px-4 pb-[90px] overflow-y-auto h-full">
+            {children}
         </div>
-      </div>
+            {/* Bottom bar */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white px-4 py-3 flex items-center justify-between border-t">
+            <div className='text-black font-[Instrument Sans] text-[16px] font-medium tracking-[-0.8px]'>
+                Servings: 20
+            </div>
+            <button className="w-[125px] h-[40px] rounded-[20px] bg-[#26612F] text-white font-[Instrument Sans] text-[16px] font-bold tracking-[-0.8px]">
+                Add Meal
+            </button>
+        </div>
+        </div>
     </>
   )
 }

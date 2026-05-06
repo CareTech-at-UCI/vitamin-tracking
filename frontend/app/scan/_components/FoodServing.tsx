@@ -73,6 +73,7 @@ export default function FoodServing({ name }: FoodServingProps) {
           value={servings}
           onChange={(e) => setServings(Number(e.target.value))}
           className="w-full accent-[#F16F33] bg-[#FDE2D3]"
+          aria-label="Servings"
         />
 
         {/* labels */}
