@@ -27,7 +27,7 @@ export default function FoodServing({ name }: FoodServingProps) {
               onBlur={() => setIsEditing(false)}
               autoFocus
               className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates'] outline-none"
-              aria-label = "Food Serving"
+              aria-label="Food Serving"
             />
           ) : (
             <h1 className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates']">
@@ -51,7 +51,7 @@ export default function FoodServing({ name }: FoodServingProps) {
 
       </div>
 
-      {/* SERVING DISPLAY (driven by slider) */}
+      {/* SERVING DISPLAY */}
       <div className="flex items-center justify-between rounded-[20px] bg-[#F16F33] h-[4rem] px-[1rem]">
         <p className="text-[#FFFDEE] text-[16px] font-medium tracking-[-0.8px] font-['Instrument_Sans']">
           {servings} servings
@@ -73,15 +73,15 @@ export default function FoodServing({ name }: FoodServingProps) {
           max={10}
           value={servings}
           onChange={(e) => setServings(Number(e.target.value))}
-          className="w-full accent-[#F16F33] bg-[#FDE2D3]"
+          className="w-full accent-[#F16F33] cursor-pointer"
           aria-label="Servings"
         />
 
-        {/* labels */}
         <div className="flex justify-between text-[16px] font-medium text-black font-['Instrument_Sans']">
           <span>0</span>
           <span>10</span>
         </div>
+
       </div>
     </div>
   )
