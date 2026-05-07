@@ -14,20 +14,20 @@ export default function LogCompletedModal({
   onClose,
   onContinueScanning,
 }: LogCompletedModalProps) {
-  const foodNamesString = foodNames.join(", ");
+  const foodNamesString = foodNames[0] ?? "Food Name";
 
   return (
     <ModalShell
       ariaLabel="Log completed"
       onClose={onClose}
-      panelClassName="max-w-[1076px] overflow-hidden rounded-2xl bg-scan-cream text-scan-green-dark"
+      panelClassName="max-w-[1076px] overflow-hidden rounded-2xl bg-[#FDFAE7] text-scan-green-dark"
       closeButtonClassName="text-scan-green-dark"
     >
       <div className="flex aspect-[1076/679]">
         <div className="w-[53%] shrink-0" />
 
-        <div className="flex flex-1 flex-col items-center px-10 py-14 text-center">
-          <div className="flex flex-1 flex-col items-center gap-8">
+        <div className="flex flex-1 flex-col items-center px-10 pb-[92px] pt-[102px] text-center">
+          <div className="flex flex-col items-center gap-[59px]">
             <div
               className="flex shrink-0 items-center justify-center rounded-full"
               style={{ width: 98, height: 98, backgroundColor: "#6FAF6B" }}
@@ -41,7 +41,7 @@ export default function LogCompletedModal({
                 strokeLinejoin="round"
                 style={{ width: 70, height: 70 }}
                 aria-hidden="true"
-              >i 
+              >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
@@ -50,23 +50,23 @@ export default function LogCompletedModal({
               Log completed
             </h2>
 
-            <p className="w-full font-body text-xl font-medium leading-snug tracking-[-0.05em] text-[#09090B]">
-              Your <span className="font-semibold">{foodNamesString}</span> has
+            <p className="max-w-[360px] font-body text-xl font-medium leading-snug tracking-[-0.05em] text-[#09090B]">
+              Your <span>[{foodNamesString}]</span> has
               been successfully added to your daily log.
             </p>
           </div>
 
-          <div className="flex w-full items-center gap-4">
+          <div className="mt-[118px] flex w-[92%] items-center gap-6">
             <Link
               href="/dashboard"
-              className="flex h-[62px] flex-1 items-center justify-center rounded-[20px] bg-scan-green font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-scan-green/35"
+              className="flex h-[62px] flex-[145] items-center justify-center rounded-[20px] bg-scan-green font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-scan-green/35"
             >
               Go to Home
             </Link>
             <button
               type="button"
               onClick={onContinueScanning}
-              className="h-[62px] flex-1 rounded-[20px] bg-scan-orange font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-scan-orange/35"
+              className="h-[62px] flex-[199] rounded-[20px] bg-scan-orange font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-scan-orange/35"
             >
               Continue Scanning
             </button>
