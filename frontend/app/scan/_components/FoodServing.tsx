@@ -26,11 +26,11 @@ export default function FoodServing({ name }: FoodServingProps) {
               onChange={(e) => setFoodName(e.target.value)}
               onBlur={() => setIsEditing(false)}
               autoFocus
-              className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates'] outline-none"
+              className="text-black font-semibold text-[2rem] leading-none tracking-[-1.92px] font-['Montserrat_Alternates'] outline-none"
               aria-label="Food Serving"
             />
           ) : (
-            <h1 className="text-black font-semibold text-[24px] leading-none tracking-[-1.92px] font-['Montserrat_Alternates']">
+            <h1 className="text-black font-semibold text-[1.5rem] pb-[5%] leading-none tracking-[-1.92px] font-['Montserrat_Alternates']">
               {foodName}
             </h1>
           )}
@@ -53,7 +53,7 @@ export default function FoodServing({ name }: FoodServingProps) {
 
       {/* SERVING DISPLAY */}
       <div className="flex items-center justify-between rounded-[20px] bg-[#F16F33] h-[4rem] px-[1rem]">
-        <p className="text-[#FFFDEE] text-[16px] font-medium tracking-[-0.8px] font-['Instrument_Sans']">
+        <p className="text-[#FFFDEE] text-[1rem] font-medium tracking-[-0.8px] font-['Instrument_Sans']">
           {servings} servings
         </p>
 
@@ -77,7 +77,7 @@ export default function FoodServing({ name }: FoodServingProps) {
           aria-label="Servings"
         />
 
-        <div className="flex justify-between text-[16px] font-medium text-black font-['Instrument_Sans']">
+        <div className="flex justify-between text-[1rem]] font-medium text-black font-['Instrument_Sans']">
           <span>0</span>
           <span>10</span>
         </div>
