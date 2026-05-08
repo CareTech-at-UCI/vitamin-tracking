@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ConfirmFoodModal from "@/app/scan/_components/ConfirmFoodModal";
-<<<<<<< HEAD
 import LogCompletedModal from "@/app/scan/_components/LogCompletedModal";
 import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
 
@@ -11,39 +10,8 @@ type ScanStep = "scan" | "confirm" | "log-completed" | "closed";
 export default function ScanFoodFlow() {
   const [step, setStep] = useState<ScanStep>("scan");
   const [loggedFoodNames, setLoggedFoodNames] = useState<string[]>([]);
-=======
-import MobileProceedDrawer from "@/app/scan/_components/MobileProceedDrawer";
-import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
-
-type ScanStep = "proceed" | "scan" | "confirm" | "closed";
-
-export default function ScanFoodFlow() {
-  const [step, setStep] = useState<ScanStep>("closed");
-
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-
-    setStep(isMobile ? "proceed" : "scan");
-  }, []);
->>>>>>> 12396bc (Add mobile scanning flow UI)
 
   if (step === "closed") return null;
-
-  if (step === "proceed") {
-    return (
-      <>
-        <ScanCameraModal
-          onClose={() => setStep("closed")}
-          onScan={() => {}}
-        />
-
-        <MobileProceedDrawer
-          onHome={() => setStep("closed")}
-          onConfirm={() => setStep("scan")}
-        />
-      </>
-    );
-  }
 
   if (step === "scan") {
     return (
@@ -75,6 +43,4 @@ export default function ScanFoodFlow() {
       />
     );
   }
-
-  return null;
 }
