@@ -18,9 +18,9 @@ export default function Navbar() {
       {/* Profile avatar / logo */}
       <Link href="/profile" className="flex-shrink-0">
         <img
-          src="/logo.svg"
+          src="/assets/avatars/tomato.svg"
           alt="Profile"
-          className="w-10 h-10"
+          className="w-10 h-10 rounded-full"
         />
       </Link>
 
