@@ -27,12 +27,15 @@ async def get_dashboard_week(
     if anchor_date is None:
         anchor_date = datetime.utcnow().date()
 
+    # Generate rolling 7 day window.
     start_date = anchor_date - timedelta(days=6)
     dates = [start_date + timedelta(days=i) for i in range(7)]
 
+    # Default empty response structure.
     empty_days = [{"date": current_date, "vitamins": []} for current_date in dates]
 
     try:
+        # Fetch meals for the selected user within the date range.
         meals_response = (
             supabase.table("meals")
             .select("*")
@@ -43,13 +46,13 @@ async def get_dashboard_week(
         )
 
         meals = meals_response.data or []
-        print("meals:", len(meals), flush=True)
 
         meal_ids = [meal["id"] for meal in meals]
 
         if not meal_ids:
             return {"dates": dates, "days": empty_days}
 
+        # Fetch meal items tied to the user's meals.
         meal_items_response = (
             supabase.table("meal_items")
             .select("*")
@@ -58,7 +61,6 @@ async def get_dashboard_week(
         )
 
         meal_items = meal_items_response.data or []
-        print("meal_items:", len(meal_items), flush=True)
 
         item_ids = [item["id"] for item in meal_items]
 
@@ -72,14 +74,15 @@ async def get_dashboard_week(
             .execute()
         )
 
+        # Fetch nutrient quantities linked to meal items.
         meal_nutrients = meal_nutrients_response.data or []
-        print("meal_nutrients:", len(meal_nutrients), flush=True)
 
         nutrient_ids = list({row["nutrient_id"] for row in meal_nutrients})
 
         if not nutrient_ids:
             return {"dates": dates, "days": empty_days}
-
+        
+        # Fetch nutrient metadata and the user's nutrient goals.
         nutrients_response = (
             supabase.table("nutrients")
             .select("*")
@@ -98,9 +101,7 @@ async def get_dashboard_week(
         nutrients = nutrients_response.data or []
         goals = goals_response.data or []
 
-        print("nutrients:", len(nutrients), flush=True)
-        print("goals:", len(goals), flush=True)
-
+        # Create lookup maps for faster aggregation.
         nutrients_by_id = {nutrient["id"]: nutrient for nutrient in nutrients}
         goals_by_nutrient_id = {
             goal["nutrient_id"]: goal["quantity"]
@@ -113,6 +114,7 @@ async def get_dashboard_week(
             for item in meal_items
         }
 
+        # Aggregate nutrient totals by day and nutrient.
         totals_by_date_and_nutrient = {}
 
         for row in meal_nutrients:
@@ -135,6 +137,7 @@ async def get_dashboard_week(
                 totals_by_date_and_nutrient.get(key, 0) + quantity
             )
 
+        # Build frontend-ready response structure.
         days = []
 
         for current_date in dates:
