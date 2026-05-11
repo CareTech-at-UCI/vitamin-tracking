@@ -1,68 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import DaySection from "@/app/recent-foods/_components/DaySection";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
+import { getRecentFoodsDay, type RecentFoodsApiMeals } from "@/lib/recent-foods/recent-foods-api";
 
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
 
-const RECENT_FOOD_DATA = {
-  "2026-02-07": {
-    breakfast: [
-      { id: 1, name: "Food Name", image: FOOD_IMAGE },
-      { id: 2, name: "Food Name", image: FOOD_IMAGE },
-      { id: 3, name: "Food Name", image: FOOD_IMAGE },
-      { id: 4, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    lunch: [
-      { id: 5, name: "Food Name", image: FOOD_IMAGE },
-      { id: 6, name: "Food Name", image: FOOD_IMAGE },
-      { id: 7, name: "Food Name", image: FOOD_IMAGE },
-      { id: 8, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    dinner: [
-      { id: 9, name: "Food Name", image: FOOD_IMAGE },
-      { id: 10, name: "Food Name", image: FOOD_IMAGE },
-      { id: 11, name: "Food Name", image: FOOD_IMAGE },
-      { id: 12, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    snacks: [
-      { id: 13, name: "Food Name", image: FOOD_IMAGE },
-      { id: 14, name: "Food Name", image: FOOD_IMAGE },
-      { id: 15, name: "Food Name", image: FOOD_IMAGE },
-      { id: 16, name: "Food Name", image: FOOD_IMAGE },
-    ],
-  },
-  "2026-02-06": {
-    breakfast: [
-      { id: 17, name: "Food Name", image: FOOD_IMAGE },
-      { id: 18, name: "Food Name", image: FOOD_IMAGE },
-      { id: 19, name: "Food Name", image: FOOD_IMAGE },
-      { id: 20, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    lunch: [
-      { id: 21, name: "Food Name", image: FOOD_IMAGE },
-      { id: 22, name: "Food Name", image: FOOD_IMAGE },
-      { id: 23, name: "Food Name", image: FOOD_IMAGE },
-      { id: 24, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    dinner: [
-      { id: 25, name: "Food Name", image: FOOD_IMAGE },
-      { id: 26, name: "Food Name", image: FOOD_IMAGE },
-      { id: 27, name: "Food Name", image: FOOD_IMAGE },
-      { id: 28, name: "Food Name", image: FOOD_IMAGE },
-    ],
-    snacks: [
-      { id: 29, name: "Food Name", image: FOOD_IMAGE },
-      { id: 30, name: "Food Name", image: FOOD_IMAGE },
-      { id: 31, name: "Food Name", image: FOOD_IMAGE },
-      { id: 32, name: "Food Name", image: FOOD_IMAGE },
-    ],
-  },
+type FoodItem = {
+  id: number;
+  name: string;
+  image: string;
+};
+
+type Meals = Record<keyof RecentFoodsApiMeals, FoodItem[]>;
+
+const EMPTY_MEALS: Meals = {
+  breakfast: [],
+  lunch: [],
+  dinner: [],
+  snacks: [],
 };
 
 function getRecentDates(selectedDate: string, count = 2) {
@@ -79,13 +40,73 @@ function getRecentDates(selectedDate: string, count = 2) {
 }
 
 export default function RecentFoodsPage() {
-  const [selectedDate, setSelectedDate] = useState("2026-02-07");
+  const [selectedDate, setSelectedDate] = useState("2026-05-08");
   const [isEditing, setIsEditing] = useState(false);
+  const [mealsByDate, setMealsByDate] = useState<Record<string, Meals>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const recentDates = useMemo(() => {
     if (isEditing) return [selectedDate];
     return getRecentDates(selectedDate, 2);
   }, [selectedDate, isEditing]);
+
+  useEffect(() => {
+    let isCurrentRequest = true;
+
+    async function loadRecentFoods() {
+      setIsLoading(true);
+      setLoadError(null);
+
+      try {
+        const days = await Promise.all(
+          recentDates.map(async (date) => {
+            const response = await getRecentFoodsDay(date);
+            return [
+              date,
+              {
+                breakfast: response.meals.breakfast.map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  image: FOOD_IMAGE,
+                })),
+                lunch: response.meals.lunch.map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  image: FOOD_IMAGE,
+                })),
+                dinner: response.meals.dinner.map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  image: FOOD_IMAGE,
+                })),
+                snacks: response.meals.snacks.map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  image: FOOD_IMAGE,
+                })),
+              } satisfies Meals,
+            ] as const;
+          }),
+        );
+
+        if (!isCurrentRequest) return;
+        setMealsByDate(Object.fromEntries(days));
+      } catch (error) {
+        if (!isCurrentRequest) return;
+        setMealsByDate({});
+        setLoadError(error instanceof Error ? error.message : "Failed to load recent foods.");
+      } finally {
+        if (isCurrentRequest) setIsLoading(false);
+      }
+    }
+
+    void loadRecentFoods();
+
+    return () => {
+      isCurrentRequest = false;
+    };
+  }, [recentDates]);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
@@ -128,9 +149,20 @@ export default function RecentFoodsPage() {
           )}
 
           <div className="space-y-10 lg:space-y-12">
+            {loadError && (
+              <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4 font-secondary text-sm text-red-900">
+                {loadError}
+              </div>
+            )}
+
+            {isLoading && (
+              <p className="font-secondary text-sm font-medium text-secondary/70">
+                Loading recent foods...
+              </p>
+            )}
+
             {recentDates.map((date) => {
-              const meals =
-                RECENT_FOOD_DATA[date] || RECENT_FOOD_DATA["2026-02-07"];
+              const meals = mealsByDate[date] ?? EMPTY_MEALS;
 
               return (
                 <DaySection
