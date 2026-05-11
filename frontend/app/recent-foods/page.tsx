@@ -102,10 +102,6 @@ export default function RecentFoodsPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
-      <div className="hidden lg:flex lg:min-h-screen lg:shrink-0 lg:bg-primary">
-        <Sidebar />
-      </div>
-
       <main className="w-full px-6 pb-24 pt-8 sm:px-8 lg:flex-1 lg:px-14 lg:pt-14">
         <div className="mx-auto max-w-295">
           {!isEditing && (
@@ -201,8 +197,6 @@ export default function RecentFoodsPage() {
                 <HiPencil />
               </button>
             </div>
-
-            <div className="fixed bottom-0 left-0 right-0 h-10 bg-primary lg:hidden" />
           </>
         )}
       </main>

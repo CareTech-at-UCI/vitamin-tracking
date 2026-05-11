@@ -48,14 +48,14 @@ export default function DaySection({
           <button
             type="button"
             onClick={onPreviousDate}
-            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary/40 transition hover:text-secondary lg:hidden"
+            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary transition hover:text-secondary lg:hidden"
             aria-label="Previous date"
           >
             <HiChevronLeft />
           </button>
         )}
 
-        <h2 className="whitespace-nowrap text-center font-primary text-[24px] font-semibold leading-none text-secondary sm:text-[38px] lg:text-left lg:text-[40px]">
+        <h2 className="whitespace-nowrap text-center font-primary text-[24px] font-semibold tracking-[-0.08em] leading-none text-secondary sm:text-[38px] lg:text-left lg:text-[40px]">
           {formatHeading(date)}
         </h2>
 
