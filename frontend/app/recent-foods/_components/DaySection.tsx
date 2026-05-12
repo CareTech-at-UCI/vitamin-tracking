@@ -55,7 +55,7 @@ export default function DaySection({
           </button>
         )}
 
-        <h2 className="whitespace-nowrap text-center font-primary text-[24px] font-semibold tracking-[-0.08em] leading-none text-secondary sm:text-[38px] lg:text-left lg:text-[40px]">
+        <h2 className="whitespace-nowrap text-center font-primary text-2xl font-semibold tracking-[-0.08em] leading-none text-secondary sm:text-5xl lg:text-left lg:text-[40px]">
           {formatHeading(date)}
         </h2>
 

@@ -89,7 +89,7 @@ export default function VitaminBreakdownPage() {
 
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
-  const [snap, setSnap] = useState<number | string | null>(0.75);
+  const [snap, setSnap] = useState<number | string | null>(0.6);
 
   const handleInfoClick = (vitaminId: string) => {
     if (window.innerWidth < 1024) {
@@ -101,29 +101,31 @@ export default function VitaminBreakdownPage() {
 
   return (
     <div className="flex min-h-screen overflow-x-hidden bg-background">
-      <div className="hidden lg:flex lg:min-h-screen lg:shrink-0 lg:bg-primary">
-        <Sidebar />
-      </div>
-
       <div className="flex-1 min-w-0">
         <div className="mb-5 flex items-start gap-4 px-6 pt-10 lg:px-12 lg:pt-14">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => router.back()}
-              className="font-primary text-4xl leading-none text-primary transition hover:text-accent lg:hidden"
+              className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:hidden"
               aria-label="Go back"
             >
               <HiChevronLeft />
             </button>
-            <h1 className="font-primary text-4xl font-semibold text-primary lg:text-5xl">
+            <h1 className="font-primary text-4xl sm:text-6xl font-semibold text-secondary">
               Vitamin Breakdown
             </h1>
           </div>
         </div>
 
         <div className="flex flex-col items-center gap-4 px-6 pb-6 lg:flex-row lg:items-center lg:justify-between lg:px-12">
-          <div className="flex w-fit overflow-hidden rounded-lg border border-primary">
+          <div className="order-2 w-full md:w-auto lg:order-1">
+            <div className="w-full lg:mx-0 lg:w-fit">
+              <DatePicker value={selectedDate} onChange={setSelectedDate} />
+            </div>
+          </div>
+
+          <div className="order-1 flex w-fit overflow-hidden rounded-lg border border-primary lg:order-2">
             {(["daily", "weekly"] as ViewMode[]).map((viewOption) => (
               <button
                 key={viewOption}
@@ -139,10 +141,6 @@ export default function VitaminBreakdownPage() {
               </button>
             ))}
           </div>
-
-          <div className="w-full md:w-auto">
-            <DatePicker value={selectedDate} onChange={setSelectedDate} />
-          </div>
         </div>
 
         <div className="flex items-center gap-2 px-6 pb-6 lg:hidden">
@@ -153,12 +151,12 @@ export default function VitaminBreakdownPage() {
                 shiftDateStr(selectedDate, view === "weekly" ? -7 : -1)
               )
             }
-            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary/40 transition hover:text-secondary"
+            className="flex h-10 w-10 items-center justify-center text-3xl text-accent transition hover:text-secondary"
             aria-label="Previous"
           >
             <HiChevronLeft />
           </button>
-          <p className="flex-1 text-center font-primary text-[24px] font-bold text-accent">
+          <p className="flex-1 text-center font-primary text-2xl sm:text-[40px] font-semibold text-accent tracking-[-0.08em]">
             {view === "weekly"
               ? (() => {
                   const days = getLast7Days(selectedDate);
@@ -181,7 +179,7 @@ export default function VitaminBreakdownPage() {
                 shiftDateStr(selectedDate, view === "weekly" ? 7 : 1)
               )
             }
-            className="flex h-10 w-10 items-center justify-center text-3xl text-secondary transition hover:text-accent"
+            className="flex h-10 w-10 items-center justify-center text-3xl text-accent transition hover:text-accent"
             aria-label="Next"
           >
             <HiChevronRight />
@@ -215,7 +213,7 @@ export default function VitaminBreakdownPage() {
         <Drawer.Root
           open={!!drawerVitaminId}
           onOpenChange={(open) => !open && setDrawerVitaminId(null)}
-          snapPoints={[0.75, 1]}
+          snapPoints={[0.6, 0.95]}
           activeSnapPoint={snap}
           setActiveSnapPoint={setSnap}
         >

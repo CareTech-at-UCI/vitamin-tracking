@@ -1,6 +1,7 @@
 "use client";
 
 import infoIcon from "@/public/info-icon.svg";
+import { JSX } from "react";
 
 type VitaminRingProps = { 
   label?: string; 

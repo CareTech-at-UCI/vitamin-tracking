@@ -10,7 +10,20 @@ import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
 
-const RECENT_FOOD_DATA = {
+type FoodItem = {
+  id: number;
+  name: string;
+  image: string;
+};
+
+type MealsByType = {
+  breakfast: FoodItem[];
+  lunch: FoodItem[];
+  dinner: FoodItem[];
+  snacks: FoodItem[];
+};
+
+const RECENT_FOOD_DATA: Record<string, MealsByType> = {
   "2026-02-07": {
     breakfast: [
       { id: 1, name: "Food Name", image: FOOD_IMAGE },
@@ -101,61 +114,58 @@ export default function RecentFoodsPage() {
   const goToNextDate = () => changeDateByDays(1);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
-      <main className="w-full px-6 pb-24 pt-8 sm:px-8 lg:flex-1 lg:px-14 lg:pt-14">
-        <div className="mx-auto max-w-295">
-          {!isEditing && (
-            <>
-              <div className="mb-5 flex items-start gap-4">
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/dashboard"
-                    className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:text-[44px]"
-                    aria-label="Go back"
-                  >
-                    <HiChevronLeft />
-                  </Link>
-
-                  <h1 className="font-primary text-4xl font-bold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
-                    Recent Foods
-                  </h1>
-                </div>
-              </div>
-
-              <div className="mb-8 flex items-center justify-between gap-3">
-                <div className="w-full md:w-auto">
-                  <DatePicker value={selectedDate} onChange={setSelectedDate} />
-                </div>
-
-                <button
-                  type="button"
-                  className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
+    <div className="flex min-h-screen overflow-x-hidden bg-background">
+      <main className="flex-1 min-w-0">
+        {!isEditing && (
+          <>
+            <div className="mb-5 flex items-start gap-4 px-6 pt-10 lg:px-12 lg:pt-14">
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="font-primary text-4xl sm:text-6xl leading-none text-secondary transition hover:text-accent"
+                  aria-label="Go back"
                 >
-                  <HiCheck />
-                  Categorize by Meal
-                </button>
+                  <HiChevronLeft />
+                </Link>
+
+                <h1 className="font-primary text-4xl font-semibold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
+                  Recent Foods
+                </h1>
               </div>
-            </>
-          )}
+            </div>
 
-          <div className="space-y-10 lg:space-y-12">
-            {recentDates.map((date) => {
-              const meals =
-                RECENT_FOOD_DATA[date] || RECENT_FOOD_DATA["2026-02-07"];
+            <div className="mb-8 flex items-center justify-between gap-3 px-6 lg:px-12">
+              <div className="w-full md:w-auto">
+                <DatePicker value={selectedDate} onChange={setSelectedDate} />
+              </div>
 
-              return (
-                <DaySection
-                  key={date}
-                  date={date}
-                  meals={meals}
-                  isEditing={isEditing}
-                  onEdit={() => setIsEditing(true)}
-                  onPreviousDate={goToPreviousDate}
-                  onNextDate={goToNextDate}
-                />
-              );
-            })}
-          </div>
+              <button
+                type="button"
+                className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
+              >
+                <HiCheck />
+                Categorize by Meal
+              </button>
+            </div>
+          </>
+        )}
+
+        <div className="space-y-10 px-6 pb-16 lg:space-y-12 lg:px-12">
+          {recentDates.map((date) => {
+            const meals = RECENT_FOOD_DATA[date] || RECENT_FOOD_DATA["2026-02-07"];
+
+            return (
+              <DaySection
+                key={date}
+                date={date}
+                meals={meals}
+                isEditing={isEditing}
+                onEdit={() => setIsEditing(true)}
+                onPreviousDate={goToPreviousDate}
+                onNextDate={goToNextDate}
+              />
+            );
+          })}
         </div>
 
         {isEditing && (

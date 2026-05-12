@@ -23,7 +23,7 @@ export default function MealRow({ title, items }: Props) {
     <section>
       <div className="mb-2 lg:w-fit">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="font-primary text-[28px] font-semibold tracking-[-0.08em] leading-none text-accent">
+          <h3 className="font-primary text-[20px] sm:text-[40px] font-semibold tracking-[-0.08em] leading-none text-accent">
             {title}
           </h3>
 
