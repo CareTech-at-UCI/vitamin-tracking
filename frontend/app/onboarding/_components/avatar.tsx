@@ -9,12 +9,14 @@ type OnboardingStepAvatarProps = {
   selectedAvatar: AvatarOption["id"] | "";
   avatars: readonly AvatarOption[];
   onAvatarChange: (avatar: AvatarOption["id"]) => void;
+  avatarError?: string;
 };
 
 export function OnboardingStepAvatar({
   selectedAvatar,
   avatars,
   onAvatarChange,
+  avatarError,
 }: OnboardingStepAvatarProps) {
   return (
     <section className="flex flex-col gap-7 md:gap-9">
@@ -22,6 +24,7 @@ export function OnboardingStepAvatar({
         <h1 className="font-display text-[2rem] leading-[1.1] font-semibold text-[#3b6b3c] md:text-4xl md:leading-tight lg:text-5xl">
           Choose your avatar
         </h1>
+        {avatarError ? <p className="mt-2 text-sm text-red-500">{avatarError}</p> : null}
       </div>
       <div className="grid grid-cols-3 gap-4 md:flex md:flex-wrap md:gap-5">
         {avatars.map((avatar) => {
