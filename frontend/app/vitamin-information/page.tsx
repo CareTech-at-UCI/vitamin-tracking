@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import VitaminDropdown from "@/app/recent-foods/_components/VitaminDropdown";
 
 export default function VitaminInfoPage() {
   const searchParams = useSearchParams();
   const activeVitamin = searchParams.get("vitamin");
+
   const vitamins = [
     { id: "vitamin-a", title: "Vitamin A" },
     { id: "vitamin-b1", title: "Vitamin B1" },
@@ -23,6 +24,17 @@ export default function VitaminInfoPage() {
     { id: "iron", title: "Iron" },
   ];
 
+  useEffect(() => {
+    if (!activeVitamin) return;
+
+    requestAnimationFrame(() => {
+      document.getElementById(activeVitamin)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, [activeVitamin]);
+
   return (
     <div className="flex min-h-screen bg-background">
       <div className="flex-1 sm:px-20 px-6 sm:pt-14 pt-10 pb-16">
@@ -36,13 +48,14 @@ export default function VitaminInfoPage() {
         </p>
 
         <div className="space-y-2">
-          {vitamins.map((v, i) => (
-            <VitaminDropdown
-              key={v.id}
-              id={v.id}
-              title={v.title}
-              isActive={v.id === activeVitamin}
-            />
+          {vitamins.map((v) => (
+            <section key={v.id} id={v.id} className="scroll-mt-24">
+              <VitaminDropdown
+                id={v.id}
+                title={v.title}
+                isActive={v.id === activeVitamin}
+              />
+            </section>
           ))}
         </div>
       </div>

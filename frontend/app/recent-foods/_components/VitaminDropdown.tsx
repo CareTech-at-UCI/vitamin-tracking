@@ -3,13 +3,17 @@
 import { useState, useEffect, JSX } from "react";
 import { HiChevronDown, HiChevronRight } from "react-icons/hi";
 
-type VitaminDropdownProps = { 
-  id: string; 
-  title: string; 
-  isActive?: boolean; 
+type VitaminDropdownProps = {
+  id: string;
+  title: string;
+  isActive?: boolean;
 };
 
-export default function VitaminDropdown({ id, title, isActive = false }: VitaminDropdownProps): JSX.Element {
+export default function VitaminDropdown({
+  id,
+  title,
+  isActive = false,
+}: VitaminDropdownProps): JSX.Element {
   const [open, setOpen] = useState(isActive);
 
   useEffect(() => {
@@ -22,11 +26,19 @@ export default function VitaminDropdown({ id, title, isActive = false }: Vitamin
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center cursor-pointer group"
       >
-        <h3 className="text-4xl font-primary font-semibold text-[#000000]">
+        <h3
+          className={`text-4xl font-primary font-semibold ${
+            isActive ? "text-accent" : "text-[#000000]"
+          }`}
+        >
           {title}
         </h3>
 
-        <span className="text-4xl text-secondary group-hover:text-accent">
+        <span
+          className={`text-4xl ${
+            isActive ? "text-accent" : "text-secondary group-hover:text-accent"
+          }`}
+        >
           {open ? <HiChevronDown /> : <HiChevronRight />}
         </span>
       </div>
@@ -63,21 +75,21 @@ export default function VitaminDropdown({ id, title, isActive = false }: Vitamin
           </div>
 
           <div className="sm:hidden block">
-              <h1 className="font-bold text-xl">Plant Sources</h1>
-              <ul className="font-medium list-disc ml-5 text-md">
-                <li>Orange/yellow vegetables</li>
-                <li>Leafy greens</li>
-              </ul>
-            </div>
+            <h1 className="font-bold text-xl">Plant Sources</h1>
+            <ul className="font-medium list-disc ml-5 text-md">
+              <li>Orange/yellow vegetables</li>
+              <li>Leafy greens</li>
+            </ul>
+          </div>
 
-            <div className="sm:hidden block">
-              <h1 className="font-bold text-xl">Animal Sources</h1>
-              <ul className="font-medium list-disc ml-5 text-md">
-                <li>Liver</li>
-                <li>Eggs</li>
-                <li>Milk products</li>
-              </ul>
-            </div>
+          <div className="sm:hidden block">
+            <h1 className="font-bold text-xl">Animal Sources</h1>
+            <ul className="font-medium list-disc ml-5 text-md">
+              <li>Liver</li>
+              <li>Eggs</li>
+              <li>Milk products</li>
+            </ul>
+          </div>
         </div>
       )}
     </div>

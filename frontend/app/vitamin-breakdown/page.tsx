@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ROUTES } from "@/constants/routes";
 import VitaminRing from "@/app/recent-foods/_components/VitaminRing";
 import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
@@ -19,8 +18,29 @@ type Vitamin = {
   percent: number;
 };
 
+type ApiVitamin = {
+  nutrient_id?: string;
+  nutrient_name: string;
+  symbol?: string;
+  unit?: string;
+  total_quantity: number;
+  goal_quantity: number;
+  ratio: number | null;
+};
+
+type ApiVitaminDay = {
+  date: string;
+  vitamins: ApiVitamin[];
+};
+
+type VitaminBreakdownResponse = {
+  dates: string[];
+  days: ApiVitaminDay[];
+};
+
 type DataByDate = Record<string, Vitamin[]>;
 
+// fallback for now: remove later
 const VITAMINS: Vitamin[] = [
   { id: "vitamin-a", label: "Vitamin A", percent: 28 },
   { id: "vitamin-b1", label: "Vitamin B1", percent: 55 },
@@ -80,23 +100,94 @@ function shiftDateStr(dateStr: string, days: number): string {
   return d.toLocaleDateString("en-CA");
 }
 
+function slugifyVitamin(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function apiVitaminToRingVitamin(vitamin: ApiVitamin): Vitamin {
+  const ratio =
+    vitamin.ratio ??
+    (vitamin.goal_quantity > 0
+      ? vitamin.total_quantity / vitamin.goal_quantity
+      : 0);
+
+  return {
+    id: slugifyVitamin(vitamin.nutrient_name),
+    label: vitamin.nutrient_name,
+    percent: Math.round(Math.min(ratio, 1) * 100),
+  };
+}
+
 export default function VitaminBreakdownPage() {
   const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState<string>(getToday());
   const [view, setView] = useState<ViewMode>("daily");
   const [drawerVitaminId, setDrawerVitaminId] = useState<string | null>(null);
+  const [vitaminData, setVitaminData] =
+    useState<VitaminBreakdownResponse | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
   const [snap, setSnap] = useState<number | string | null>(0.6);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadVitaminData() {
+      setIsLoading(true);
+      setError(null);
+
+      const endpoint =
+        view === "daily"
+          ? `/api/v1/vitamin-breakdown?date=${selectedDate}`
+          : `/api/v1/vitamin-breakdown/week?anchor_date=${selectedDate}`;
+
+      try {
+        const response = await fetch(endpoint, {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch vitamin breakdown");
+        }
+
+        const result = (await response.json()) as VitaminBreakdownResponse;
+
+        if (!cancelled) {
+          setVitaminData(result);
+        }
+      } catch {
+        if (!cancelled) {
+          setVitaminData(null);
+          setError("Could not load vitamin data. Showing sample data.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadVitaminData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedDate, view]);
+
   const handleInfoClick = (vitaminId: string) => {
     if (window.innerWidth < 1024) {
       setDrawerVitaminId(vitaminId);
-    } else {
-      router.push(ROUTES.vitaminDetails(vitaminId));
+      return;
     }
+
+    router.push(`/vitamin-information?vitamin=${vitaminId}#${vitaminId}`);
   };
 
   return (
@@ -186,9 +277,26 @@ export default function VitaminBreakdownPage() {
           </button>
         </div>
 
+        {isLoading && (
+          <p className="px-6 pb-4 font-secondary text-sm text-secondary lg:px-12">
+            Loading vitamin data...
+          </p>
+        )}
+
+        {error && (
+          <p className="px-6 pb-4 font-secondary text-sm text-red-600 lg:px-12">
+            {error}
+          </p>
+        )}
+
         <div className="space-y-16 px-6 pb-16 lg:px-12">
           {dates.map((date) => {
-            const vitamins = DATA_BY_DATE[date] ?? VITAMINS;
+            const apiDay = vitaminData?.days?.find((day) => day.date === date);
+
+            const vitamins =
+              apiDay?.vitamins?.map(apiVitaminToRingVitamin) ??
+              DATA_BY_DATE[date] ??
+              VITAMINS;
 
             return (
               <section key={date}>
@@ -210,6 +318,7 @@ export default function VitaminBreakdownPage() {
             );
           })}
         </div>
+
         <Drawer.Root
           open={!!drawerVitaminId}
           onOpenChange={(open) => !open && setDrawerVitaminId(null)}
