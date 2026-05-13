@@ -70,6 +70,7 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
                                 key={v.id}
                                 percentage={v.percentage}
                                 vitaminName={v.name}
+                                vitaminId={v.id}
                             />
                         ))
                     ) : (

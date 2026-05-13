@@ -1,12 +1,23 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import VitaminDropdown from "@/app/recent-foods/_components/VitaminDropdown";
 
 export default function VitaminInfoPage() {
   const searchParams = useSearchParams();
   const activeVitamin = searchParams.get("vitamin");
+
+  useEffect(() => {
+    if (activeVitamin) {
+      // Scroll to the active vitamin dropdown
+      setTimeout(() => {
+        const element = document.getElementById(`vitamin-${activeVitamin}`);
+        element?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 0);
+    }
+  }, [activeVitamin]);
   const vitamins = [
     { id: "vitamin-a", title: "Vitamin A" },
     { id: "vitamin-b1", title: "Vitamin B1" },
@@ -39,12 +50,13 @@ export default function VitaminInfoPage() {
 
         <div className="space-y-2">
           {vitamins.map((v, i) => (
-            <VitaminDropdown
-              key={v.id}
-              id={v.id}
-              title={v.title}
-              isActive={v.id === activeVitamin}
-            />
+            <div key={v.id} id={`vitamin-${v.id}`}>
+              <VitaminDropdown
+                id={v.id}
+                title={v.title}
+                isActive={v.id === activeVitamin}
+              />
+            </div>
           ))}
         </div>
       </div>
