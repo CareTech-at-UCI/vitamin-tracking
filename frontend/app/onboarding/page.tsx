@@ -7,6 +7,7 @@ import { OnboardingNav } from "@/app/onboarding/_components/nav";
 import { OnboardingStepNameAge } from "@/app/onboarding/_components/name-age";
 import { OnboardingStepRestrictions } from "@/app/onboarding/_components/restrictions";
 import { OnboardingShell } from "@/app/onboarding/_components/shell";
+import { createClient } from "@/utils/supabase/client";
 
 const HEIGHT_FEET_OPTIONS = ["3 ft", "4 ft", "5 ft", "6 ft", "7 ft", "8 ft"];
 
@@ -35,6 +36,14 @@ const AVATAR_OPTIONS = [
   { id: "grape", label: "Grape" },
 ] as const;
 
+// !! TEMP FUNCTION TO MATCH ENUM IN DB, PLEASE FIX WHEN DB IS FIXED !!
+const AVATAR_TO_DB: Record<AvatarId, "fox" | "monkey" | "cat"> = {
+  tomato: "fox",
+  blueberry: "monkey",
+  watermelon: "cat",
+  grape: "fox",
+};
+
 type AvatarId = (typeof AVATAR_OPTIONS)[number]["id"];
 
 type OnboardingForm = {
@@ -46,7 +55,7 @@ type OnboardingForm = {
   sex: string;
   activityLevel: number;
   selectedRestrictions: string[];
-  selectedAvatar: AvatarId | "";
+  selectedAvatar: AvatarId;
 };
 
 const INITIAL_FORM: OnboardingForm = {
@@ -112,13 +121,78 @@ export default function OnboardingPage() {
     setSearchValue("");
   }
 
-  function handleNext() {
-    if (currentStep === stepCount - 1) {
-      return;
+  async function handleSubmit() {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error("No authenticated user");
     }
 
-    setCurrentStep((previous) => previous + 1);
+    const [firstName, lastName] = form.name.split(" ");
+
+    const feet = Number(form.heightFeet.replace(" ft", ""));
+    const inches = Number(form.heightInches.replace(" in", ""));
+    const weight = Number(form.weight);
+
+    const safeFeet = Number.isFinite(feet) ? feet : 0;
+    const safeInches = Number.isFinite(inches) ? inches : 0;
+    const safeWeight = Number.isFinite(weight) ? weight : 0;
+
+    const response = await fetch(
+      `http://localhost:8000/api/v1/users/${user.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: firstName || "Unknown",
+          last_name: lastName || "User",
+          date_of_birth: "2000-01-01",
+
+          sex:
+            form.sex === "F - Female"
+              ? "female"
+              : form.sex === "M - Male"
+              ? "male"
+              : "other",
+
+          height: safeFeet * 12 + safeInches,
+          weight: safeWeight,
+          activity_level: form.activityLevel,
+
+          recommendations: form.selectedRestrictions ?? [],
+
+          profile_picture: AVATAR_TO_DB[form.selectedAvatar],
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log("FASTAPI ERROR:", errorData);
+      throw new Error(JSON.stringify(errorData, null, 2));
+    }
+
+    const updatedUser = await response.json();
+    console.log(updatedUser);
+
+    return updatedUser;
   }
+
+  async function handleNext() {
+  if (currentStep === stepCount - 1) {
+    // desktop submit logic
+    await handleSubmit();
+    return;
+  }
+
+  setCurrentStep((previous) => previous + 1);
+}
 
   function handleBack() {
     setCurrentStep((previous) => Math.max(previous - 1, 0));
@@ -259,6 +333,7 @@ export default function OnboardingPage() {
           <button
             type="button"
             className="mb-8 inline-flex min-h-12 snap-start items-center justify-center gap-1.5 self-stretch rounded-lg bg-[#ef7a3f] px-5 text-base font-medium text-[#fdf4df]"
+            onClick = {handleSubmit}
           >
             Finish
           </button>

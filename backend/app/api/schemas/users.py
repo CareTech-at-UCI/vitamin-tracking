@@ -19,6 +19,7 @@ class SexType(str, Enum):
 
 
 class ProfilePictureType(str, Enum):
+    # !! ENUMS CURRENTLY REFER TO WRONG PROFILE PICTURES, CORRECT SET = {tomato, watermelon, grape, blueberry} !!
     fox = "fox"
     monkey = "monkey"
     cat = "cat"
