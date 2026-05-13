@@ -1,17 +1,14 @@
+"use client";
+
 import { useState } from "react";
 import { ProgressBar } from "./ProgressBar";
 import { SearchBar } from "./SearchBar";
+import { useDashboardWeekVitamins } from "@/lib/dashboard-week-vitamins";
 
 export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
     const [filter, setFilter] = useState<"all" | "low">("all");
     const [search, setSearch] = useState("");
-
-    const vitamins = [
-        { name: "Vitamin A", percentage: 30 },
-        { name: "Vitamin C", percentage: 65 },
-        { name: "Vitamin D", percentage: 90 },
-        { name: "Vitamin Scroll", percentage: 10 },
-    ];
+    const { vitamins, isLoading, error } = useDashboardWeekVitamins();
 
     const filteredVitamins = vitamins.filter((v) => {
         const matchesSearch = v.name
@@ -63,13 +60,21 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
                     </button>
                 </div>
                 <div className="max-h-[27vh] overflow-y-auto pr-2">
-                    {filteredVitamins.map((v) => (
-                        <ProgressBar
-                            key={v.name}
-                            percentage={v.percentage}
-                            vitaminName={v.name}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <p className="text-sm text-[#0A3323]/70">Loading vitamin data...</p>
+                    ) : error ? (
+                        <p className="text-sm text-[#0A3323]/70">{error}</p>
+                    ) : filteredVitamins.length > 0 ? (
+                        filteredVitamins.map((v) => (
+                            <ProgressBar
+                                key={v.id}
+                                percentage={v.percentage}
+                                vitaminName={v.name}
+                            />
+                        ))
+                    ) : (
+                        <p className="text-sm text-[#0A3323]/70">No vitamins match the current filters.</p>
+                    )}
                 </div>
 
                 {onToggle && (
