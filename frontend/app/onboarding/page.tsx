@@ -8,6 +8,7 @@ import { OnboardingStepNameAge } from "@/app/onboarding/_components/name-age";
 import { OnboardingStepRestrictions } from "@/app/onboarding/_components/restrictions";
 import { OnboardingShell } from "@/app/onboarding/_components/shell";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 const HEIGHT_FEET_OPTIONS = ["3 ft", "4 ft", "5 ft", "6 ft", "7 ft", "8 ft"];
 
@@ -71,6 +72,7 @@ const INITIAL_FORM: OnboardingForm = {
 };
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [form, setForm] = useState<OnboardingForm>(INITIAL_FORM);
@@ -180,7 +182,7 @@ export default function OnboardingPage() {
 
     const updatedUser = await response.json();
     console.log(updatedUser);
-
+    router.push("/dashboard");
     return updatedUser;
   }
 
