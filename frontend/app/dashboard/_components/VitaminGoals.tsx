@@ -19,7 +19,7 @@ export function VitaminGoals({ onToggle }: { onToggle?: () => void }) {
             .includes(search.toLowerCase());
 
         const matchesFilter =
-            filter === "all" ? true : v.percentage < 50;
+            filter === "all" ? true : v.percentage < 30;
 
         return matchesSearch && matchesFilter;
     });
