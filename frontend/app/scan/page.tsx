@@ -76,8 +76,8 @@ function CameraIcon({ className }: { className?: string }) {
         d="M7.2 7.4 8.7 5.2h6.6l1.5 2.2h2.3c1.1 0 1.9.8 1.9 1.9v7.6c0 1.1-.8 1.9-1.9 1.9H4.9c-1.1 0-1.9-.8-1.9-1.9V9.3c0-1.1.8-1.9 1.9-1.9h2.3Z"
         fill="currentColor"
       />
-      <circle cx="12" cy="13" r="3.2" fill="var(--color-scan-cream)" />
-      <circle cx="18.1" cy="10.1" r="1" fill="var(--color-scan-cream)" />
+      <circle cx="12" cy="13" r="3.2" fill="var(--background)" />
+      <circle cx="18.1" cy="10.1" r="1" fill="var(--background)" />
     </svg>
   );
 }

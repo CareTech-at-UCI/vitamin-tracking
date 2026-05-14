@@ -33,7 +33,7 @@ export default function FoodItemRow({
   }
 
   return (
-    <article className="grid gap-3 font-display text-scan-green-dark">
+    <article className="grid gap-3 font-display text-secondary">
       <div className="relative mx-auto w-full max-w-[644px]">
         <div className="flex min-w-0 items-center justify-center gap-3 px-12">
           {isEditingName ? (
@@ -45,7 +45,7 @@ export default function FoodItemRow({
               onKeyDown={(event) => {
                 if (event.key === "Enter") setIsEditingName(false);
               }}
-              className="min-h-11 min-w-0 max-w-[320px] rounded-xl border border-scan-green/30 bg-white px-3 text-center text-3xl font-semibold leading-none text-scan-green-dark outline-none [background-image:none] focus:border-scan-orange focus:ring-2 focus:ring-scan-orange/20"
+              className="min-h-11 min-w-0 max-w-[320px] rounded-xl border border-primary/30 bg-white px-3 text-center text-3xl font-semibold leading-none text-secondary outline-none [background-image:none] focus:border-accent focus:ring-2 focus:ring-accent/20"
               autoFocus
             />
           ) : (
@@ -58,7 +58,7 @@ export default function FoodItemRow({
             type="button"
             onClick={() => setIsEditingName(true)}
             aria-label={`Edit ${item.name}`}
-            className="flex size-8 shrink-0 items-center justify-center text-neutral-500 transition hover:text-scan-orange"
+            className="flex size-8 shrink-0 items-center justify-center text-neutral-500 transition hover:text-accent"
           >
             <Image
               src="/assets/scan/material-symbols_edit.svg"
@@ -76,14 +76,14 @@ export default function FoodItemRow({
           onClick={onDelete}
           disabled={!canDelete}
           aria-label={`Delete ${item.name}`}
-          className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-scan-orange transition hover:bg-scan-orange/10 disabled:cursor-not-allowed disabled:opacity-35"
+          className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-accent transition hover:bg-accent/10 disabled:cursor-not-allowed disabled:opacity-35"
         >
           <DeleteIcon className="size-5" />
         </button>
       </div>
 
       <div className="mx-auto w-full max-w-[644px]">
-        <div className="flex min-h-[54px] items-center rounded-[14px] bg-scan-orange py-2 pl-4 pr-3 text-white">
+        <div className="flex min-h-[54px] items-center rounded-[14px] bg-accent py-2 pl-4 pr-3 text-white">
           <span className="min-w-0 flex-1 font-body text-base font-medium">
             {item.servings} {item.servings === 1 ? "serving" : "servings"}
           </span>
@@ -111,7 +111,7 @@ export default function FoodItemRow({
           } as React.CSSProperties}
         />
 
-        <div className="mt-2 flex items-center justify-between text-sm font-medium text-scan-green-dark">
+        <div className="mt-2 flex items-center justify-between text-sm font-medium text-secondary">
           <span>0</span>
           <span>10</span>
         </div>

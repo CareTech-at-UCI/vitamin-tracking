@@ -54,8 +54,8 @@ export default function ConfirmFoodModal({
     <ModalShell
       ariaLabel="Confirm detected food"
       onClose={onClose}
-      panelClassName="max-w-[895px] overflow-hidden rounded-2xl bg-scan-cream text-scan-green-dark"
-      closeButtonClassName="text-scan-green-dark"
+      panelClassName="max-w-[895px] overflow-hidden rounded-2xl bg-background text-secondary"
+      closeButtonClassName="text-secondary"
     >
       <div className="flex max-h-[min(760px,calc(100svh-4rem))] min-h-[568px] flex-col">
         <div className="flex-1 overflow-y-auto px-11 pb-10 pt-12 sm:px-18">
@@ -83,7 +83,7 @@ export default function ConfirmFoodModal({
               type="button"
               onClick={addFoodItem}
               aria-label="Add food item"
-              className="flex size-8 items-center justify-center rounded-full border border-scan-green text-2xl leading-none text-scan-green transition hover:bg-scan-green hover:text-white"
+              className="flex size-8 items-center justify-center rounded-full border border-primary text-2xl leading-none text-primary transition hover:bg-primary hover:text-white"
             >
               +
             </button>
