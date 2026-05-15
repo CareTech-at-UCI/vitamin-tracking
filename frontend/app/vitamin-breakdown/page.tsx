@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 import VitaminRing from "@/app/recent-foods/_components/VitaminRing";
 import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
@@ -143,10 +144,14 @@ export default function VitaminBreakdownPage() {
       setIsLoading(true);
       setError(null);
 
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const endpoint =
         view === "daily"
-          ? `/api/v1/vitamin-breakdown?date=${selectedDate}`
-          : `/api/v1/vitamin-breakdown/week?anchor_date=${selectedDate}`;
+          ? `/api/v1/vitamin-breakdown?user_id=${user.id}&date=${selectedDate}`
+          : `/api/v1/vitamin-breakdown/week?user_id=${user.id}&anchor_date=${selectedDate}`;
 
       try {
         const response = await fetch(endpoint, {
