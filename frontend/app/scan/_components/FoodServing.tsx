@@ -4,11 +4,16 @@ import { useState } from "react"
 
 interface FoodServingProps {
   name: string
+  servings: number
+  onServingsChange: (value: number) => void
 }
 
-export default function FoodServing({ name }: FoodServingProps) {
+export default function FoodServing({
+  name,
+  servings,
+  onServingsChange,
+}: FoodServingProps) {
 
-  const [servings, setServings] = useState(5)
   const [isEditing, setIsEditing] = useState(false)
   const [foodName, setFoodName] = useState(name)
 
@@ -72,7 +77,7 @@ export default function FoodServing({ name }: FoodServingProps) {
           min={0}
           max={10}
           value={servings}
-          onChange={(e) => setServings(Number(e.target.value))}
+          onChange={(e) => onServingsChange(Number(e.target.value))}
           className="w-full accent-[#F16F33] cursor-pointer"
           aria-label="Servings"
         />
