@@ -1,48 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ROUTES } from "@/constants/routes";
+import { createClient } from "@/utils/supabase/client";
 import VitaminRing from "@/app/recent-foods/_components/VitaminRing";
-import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import VitaminDropdown from "@/app/recent-foods/_components/VitaminDropdown";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-
 import { Drawer } from "vaul";
+import {
+  getDailyVitaminBreakdown,
+  getWeeklyVitaminBreakdown,
+  type VitaminBreakdownResponse,
+  type VitaminDetail,
+} from "@/lib/vitamin-breakdown/api";
 
 type ViewMode = "daily" | "weekly";
 
-type Vitamin = {
+type VitaminRingItem = {
   id: string;
   label: string;
   percent: number;
-};
-
-type DataByDate = Record<string, Vitamin[]>;
-
-const VITAMINS: Vitamin[] = [
-  { id: "vitamin-a", label: "Vitamin A", percent: 28 },
-  { id: "vitamin-b1", label: "Vitamin B1", percent: 55 },
-  { id: "vitamin-b2", label: "Vitamin B2", percent: 72 },
-  { id: "vitamin-b3", label: "Vitamin B3", percent: 40 },
-  { id: "vitamin-b6", label: "Vitamin B6", percent: 15 },
-  { id: "vitamin-b9", label: "Vitamin B9", percent: 90 },
-  { id: "vitamin-b12", label: "Vitamin B12", percent: 63 },
-  { id: "vitamin-c", label: "Vitamin C", percent: 48 },
-  { id: "vitamin-d", label: "Vitamin D", percent: 22 },
-  { id: "vitamin-e", label: "Vitamin E", percent: 37 },
-  { id: "vitamin-k", label: "Vitamin K", percent: 81 },
-  { id: "calcium", label: "Calcium", percent: 53 },
-  { id: "iron", label: "Iron", percent: 44 },
-];
-
-const DATA_BY_DATE: DataByDate = {
-  "2026-02-07": VITAMINS,
-  "2026-02-06": VITAMINS.map((vitamin) => ({
-    ...vitamin,
-    percent: Math.max(5, vitamin.percent - 10),
-  })),
 };
 
 function getToday(): string {
@@ -80,23 +58,126 @@ function shiftDateStr(dateStr: string, days: number): string {
   return d.toLocaleDateString("en-CA");
 }
 
+function slugifyVitamin(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function vitaminDetailToRing(vitamin: VitaminDetail): VitaminRingItem {
+  const ratio =
+    vitamin.ratio ??
+    (vitamin.goal_quantity > 0
+      ? vitamin.total_quantity / vitamin.goal_quantity
+      : 0);
+
+  return {
+    id: slugifyVitamin(vitamin.nutrient_name),
+    label: vitamin.nutrient_name,
+    percent: Math.round(Math.min(ratio, 1) * 100),
+  };
+}
+
 export default function VitaminBreakdownPage() {
   const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState<string>(getToday());
   const [view, setView] = useState<ViewMode>("daily");
   const [drawerVitaminId, setDrawerVitaminId] = useState<string | null>(null);
+  const [vitaminData, setVitaminData] =
+    useState<VitaminBreakdownResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const dates = view === "daily" ? [selectedDate] : getLast7Days(selectedDate);
 
+  const drawerVitamins = useMemo(() => {
+    if (!vitaminData) {
+      return [];
+    }
+
+    const seen = new Set<string>();
+    const items: VitaminRingItem[] = [];
+
+    for (const day of vitaminData.days) {
+      for (const vitamin of day.vitamins) {
+        const ring = vitaminDetailToRing(vitamin);
+        if (seen.has(ring.id)) {
+          continue;
+        }
+        seen.add(ring.id);
+        items.push(ring);
+      }
+    }
+
+    return items;
+  }, [vitaminData]);
+
   const [snap, setSnap] = useState<number | string | null>(0.6);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadVitaminData() {
+      setIsLoading(true);
+      setError(null);
+
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        if (!cancelled) {
+          setVitaminData(null);
+          setError(
+            authError?.message ?? "Sign in to view your vitamin breakdown.",
+          );
+        }
+        return;
+      }
+
+      try {
+        const result =
+          view === "daily"
+            ? await getDailyVitaminBreakdown(user.id, selectedDate)
+            : await getWeeklyVitaminBreakdown(user.id, selectedDate);
+
+        if (!cancelled) {
+          setVitaminData(result);
+        }
+      } catch (fetchError) {
+        if (!cancelled) {
+          setVitaminData(null);
+          setError(
+            fetchError instanceof Error
+              ? fetchError.message
+              : "Could not load vitamin data.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadVitaminData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedDate, view]);
 
   const handleInfoClick = (vitaminId: string) => {
     if (window.innerWidth < 1024) {
       setDrawerVitaminId(vitaminId);
-    } else {
-      router.push(ROUTES.vitaminDetails(vitaminId));
+      return;
     }
+
+    router.push(`/vitamin-information?vitamin=${vitaminId}#${vitaminId}`);
   };
 
   return (
@@ -148,7 +229,7 @@ export default function VitaminBreakdownPage() {
             type="button"
             onClick={() =>
               setSelectedDate(
-                shiftDateStr(selectedDate, view === "weekly" ? -7 : -1)
+                shiftDateStr(selectedDate, view === "weekly" ? -7 : -1),
               )
             }
             className="flex h-10 w-10 items-center justify-center text-3xl text-accent transition hover:text-secondary"
@@ -176,7 +257,7 @@ export default function VitaminBreakdownPage() {
             type="button"
             onClick={() =>
               setSelectedDate(
-                shiftDateStr(selectedDate, view === "weekly" ? 7 : 1)
+                shiftDateStr(selectedDate, view === "weekly" ? 7 : 1),
               )
             }
             className="flex h-10 w-10 items-center justify-center text-3xl text-accent transition hover:text-accent"
@@ -186,15 +267,35 @@ export default function VitaminBreakdownPage() {
           </button>
         </div>
 
+        {isLoading && (
+          <p className="px-6 pb-4 font-secondary text-sm text-secondary lg:px-12">
+            Loading vitamin data...
+          </p>
+        )}
+
+        {error && (
+          <p className="px-6 pb-4 font-secondary text-sm text-red-600 lg:px-12">
+            {error}
+          </p>
+        )}
+
         <div className="space-y-16 px-6 pb-16 lg:px-12">
           {dates.map((date) => {
-            const vitamins = DATA_BY_DATE[date] ?? VITAMINS;
+            const apiDay = vitaminData?.days?.find((day) => day.date === date);
+            const vitamins =
+              apiDay?.vitamins?.map(vitaminDetailToRing) ?? [];
 
             return (
               <section key={date}>
                 <h2 className="hidden lg:block mb-8 font-primary text-4xl font-bold text-accent">
                   {formatDateHeading(date)}
                 </h2>
+
+                {!isLoading && !error && vitamins.length === 0 ? (
+                  <p className="mb-4 font-secondary text-sm text-secondary">
+                    No vitamins logged for this day.
+                  </p>
+                ) : null}
 
                 <div className="grid grid-cols-3 gap-x-12 gap-y-8 md:grid-cols-5 xl:grid-cols-8">
                   {vitamins.map((vitamin) => (
@@ -210,6 +311,7 @@ export default function VitaminBreakdownPage() {
             );
           })}
         </div>
+
         <Drawer.Root
           open={!!drawerVitaminId}
           onOpenChange={(open) => !open && setDrawerVitaminId(null)}
@@ -234,7 +336,7 @@ export default function VitaminBreakdownPage() {
                   various metabolic processes and bodily functions.
                 </p>
                 <div className="space-y-2">
-                  {VITAMINS.map((v) => (
+                  {drawerVitamins.map((v) => (
                     <VitaminDropdown
                       key={v.id}
                       id={v.id}

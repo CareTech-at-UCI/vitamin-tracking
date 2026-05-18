@@ -2,7 +2,7 @@
 Meal endpoints.
 """
 
-from datetime import datetime
+from datetime import date, datetime, time, timedelta
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -15,9 +15,12 @@ from app.api.schemas.meals import (
     MealDeleteResponse,
     MealRow,
     MealUpdate,
+    RecentFoodsDayResponse,
 )
 
 router = APIRouter()
+
+RECENT_FOODS_MEAL_KEYS = ("breakfast", "lunch", "dinner", "snacks")
 
 
 @router.get("/", response_model=ListMealsResponse)
@@ -80,6 +83,80 @@ async def get_user_meals(
 
     items = response.data or []
     return {"count": len(items), "items": items}
+
+
+@router.get("/recent-foods", response_model=RecentFoodsDayResponse)
+async def get_recent_foods_for_day(
+    user_id: UUID = Query(...),
+    date_value: date = Query(..., alias="date"),
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """Return logged meal items for one user's local calendar day."""
+    day_start = datetime.combine(date_value, time.min)
+    next_day_start = day_start + timedelta(days=1)
+
+    try:
+        user_response = (
+            supabase.table("users")
+            .select("id")
+            .eq("id", str(user_id))
+            .limit(1)
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase user lookup failed: {exc}") from exc
+
+    if not (user_response.data or []):
+        raise HTTPException(status_code=404, detail="User not found")
+
+    try:
+        meals_response = (
+            supabase.table("meals")
+            .select("id, type, consumed_at")
+            .eq("user_id", str(user_id))
+            .gte("consumed_at", day_start.isoformat())
+            .lt("consumed_at", next_day_start.isoformat())
+            .order("consumed_at")
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase meals query failed: {exc}") from exc
+
+    meals = meals_response.data or []
+    grouped_items = {key: [] for key in RECENT_FOODS_MEAL_KEYS}
+    if not meals:
+        return {"date": date_value, "meals": grouped_items}
+
+    meal_ids = [meal["id"] for meal in meals]
+    meal_type_by_id = {
+        meal["id"]: "snacks" if meal.get("type") == "snack" else meal.get("type")
+        for meal in meals
+    }
+
+    try:
+        items_response = (
+            supabase.table("meal_items")
+            .select("id, meal_id, item_name")
+            .in_("meal_id", meal_ids)
+            .order("id")
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase meal items query failed: {exc}") from exc
+
+    for item in items_response.data or []:
+        meal_key = meal_type_by_id.get(item.get("meal_id"))
+        if meal_key not in grouped_items:
+            continue
+        grouped_items[meal_key].append(
+            {
+                "id": item["id"],
+                "meal_id": item["meal_id"],
+                "name": item["item_name"],
+            }
+        )
+
+    return {"date": date_value, "meals": grouped_items}
 
 
 @router.post("/", response_model=MealRow)

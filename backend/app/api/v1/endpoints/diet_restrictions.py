@@ -20,18 +20,18 @@ router = APIRouter()
 @router.get("/", response_model=ListDietRestrictionsResponse)
 async def get_diet_restrictions(
     limit: int = Query(default=20, ge=1, le=100),
+    is_custom: bool | None = Query(default=None),
     supabase: Client = Depends(get_supabase_admin),
 ):
     """
-    List rows from `public.diet_restrictions`
+    List rows from `public.diet_restrictions`.
+    Use `is_custom=false` to list preset options for onboarding.
     """
     try:
-        response = (
-            supabase.table("diet_restrictions")
-            .select("*")
-            .limit(limit)
-            .execute()
-        )
+        query = supabase.table("diet_restrictions").select("*")
+        if is_custom is not None:
+            query = query.eq("is_custom", is_custom)
+        response = query.limit(limit).execute()
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Supabase query failed: {exc}") from exc
 

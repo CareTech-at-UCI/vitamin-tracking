@@ -37,12 +37,13 @@ export default function VitaminInfoContent() {
 
         <div className="space-y-2">
           {VITAMINS.map((v) => (
-            <VitaminDropdown
-              key={v.id}
-              id={v.id}
-              title={v.title}
-              isActive={v.id === activeVitamin}
-            />
+            <div key={v.id} id={`vitamin-${v.id}`}>
+              <VitaminDropdown
+                id={v.id}
+                title={v.title}
+                isActive={v.id === activeVitamin}
+              />
+            </div>
           ))}
         </div>
       </div>

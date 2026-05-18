@@ -7,6 +7,7 @@ type OnboardingStepRestrictionsProps = {
   onAddCustomRestriction: () => void;
   onToggleRestriction: (value: string) => void;
   onClearSearch: () => void;
+  restrictionsError?: string;
 };
 
 export function OnboardingStepRestrictions({
@@ -18,6 +19,7 @@ export function OnboardingStepRestrictions({
   onAddCustomRestriction,
   onToggleRestriction,
   onClearSearch,
+  restrictionsError,
 }: OnboardingStepRestrictionsProps) {
   return (
     <section className="flex max-w-4xl flex-col gap-6 md:gap-8">
@@ -27,7 +29,10 @@ export function OnboardingStepRestrictions({
           <span className="text-[#ef7a3f]">dietary restrictions</span>?
         </h1>
         <div className="space-y-3">
-          <p className="text-base font-medium italic text-[#557b52] md:text-lg">Your Restrictions</p>
+          <div className="flex items-center gap-3">
+            <p className="text-base font-medium italic text-[#557b52] md:text-lg">Your Restrictions</p>
+            {restrictionsError ? <p className="text-sm text-red-500">{restrictionsError}</p> : null}
+          </div>
           <div className="flex flex-wrap gap-2.5 md:gap-3">
             {selectedRestrictions.length > 0 ? (
               selectedRestrictions.map((restriction) => (

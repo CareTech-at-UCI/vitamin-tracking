@@ -9,13 +9,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { navOverlay } = useScanChrome();
   const showNav =
-    pathname !== "/" && pathname !== "/login" && pathname !== "/signup";
+    pathname !== "/" && pathname !== "/login" && pathname !== "/signup" && pathname !== "/onboarding";
   const navBlocked = navOverlay === "blur";
 
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       {showNav && <Navbar />}
-      <main className={showNav ? "flex-1 pb-20 md:pb-0" : "flex-1"}>
+      <main
+        className={
+          showNav
+            ? "flex min-h-0 flex-1 flex-col overflow-y-auto pb-mobile-nav md:overflow-visible md:pb-0"
+            : "flex min-h-0 flex-1 flex-col overflow-y-auto"
+        }
+      >
         {children}
       </main>
       {showNav && (
@@ -30,6 +36,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <MobileNavbar />
         </div>
       )}
-    </>
+    </div>
   );
 }
