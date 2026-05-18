@@ -53,7 +53,6 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #FDFAE7;
     --foreground: #ededed;
     --primary: #26612F;
     --primary_600: #0F3D2E;
@@ -180,3 +179,5 @@ textarea {
   border-radius: 999px;
   background: var(--accent);
 }
+
+
