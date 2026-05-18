@@ -4,21 +4,28 @@ import { useState } from "react";
 import ConfirmFoodModal from "@/app/scan/_components/ConfirmFoodModal";
 import LogCompletedModal from "@/app/scan/_components/LogCompletedModal";
 import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
+import ProceedStep from "@/app/scan/_components/ProceedStep";
 
-type ScanStep = "scan" | "confirm" | "log-completed" | "closed";
+type ScanStep = "proceed" | "scan" | "confirm" | "log-completed" | "closed";
 
 export default function ScanFoodFlow() {
-  const [step, setStep] = useState<ScanStep>("scan");
+  const [step, setStep] = useState<ScanStep>("proceed");
   const [loggedFoodNames, setLoggedFoodNames] = useState<string[]>([]);
 
   if (step === "closed") return null;
 
-  if (step === "scan") {
+  if (step === "proceed" || step === "scan") {
     return (
-      <ScanCameraModal
-        onClose={() => setStep("closed")}
-        onScan={() => setStep("confirm")}
-      />
+      <>
+        <ScanCameraModal
+          paused={step === "proceed"}
+          onClose={() => setStep("closed")}
+          onScan={() => setStep("confirm")}
+        />
+        {step === "proceed" && (
+          <ProceedStep onConfirm={() => setStep("scan")} />
+        )}
+      </>
     );
   }
 
