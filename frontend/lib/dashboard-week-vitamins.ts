@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 const DEFAULT_API_BASE = "http://127.0.0.1:8000";
-const DASHBOARD_WEEK_USER_ID = "869d8252-7373-4741-b888-8ee8a17a46ec";
 
 type DashboardWeekVitamin = {
   nutrient_id: number;
@@ -109,7 +109,25 @@ export function useDashboardWeekVitamins(): DashboardWeekState {
       setError(null);
 
       try {
-        const response = await fetchDashboardWeek(DASHBOARD_WEEK_USER_ID);
+        const supabase = createClient();
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+
+        if (!isActive) {
+          return;
+        }
+
+        if (authError || !user) {
+          setVitamins([]);
+          setError(
+            authError?.message ?? "Sign in to view your vitamin dashboard.",
+          );
+          return;
+        }
+
+        const response = await fetchDashboardWeek(user.id);
 
         if (!isActive) {
           return;
