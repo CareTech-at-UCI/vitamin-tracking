@@ -7,16 +7,19 @@ type ScanCameraModalProps = {
   onClose: () => void;
   onScan: () => void;
   paused?: boolean;
+  hideMobileCaptureButton?: boolean;
 };
 
 function ScanCameraContent({
   onScan,
   paused,
   layout,
+  hideCaptureButton,
 }: {
   onScan: () => void;
   paused?: boolean;
   layout: "mobile" | "desktop";
+  hideCaptureButton?: boolean;
 }) {
   const isMobile = layout === "mobile";
 
@@ -70,22 +73,24 @@ function ScanCameraContent({
           />
         </button> */}
 
-        <button
-          type="button"
-          onClick={onScan}
-          disabled={paused}
-          aria-label="Scan food"
-          className="flex size-[80px] items-center justify-center rounded-full shadow-[0_10px_28px_rgb(38_97_47_/_0.38)] transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-primary/35 disabled:opacity-50"
-        >
-          <Image
-            src="/assets/scan/cam.svg"
-            alt=""
-            width={40}
-            height={80}
-            aria-hidden="true"
-            priority
-          />
-        </button>
+        {!hideCaptureButton && (
+          <button
+            type="button"
+            onClick={onScan}
+            disabled={paused}
+            aria-label="Scan food"
+            className="flex size-[80px] items-center justify-center rounded-full shadow-[0_10px_28px_rgb(38_97_47_/_0.38)] transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-primary/35 disabled:opacity-50"
+          >
+            <Image
+              src="/assets/scan/cam.svg"
+              alt=""
+              width={40}
+              height={80}
+              aria-hidden="true"
+              priority
+            />
+          </button>
+        )}
 
         {/* <button
           type="button"
@@ -110,12 +115,18 @@ export default function ScanCameraModal({
   onClose,
   onScan,
   paused = false,
+  hideMobileCaptureButton = false,
 }: ScanCameraModalProps) {
   return (
     <>
       {/* Mobile: full-screen camera behind proceed drawer */}
       <div className="fixed inset-0 z-40 flex min-h-svh flex-col bg-black text-white md:hidden">
-        <ScanCameraContent onScan={onScan} paused={paused} layout="mobile" />
+        <ScanCameraContent
+          onScan={onScan}
+          paused={paused}
+          layout="mobile"
+          hideCaptureButton={hideMobileCaptureButton}
+        />
       </div>
 
       {/* Desktop: centered camera modal */}
