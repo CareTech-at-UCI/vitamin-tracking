@@ -12,12 +12,14 @@ from .endpoints import (
     meals,
     meal_items,
     users,
+    dashboard,
     todos,
     diet_restrictions,
     user_diet_restrictions,
     nutrients,
     nutrient_goals,
     meal_nutrients,
+    vitamin_breakdown,
     onboarding,
 )
 

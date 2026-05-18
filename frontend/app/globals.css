@@ -102,6 +102,10 @@ body {
   box-sizing: border-box;
 }
 
+.input-plain {
+  background-image: none;
+}
+
 /* Onboarding form fields only */
 .onboarding-form input:not([type="range"]),
 .onboarding-form select,
