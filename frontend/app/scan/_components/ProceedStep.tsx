@@ -14,16 +14,19 @@ type ProceedStepProps = {
 };
 
 function ProceedContent({
+  layout,
   showHandle,
   onToggleDrawer,
   onDashboard,
   onConfirm,
 }: {
+  layout: "mobile" | "desktop";
   showHandle: boolean;
   onToggleDrawer: () => void;
   onDashboard: () => void;
   onConfirm: () => void;
 }) {
+  const isMobile = layout === "mobile";
   return (
     <>
       <div className="rounded-t-[36px] bg-[linear-gradient(90deg,#1A4D20_0%,#0F2414_100%)] px-6 pb-4 pt-6 text-white md:rounded-t-2xl">
@@ -51,7 +54,11 @@ function ProceedContent({
           <button
             type="button"
             onClick={onDashboard}
-            className="min-w-0 flex-1 rounded-full bg-[#26612F] px-3 py-3 text-center text-sm text-white sm:flex-none sm:px-5 sm:text-base"
+            className={
+              isMobile
+                ? "flex h-[50px] w-[118px] max-w-[118px] shrink-0 items-center justify-center rounded-full bg-[#26612F] px-2 text-center text-xs font-medium leading-tight text-white"
+                : "rounded-full bg-[#26612F] px-5 py-3 text-white"
+            }
           >
             Go to Dashboard
           </button>
@@ -59,7 +66,11 @@ function ProceedContent({
           <button
             type="button"
             onClick={onConfirm}
-            className="min-w-0 flex-1 rounded-full bg-[#F16F33] px-3 py-3 text-center text-sm text-white sm:flex-none sm:px-5 sm:text-base"
+            className={
+              isMobile
+                ? "flex h-[50px] w-[118px] max-w-[118px] shrink-0 items-center justify-center rounded-full bg-[#F16F33] px-2 text-center text-xs font-medium leading-tight text-white"
+                : "rounded-full bg-[#F16F33] px-5 py-3 text-white"
+            }
           >
             Confirm Scanning
           </button>
@@ -97,6 +108,7 @@ export default function ProceedStep({
           overlayClassName="z-[55]"
         >
           <ProceedContent
+            layout="mobile"
             showHandle
             onToggleDrawer={handleToggleDrawer}
             onDashboard={handleDashboard}
@@ -112,6 +124,7 @@ export default function ProceedStep({
           panelClassName="max-w-[480px] scale-100 overflow-hidden rounded-2xl bg-[#FFFDEE] opacity-100 transition-all duration-300"
         >
           <ProceedContent
+            layout="desktop"
             showHandle={false}
             onToggleDrawer={handleToggleDrawer}
             onDashboard={handleDashboard}

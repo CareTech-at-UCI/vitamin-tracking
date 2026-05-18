@@ -118,18 +118,18 @@ function LogCompletedContent({
           Your {foodLabel} has been successfully added to your daily log.
         </p>
 
-        <div className="flex w-full flex-row flex-wrap items-center justify-center gap-3 pt-2">
+        <div className="flex w-full flex-row flex-nowrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
             onClick={onGoHome}
-            className="flex h-[50px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-3 font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
+            className="flex h-[50px] w-[118px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-2 font-body text-xs font-medium leading-tight tracking-[-0.8px] text-[#FDFAE7] sm:text-[0.9rem]"
           >
             Go to Home
           </button>
           <button
             type="button"
             onClick={onContinueScanning}
-            className="flex h-[50px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-3 font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
+            className="flex h-[50px] w-[118px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-2 font-body text-xs font-medium leading-tight tracking-[-0.8px] text-[#FDFAE7] sm:text-[0.9rem]"
           >
             Continue Scanning
           </button>
@@ -165,18 +165,18 @@ function LogCompletedContent({
           </p>
         </div>
 
-        <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 pt-8">
+        <div className="flex w-full shrink-0 flex-row flex-nowrap items-center justify-center gap-4 pt-8">
           <button
             type="button"
             onClick={onGoHome}
-            className="flex h-[62px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-4 font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#26612F]/35"
+            className="flex h-[62px] w-[145px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-3 font-body text-base font-medium leading-tight tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#26612F]/35 lg:text-xl"
           >
             Go to Home
           </button>
           <button
             type="button"
             onClick={onContinueScanning}
-            className="flex h-[62px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-4 font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[#F16F33]/35"
+            className="flex h-[62px] w-[145px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-3 font-body text-base font-medium leading-tight tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[#F16F33]/35 lg:text-xl"
           >
             Continue Scanning
           </button>
