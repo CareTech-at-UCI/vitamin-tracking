@@ -105,9 +105,8 @@ function ScanFoodFlowSession() {
         />
         <LogCompleted
           foodNames={loggedFoodItems.map((item) => item.name)}
-          foodItems={loggedFoodItems}
           onClose={() => setStep("scan")}
-          onContinueScanning={() => setStep("scan")}
+          onContinueScanning={() => setStep("proceed")}
         />
       </>
     );

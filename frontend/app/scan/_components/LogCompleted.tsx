@@ -9,12 +9,11 @@ import Drawer, {
   type DrawerSnap,
   toggleDrawerCollapse,
 } from "@/app/scan/_components/Drawer";
-import FoodItemRow, { type FoodItem } from "@/app/scan/_components/FoodItemRow";
-import FoodServing from "@/app/scan/_components/FoodServing";
+
+const PLACEHOLDER_FOOD_IMAGE = "/sample.png";
 
 type LogCompletedProps = {
   foodNames: string[];
-  foodItems?: FoodItem[];
   imageSrc?: string;
   onClose: () => void;
   onContinueScanning: () => void;
@@ -69,55 +68,9 @@ function formatFoodLabel(foodNames: string[]) {
   return `${foodNames.slice(0, -1).join(", ")}, and ${foodNames.at(-1)}`;
 }
 
-function LoggedFoodSummary({
-  foodItems,
-  layout,
-}: {
-  foodItems: FoodItem[];
-  layout: "mobile" | "desktop";
-}) {
-  if (foodItems.length === 0) return null;
-
-  if (layout === "mobile") {
-    return (
-      <div className="mt-4 flex max-h-[28vh] w-full flex-col gap-8 overflow-y-auto px-2">
-        {foodItems.map((item) => (
-          <FoodServing
-            key={item.id}
-            name={item.name}
-            servings={item.servings}
-            readOnly
-            onServingsChange={() => {}}
-          />
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex w-full max-w-[520px] flex-col gap-7 overflow-y-auto">
-      {foodItems.map((item, index) => (
-        <div key={item.id}>
-          <FoodItemRow
-            item={item}
-            canDelete={false}
-            readOnly
-            onChange={() => {}}
-            onDelete={() => {}}
-          />
-          {index < foodItems.length - 1 && (
-            <div className="my-5 h-px w-full bg-black/15" />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function LogCompletedContent({
   foodNames,
-  foodItems = [],
-  imageSrc,
+  imageSrc = PLACEHOLDER_FOOD_IMAGE,
   layout,
   showHandle,
   onToggleDrawer,
@@ -125,7 +78,6 @@ function LogCompletedContent({
   onContinueScanning,
 }: {
   foodNames: string[];
-  foodItems?: FoodItem[];
   imageSrc?: string;
   layout: "mobile" | "desktop";
   showHandle: boolean;
@@ -155,21 +107,17 @@ function LogCompletedContent({
           Log Completed
         </h2>
 
-        {imageSrc ? (
-          <Image
-            src={imageSrc}
-            alt={foodLabel}
-            width={96}
-            height={96}
-            className="size-[12vh] rounded-lg object-cover"
-          />
-        ) : null}
+        <Image
+          src={imageSrc}
+          alt={foodLabel}
+          width={96}
+          height={96}
+          className="size-[12vh] rounded-lg object-cover"
+        />
 
         <p className="w-[80vw] text-center font-body text-[1rem] font-medium tracking-[-0.8px] text-[#09090B]">
           Your {foodLabel} has been successfully added to your daily log.
         </p>
-
-        <LoggedFoodSummary foodItems={foodItems} layout="mobile" />
 
         <div className="flex w-full justify-between gap-3 pt-2">
           <button
@@ -193,18 +141,14 @@ function LogCompletedContent({
 
   return (
     <div className="flex aspect-[1076/679]">
-      <div className="flex w-[53%] shrink-0 items-center justify-center overflow-y-auto p-10">
-        {imageSrc ? (
-          <Image
-            src={imageSrc}
-            alt={foodLabel}
-            width={280}
-            height={280}
-            className="max-h-full w-auto rounded-2xl object-cover"
-          />
-        ) : (
-          <LoggedFoodSummary foodItems={foodItems} layout="desktop" />
-        )}
+      <div className="flex w-[53%] shrink-0 items-center justify-center p-10">
+        <Image
+          src={imageSrc}
+          alt={foodLabel}
+          width={280}
+          height={280}
+          className="max-h-full w-auto rounded-2xl object-cover"
+        />
       </div>
 
       <div className="flex flex-1 flex-col items-center px-10 pb-[92px] pt-[102px] text-center">
@@ -218,8 +162,7 @@ function LogCompletedContent({
           </h2>
 
           <p className="max-w-[360px] font-body text-xl font-medium leading-snug tracking-[-0.05em] text-[#09090B]">
-            Your <span>[{foodLabel}]</span> has been successfully added to your
-            daily log.
+            Your {foodLabel} has been successfully added to your daily log.
           </p>
         </div>
 
@@ -245,8 +188,7 @@ function LogCompletedContent({
 
 export default function LogCompleted({
   foodNames,
-  foodItems = [],
-  imageSrc,
+  imageSrc = PLACEHOLDER_FOOD_IMAGE,
   onClose,
   onContinueScanning,
 }: LogCompletedProps) {
@@ -283,7 +225,6 @@ export default function LogCompleted({
         >
           <LogCompletedContent
             foodNames={foodNames}
-            foodItems={foodItems}
             imageSrc={imageSrc}
             layout="mobile"
             showHandle
@@ -304,7 +245,6 @@ export default function LogCompleted({
         >
           <LogCompletedContent
             foodNames={foodNames}
-            foodItems={foodItems}
             imageSrc={imageSrc}
             layout="desktop"
             showHandle={false}

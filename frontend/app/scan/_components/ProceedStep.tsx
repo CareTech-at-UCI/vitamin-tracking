@@ -47,11 +47,11 @@ function ProceedContent({
           Scanning” to resume logging.
         </p>
 
-        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+        <div className="mt-10 flex flex-row justify-center gap-4">
           <button
             type="button"
             onClick={onDashboard}
-            className="rounded-full bg-[#26612F] px-5 py-3 text-white"
+            className="rounded-full bg-[#26612F] px-3 py-3 text-white"
           >
             Go to Dashboard
           </button>
