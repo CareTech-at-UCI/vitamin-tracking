@@ -8,55 +8,55 @@ const NAV_LINKS = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Recent", href: "/recent-foods" },
   { label: "History", href: "/history" },
-];
+] as const;
 
 export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden md:flex items-center justify-between bg-secondary px-8 py-3">
-      {/* Profile avatar / logo */}
-      <Link href="/profile" className="flex-shrink-0">
+    <nav className="hidden md:grid h-20 grid-cols-3 items-center bg-navbar px-6">
+      {/* Logo */}
+      <Link href="/profile" className="justify-self-start">
         <img
           src="/assets/avatars/tomato.svg"
           alt="Profile"
-          className="w-10 h-10 rounded-full"
+          className="h-10 w-10 rounded-full"
         />
       </Link>
 
-      {/* Center nav links with logo */}
-      <div className="flex items-center gap-8">
+      {/* Center nav — truly centered via grid */}
+      <div className="flex items-center justify-center gap-6">
         {NAV_LINKS.map((link, i) => (
-          <div key={link.href} className="flex items-center gap-8">
+          <span key={link.href} className="contents">
             <Link
               href={link.href}
-              className={`font-body text-sm tracking-tight transition-colors rounded-full px-4 py-1.5 ${
+              className={`font-body text-base tracking-tight transition-colors font-semibold rounded-full px-4 py-2 ${
                 pathname === link.href
-                  ? "text-cream font-semibold shadow-[inset_0_2px_6px_rgba(0,0,0,0.5)]"
-                  : "text-cream-muted hover:text-cream"
+                  ? "bg-navbar-active text-cream"
+                  : "text-cream hover:text-white"
               }`}
             >
               {link.label}
             </Link>
-            {/* Logo between Recent and History */}
             {i === 1 && (
               <img
                 src="/logo.svg"
                 alt=""
-                className="w-8 h-8"
+                aria-hidden
+                className="h-9 w-auto"
               />
             )}
-          </div>
+          </span>
         ))}
       </div>
 
-      {/* Scan Now button — white */}
+      {/* Scan Now */}
       <Link
         href="/scan"
-        className="flex items-center gap-2 bg-cream text-secondary font-body font-medium text-sm px-5 py-2 rounded-full hover:opacity-90 transition-opacity"
+        className="justify-self-end flex items-center gap-2 rounded-full bg-cream px-5 py-2 font-body text-xl font-medium text-navbar transition-opacity hover:opacity-90"
       >
         Scan Now
-        <HiCamera className="w-4 h-4" />
+        <HiCamera className="h-6 w-6" />
       </Link>
     </nav>
   );
