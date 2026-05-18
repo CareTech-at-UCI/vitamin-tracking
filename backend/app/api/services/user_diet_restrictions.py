@@ -102,10 +102,7 @@ def sync_user_diet_restrictions(
     into `diet_restrictions` with `is_custom = true`.
     """
     unique_preset_ids = sorted(set(diet_restriction_ids))
-    if not unique_preset_ids and not custom_names:
-        raise HTTPException(
-            status_code=400, detail="Select at least one dietary restriction"
-        )
+    normalized_custom = _normalize_names(custom_names)
 
     preset_rows = _fetch_diet_restrictions_by_ids(supabase, unique_preset_ids)
     missing_ids = [rid for rid in unique_preset_ids if rid not in preset_rows]
@@ -127,7 +124,7 @@ def sync_user_diet_restrictions(
             ),
         )
 
-    custom_ids = _resolve_or_create_custom_ids(supabase, custom_names)
+    custom_ids = _resolve_or_create_custom_ids(supabase, normalized_custom)
     all_ids = sorted(set(unique_preset_ids + custom_ids))
 
     try:

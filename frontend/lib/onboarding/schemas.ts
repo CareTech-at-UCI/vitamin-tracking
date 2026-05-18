@@ -29,9 +29,7 @@ export const healthSchema = z.object({
 });
 
 export const restrictionsSchema = z.object({
-  selectedRestrictions: z
-    .array(z.string())
-    .min(1, "Please select at least one dietary restriction"),
+  selectedRestrictions: z.array(z.string()),
 });
 
 export const avatarSchema = z.object({

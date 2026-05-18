@@ -7,7 +7,7 @@ Pydantic models for onboarding API request and response validation.
 from datetime import date, datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.schemas.user_diet_restrictions import UserDietRestrictionItem
 from app.api.schemas.users import ProfilePictureType, SexType
@@ -37,12 +37,6 @@ class RestrictionsStepPayload(BaseModel):
 
     diet_restriction_ids: list[int] = Field(default_factory=list)
     custom_names: list[str] = Field(default_factory=list)
-
-    @model_validator(mode="after")
-    def require_at_least_one(self):
-        if not self.diet_restriction_ids and not self.custom_names:
-            raise ValueError("Select at least one dietary restriction")
-        return self
 
 
 class AvatarStepPayload(BaseModel):
