@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat_Alternates, Instrument_Sans } from "next/font/google";
 import "./globals.css";
+import { Navbar, MobileNavbar } from "@/components/navbar";
 
 const montserrat = Montserrat_Alternates({
   subsets: ["latin"],
@@ -41,7 +42,11 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${instrument.variable} ${montserratAlternates.variable} ${instrumentSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Navbar />
+        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <MobileNavbar />
+      </body>
     </html>
   );
 }
