@@ -55,7 +55,7 @@ function ScanCameraContent({
       </div>
 
       <div className="flex items-center justify-center gap-7">
-        <button
+        {/* <button
           type="button"
           aria-label="Upload food photo"
           disabled={paused}
@@ -68,7 +68,7 @@ function ScanCameraContent({
             height={50}
             aria-hidden="true"
           />
-        </button>
+        </button> */}
 
         <button
           type="button"
@@ -80,14 +80,14 @@ function ScanCameraContent({
           <Image
             src="/assets/scan/cam.svg"
             alt=""
-            width={80}
+            width={40}
             height={80}
             aria-hidden="true"
             priority
           />
         </button>
 
-        <button
+        {/* <button
           type="button"
           aria-label="Toggle flash"
           disabled={paused}
@@ -100,7 +100,7 @@ function ScanCameraContent({
             height={50}
             aria-hidden="true"
           />
-        </button>
+        </button> */}
       </div>
     </div>
   );

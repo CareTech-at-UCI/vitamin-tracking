@@ -1,66 +1,117 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-interface DrawerProps {
-  children: React.ReactNode
-  onAction?: () => void
-  totalServings: number
+export type DrawerSnap = "expanded" | "collapsed" | "dismissed";
+
+type DrawerProps = {
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  snap?: DrawerSnap;
+  defaultSnap?: DrawerSnap;
+  onSnapChange?: (snap: DrawerSnap) => void;
+  panelClassName?: string;
+  contentClassName?: string;
+  overlayClassName?: string;
+  showDragHandle?: boolean;
+  heightClassName?: string;
+  fillHeight?: boolean;
+};
+
+export function toggleDrawerCollapse(
+  snap: DrawerSnap,
+  onSnapChange: (snap: DrawerSnap) => void,
+) {
+  if (snap === "dismissed") {
+    onSnapChange("expanded");
+    return;
+  }
+  onSnapChange(snap === "expanded" ? "collapsed" : "expanded");
 }
 
 export default function Drawer({
   children,
-  onAction,
-  totalServings,
+  footer,
+  snap: snapProp,
+  defaultSnap = "expanded",
+  onSnapChange,
+  panelClassName = "",
+  contentClassName = "",
+  overlayClassName = "",
+  showDragHandle = true,
+  heightClassName = "h-[85vh]",
+  fillHeight = true,
 }: DrawerProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [internalSnap, setInternalSnap] = useState<DrawerSnap>(defaultSnap);
+  const isControlled = snapProp !== undefined;
+  const snap = isControlled ? snapProp : internalSnap;
+
+  function setSnap(next: DrawerSnap) {
+    if (!isControlled) {
+      setInternalSnap(next);
+    }
+    onSnapChange?.(next);
+  }
+
+  function handleToggleCollapsed() {
+    toggleDrawerCollapse(snap, setSnap);
+  }
+
+  if (snap === "dismissed") {
+    return null;
+  }
+
+  const isExpanded = snap === "expanded";
 
   return (
     <>
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/40"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      <button
+        type="button"
+        aria-label="Close drawer"
+        className={`fixed inset-0 z-[55] bg-black/30 backdrop-blur-sm ${overlayClassName}`}
+        onClick={() => setSnap("dismissed")}
+      />
 
-      {/* Bottom Drawer */}
       <div
-        className={`fixed bottom-0 left-0 right-0 bg-[#FFFDEE] shadow-2xl rounded-t-2xl transition-transform duration-300 ${
-          isOpen ? "translate-y-0" : "translate-y-[95%]"
-        } h-[85vh] flex flex-col`}
+        role="dialog"
+        aria-modal
+        className={`fixed bottom-0 left-0 right-0 z-[60] flex flex-col rounded-t-2xl bg-[#FFFDEE] shadow-2xl transition-transform duration-300 "h-[85vh]" ${
+          isExpanded ? "translate-y-0" : "translate-y-[88%]"
+        } ${panelClassName}`}
+        onClick={!isExpanded ? handleToggleCollapsed : undefined}
       >
-        {/* Drag / collapse bar */}
-        <div
-          className="w-full flex justify-center py-2 cursor-pointer shrink-0"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
-        </div>
+        {showDragHandle && (
+          <button
+            type="button"
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? "Collapse drawer" : "Expand drawer"}
+            className="flex w-full shrink-0 cursor-pointer justify-center py-2"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleToggleCollapsed();
+            }}
+          >
+            <span className="h-1.5 w-12 rounded-full bg-gray-300" />
+          </button>
+        )}
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-4 py-[4rem]">
+        <div
+          className={
+            fillHeight
+              ? `min-h-0 flex-1 overflow-y-auto ${contentClassName}`
+              : contentClassName
+          }
+          onClick={(event) => event.stopPropagation()}
+        >
           {children}
         </div>
 
-        {/* Bottom bar */}
-        <div className="bg-white px-4 py-3 flex items-center justify-between border-t shrink-0">
-          <div className="text-black font-[Instrument Sans] text-[1rem] font-medium tracking-[-0.8px]">
-            Servings: {totalServings}
+        {footer ? (
+          <div className="shrink-0" onClick={(event) => event.stopPropagation()}>
+            {footer}
           </div>
-
-          <button
-            onClick={() => {
-              setIsOpen(false)
-              onAction?.()
-            }}
-            className="w-[6rem] h-[2rem] rounded-[20px] bg-[#26612F] text-white font-[Instrument Sans] text-[1rem] font-bold tracking-[-0.8px]"
-          >
-            Add Meal
-          </button>
-        </div>
+        ) : null}
       </div>
     </>
-  )
+  );
 }

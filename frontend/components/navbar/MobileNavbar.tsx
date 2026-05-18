@@ -1,16 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoCameraOutline } from "react-icons/io5";
-import { Home2 } from 'iconsax-reactjs';
+import { Home2 } from "iconsax-reactjs";
 import { Icon } from "@iconify/react";
+import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
 
 const MOBILE_NAV_PATH =
   "M404.31 16.9284C410.393 17.5965 415 22.7367 415 28.8571V74.6032C415 82.3352 408.732 88.6032 401 88.6032H0.999989C-6.732 88.6032 -13 82.3352 -13 74.6032V28.8571C-13 22.7367 -8.39345 17.5965 -2.30957 16.9284L151.341 0.0560958C158.972 -0.781864 165 7.92628 165 15.6032C165 35.4853 181.118 51.6032 201 51.6032C220.882 51.6032 237 35.4853 237 15.6032C237 7.92624 243.027 -0.781845 250.658 0.0561144L404.31 16.9284Z";
 
 export default function MobileNavbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { startScanSession } = useScanChrome();
+
+  function handleCameraClick() {
+    startScanSession();
+    router.push("/scan");
+  }
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 overflow-visible">
@@ -65,15 +73,17 @@ export default function MobileNavbar() {
           />
         </svg>
 
-        {/* Elevated scan button */}
-        <Link
-          href="/scan"
-          className="absolute left-1/2 -translate-x-1/2 -top-2 z-10 flex items-center justify-center"
+        {/* Elevated scan button — always opens scan at proceed step */}
+        <button
+          type="button"
+          aria-label="Open scan camera"
+          onClick={handleCameraClick}
+          className="absolute left-1/2 -top-2 z-10 flex -translate-x-1/2 items-center justify-center"
         >
-          <span className="w-[52px] h-[52px] rounded-full bg-[#3d6b45] flex items-center justify-center shadow-[0_0_22px_rgba(168,148,210,0.45)]">
-            <IoCameraOutline className="w-[24px] h-[24px] text-cream" />
+          <span className="flex size-[52px] items-center justify-center rounded-full bg-[#3d6b45] shadow-[0_0_22px_rgba(168,148,210,0.45)]">
+            <IoCameraOutline className="size-6 text-cream" />
           </span>
-        </Link>
+        </button>
 
         {/* Nav items */}
         <div className="absolute bottom-0 left-0 right-0 h-10/12 flex items-center justify-between px-5 pb-1">

@@ -1,19 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalShell from "@/components/ModalShell";
+import Drawer, {
+  type DrawerSnap,
+  toggleDrawerCollapse,
+} from "@/app/scan/_components/Drawer";
 
 type ProceedStepProps = {
+  snap: DrawerSnap;
+  onSnapChange: (snap: DrawerSnap) => void;
   onConfirm: () => void;
 };
 
 function ProceedContent({
   showHandle,
+  onToggleDrawer,
   onDashboard,
   onConfirm,
 }: {
   showHandle: boolean;
+  onToggleDrawer: () => void;
   onDashboard: () => void;
   onConfirm: () => void;
 }) {
@@ -21,7 +28,12 @@ function ProceedContent({
     <>
       <div className="rounded-t-[36px] bg-[linear-gradient(90deg,#1A4D20_0%,#0F2414_100%)] px-6 pb-4 pt-6 text-white md:rounded-t-2xl">
         {showHandle && (
-          <div className="mx-auto mb-8 h-2 w-24 rounded-full bg-white/80" />
+          <button
+            type="button"
+            aria-label="Collapse drawer"
+            onClick={onToggleDrawer}
+            className="mx-auto mb-8 block h-2 w-24 rounded-full bg-white/80"
+          />
         )}
 
         <h2 className="text-center text-[20px] font-semibold md:pt-2">
@@ -57,35 +69,51 @@ function ProceedContent({
   );
 }
 
-export default function ProceedStep({ onConfirm }: ProceedStepProps) {
+export default function ProceedStep({
+  snap,
+  onSnapChange,
+  onConfirm,
+}: ProceedStepProps) {
   const router = useRouter();
 
   function handleDashboard() {
     router.push("/dashboard");
   }
 
+  function handleToggleDrawer() {
+    toggleDrawerCollapse(snap, onSnapChange);
+  }
+
   return (
     <>
-      {/* Mobile: bottom drawer */}
-      <div
-        className={"fixed bottom-0 left-0 right-0 z-100 rounded-t-[40px] bg-[#FFFDEE] transition-transform duration-300 md:hidden translate-y-0"}
-      >
-        <ProceedContent
-          showHandle
-          onDashboard={handleDashboard}
-          onConfirm={onConfirm}
-        />
+      <div className="md:hidden">
+        <Drawer
+          snap={snap}
+          onSnapChange={onSnapChange}
+          showDragHandle={false}
+          fillHeight={false}
+          heightClassName="h-auto"
+          panelClassName="rounded-t-[40px]"
+          overlayClassName="z-[55]"
+        >
+          <ProceedContent
+            showHandle
+            onToggleDrawer={handleToggleDrawer}
+            onDashboard={handleDashboard}
+            onConfirm={onConfirm}
+          />
+        </Drawer>
       </div>
 
-      {/* Tablet / desktop: centered modal */}
       <div className="hidden md:block">
         <ModalShell
           ariaLabel="Confirm scanning"
-          className={"z-100 transition-opacity duration-300 opacity-100"}
-          panelClassName={"max-w-[480px] overflow-hidden rounded-2xl bg-[#FFFDEE] transition-all duration-300 scale-100 opacity-100"}
+          className="z-100 opacity-100 transition-opacity duration-300"
+          panelClassName="max-w-[480px] scale-100 overflow-hidden rounded-2xl bg-[#FFFDEE] opacity-100 transition-all duration-300"
         >
           <ProceedContent
             showHandle={false}
+            onToggleDrawer={handleToggleDrawer}
             onDashboard={handleDashboard}
             onConfirm={onConfirm}
           />

@@ -87,8 +87,22 @@ export default function Scan() {
 
             {step === "drawer" && (
                 <Drawer
-                    totalServings={totalServings}
-                    onAction={() => setStep("overlay")}
+                    footer={
+                        <div className="flex shrink-0 items-center justify-between border-t bg-white px-4 py-3">
+                            <div className="font-body text-[1rem] font-medium tracking-[-0.8px] text-black">
+                                Servings: {totalServings}
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setStep("overlay")}
+                                className="h-[2rem] w-[6rem] rounded-[20px] bg-[#26612F] font-body text-[1rem] font-bold tracking-[-0.8px] text-white"
+                            >
+                                Add Meal
+                            </button>
+                        </div>
+                    }
+                    contentClassName="px-4 py-[4rem]"
                 >
                     <div className="relative flex flex-col gap-[5rem]">
                         <FoodServing
