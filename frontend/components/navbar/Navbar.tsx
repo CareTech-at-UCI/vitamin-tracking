@@ -6,8 +6,8 @@ import { HiCamera } from "react-icons/hi";
 
 const NAV_LINKS = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Recent", href: "/recent-foods" },
-  { label: "History", href: "/history" },
+  { label: "Scan", href: "/scan" },
+  { label: "Recent Foods", href: "/recent-foods" },
 ] as const;
 
 export default function Navbar() {
