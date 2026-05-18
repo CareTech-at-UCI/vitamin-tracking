@@ -3,6 +3,31 @@
 :root {
   --background: #FFFDEE;
   --foreground: #171717;
+
+  /* mobile bottom nav (h-24) + device safe area for main padding & fixed UI */
+  --mobile-nav-safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* raised scan button + wavy nav for extra clearance above the bar */
+  --mobile-nav-clearance: 7.5rem;
+  --mobile-nav-offset: calc(var(--mobile-nav-clearance) + var(--mobile-nav-safe-bottom));
+  /* recent foods fab stack (2× h-16 buttons + gap) above the nav */
+  --mobile-fab-stack: 10.5rem;
+  --mobile-content-bottom: calc(var(--mobile-nav-offset) + var(--mobile-fab-stack));
+}
+
+/* mobile safe-area helpers (avoid arbitrary Tailwind + CSS var issues) */
+.pb-mobile-nav {
+  padding-bottom: var(--mobile-nav-offset);
+}
+
+.pb-mobile-content {
+  padding-bottom: var(--mobile-content-bottom);
+}
+
+.mobile-fab-anchor {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(var(--mobile-nav-offset) + 0.75rem);
+  z-index: 40;
 }
 
 @theme inline {
@@ -13,6 +38,11 @@
   --color-primary-600: var(--primary_600);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
+  --color-cream: var(--cream);
+  --color-cream-muted: var(--cream_muted);
+  --color-secondary-light: var(--secondary_light);
+  --color-navbar: var(--navbar);
+  --color-navbar-active: var(--navbar_active);
 
   --font-display: var(--font-montserrat-alternates);
   --font-body: var(--font-instrument-sans);
@@ -26,6 +56,8 @@
   --color-onboarding-cream-400: #fdf4df;
   --color-onboarding-cream-800: #ece1c6;
   --color-onboarding-orange-500: #ef7a3f;
+
+  --color-scan-backdrop: rgb(0 0 0 / 0.42);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,18 +68,27 @@
     --secondary: #0A3323;
     --background: #FFFDEE;
     --accent: #F16F33;
+    --cream: #FDFAE7;
+    --cream_muted: #FDFAE7CC;
+    --secondary_light: #1a4a35;
+    --navbar: #06261B;
+    --navbar_active: #0D3325;
   }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #FDFAE7;
     --foreground: #ededed;
     --primary: #26612F;
     --primary_600: #0F3D2E;
     --secondary: #0A3323;
     --background: #FFFDEE;
     --accent: #F16F33;
+    --cream: #FDFAE7;
+    --cream_muted: #FDFAE7CC;
+    --secondary_light: #1a4a35;
+    --navbar: #06261B;
+    --navbar_active: #0D3325;
   }
 }
 
@@ -61,9 +102,10 @@ body {
   box-sizing: border-box;
 }
 
-input:not([type="range"]),
-select,
-textarea {
+/* Onboarding form fields only */
+.onboarding-form input:not([type="range"]),
+.onboarding-form select,
+.onboarding-form textarea {
   background-image: linear-gradient(
     90deg,
     #F0E7CF 0%,
@@ -119,3 +161,49 @@ textarea {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.scan-serving-range {
+  height: 0.5rem;
+  cursor: pointer;
+  appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent) var(--scan-serving-progress, 20%),
+    #f7ddcf var(--scan-serving-progress, 20%),
+    #f7ddcf 100%
+  );
+}
+
+.scan-serving-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.125rem;
+  width: 1.125rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.scan-serving-range::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent) var(--scan-serving-progress, 20%),
+    #f7ddcf var(--scan-serving-progress, 20%),
+    #f7ddcf 100%
+  );
+}
+
+.scan-serving-range::-moz-range-thumb {
+  height: 1.125rem;
+  width: 1.125rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+

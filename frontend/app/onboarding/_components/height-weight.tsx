@@ -14,6 +14,10 @@ type OnboardingStepHeightWeightProps = {
   onWeightChange: (value: string) => void;
   onSexChange: (value: string) => void;
   onActivityLevelChange: (value: number) => void;
+  heightFeetError?: string;
+  heightInchesError?: string;
+  weightError?: string;
+  sexError?: string;
 };
 
 export function OnboardingStepHeightWeight({
@@ -30,6 +34,10 @@ export function OnboardingStepHeightWeight({
   onWeightChange,
   onSexChange,
   onActivityLevelChange,
+  heightFeetError,
+  heightInchesError,
+  weightError,
+  sexError,
 }: OnboardingStepHeightWeightProps) {
   const activityLevels = [1, 2, 3, 4, 5];
   const sliderProgress = ((activityLevel - 1) / (activityLevels.length - 1)) * 100;
@@ -53,17 +61,20 @@ export function OnboardingStepHeightWeight({
                 value={heightFeet}
                 options={heightFeetOptions}
                 onChange={onHeightFeetChange}
+                error={heightFeetError}
               />
               <SelectField
                 label="Inches"
                 value={heightInches}
                 options={heightInchOptions}
                 onChange={onHeightInchesChange}
+                error={heightInchesError}
               />
               <NumberField
                 label="Weight"
                 value={weight}
                 onChange={onWeightChange}
+                error={weightError}
               />
             </div>
           </div>
@@ -77,6 +88,7 @@ export function OnboardingStepHeightWeight({
                 value={sex}
                 options={sexOptions}
                 onChange={onSexChange}
+                error={sexError}
               />
             </div>
           </div>
@@ -139,24 +151,29 @@ function NumberField({
   label,
   value,
   onChange,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  error?: string;
 }) {
   return (
-    <label className="relative min-w-[140px] flex-1 sm:flex-initial">
-      <span className="sr-only">{label}</span>
-      <input
-        type="number"
-        min={0}
-        inputMode="numeric"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={`${label} (lbs)`}
-        className="min-h-12 w-full rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:text-lg"
-      />
-    </label>
+    <div className="min-w-[140px] flex-1 sm:flex-initial">
+      <label className="relative block">
+        <span className="sr-only">{label}</span>
+        <input
+          type="number"
+          min={0}
+          inputMode="numeric"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={`${label} (lbs)`}
+          className={`min-h-12 w-full rounded-[20px] border bg-[#fff6e3] px-4 text-base text-[#3b6b3c] outline-none transition placeholder:text-[#61805c] focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:text-lg ${error ? "border-red-400" : "border-[#efe4c8]"}`}
+        />
+      </label>
+      {error ? <p className="mt-1 px-4 text-sm text-red-500">{error}</p> : null}
+    </div>
   );
 }
 
@@ -165,28 +182,33 @@ function SelectField({
   value,
   options,
   onChange,
+  error,
 }: {
   label: string;
   value: string;
   options: string[];
   onChange: (value: string) => void;
+  error?: string;
 }) {
   return (
-    <label className="relative min-w-[140px] flex-1 sm:flex-initial">
-      <span className="sr-only">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="min-h-12 w-full appearance-none rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 pr-11 text-base text-[#3b6b3c] outline-none transition focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-12 md:text-lg"
-      >
-        <option value="">{label}</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      <span className="pointer-events-none absolute top-1/2 right-4 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-[#5f7d59] md:right-5 md:h-3 md:w-3" />
-    </label>
+    <div className="min-w-[140px] flex-1 sm:flex-initial">
+      <label className="relative block">
+        <span className="sr-only">{label}</span>
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className={`min-h-12 w-full appearance-none rounded-[20px] border bg-[#fff6e3] px-4 pr-11 text-base text-[#3b6b3c] outline-none transition focus:border-[#ef7a3f] md:min-h-14 md:px-5 md:pr-12 md:text-lg ${error ? "border-red-400" : "border-[#efe4c8]"}`}
+        >
+          <option value="">{label}</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute top-1/2 right-4 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-[#5f7d59] md:right-5 md:h-3 md:w-3" />
+      </label>
+      {error ? <p className="mt-1 px-4 text-sm text-red-500">{error}</p> : null}
+    </div>
   );
 }

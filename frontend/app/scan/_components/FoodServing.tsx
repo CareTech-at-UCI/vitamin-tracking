@@ -1,0 +1,148 @@
+"use client";
+
+import { useState } from "react";
+
+interface FoodServingProps {
+  name: string;
+  servings: number;
+  onServingsChange: (value: number) => void;
+  onNameChange?: (name: string) => void;
+  readOnly?: boolean;
+  canDelete?: boolean;
+  onDelete?: () => void;
+}
+
+export default function FoodServing({
+  name,
+  servings,
+  onServingsChange,
+  onNameChange,
+  readOnly = false,
+  canDelete = false,
+  onDelete,
+}: FoodServingProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftName, setDraftName] = useState(name);
+
+  function startEditing() {
+    setDraftName(name);
+    setIsEditing(true);
+  }
+
+  function commitNameEdit() {
+    const nextName = draftName.trim() || name;
+    setIsEditing(false);
+    onNameChange?.(nextName);
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-row items-center">
+        <div className="flex items-center gap-2">
+          {isEditing && !readOnly ? (
+            <input
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              onBlur={commitNameEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitNameEdit();
+              }}
+              autoFocus
+              className="font-['Montserrat_Alternates'] text-[2rem] font-semibold leading-none tracking-[-1.92px] text-black outline-none"
+              aria-label="Food serving name"
+            />
+          ) : (
+            <h1 className="pb-[5%] font-['Montserrat_Alternates'] text-[1.5rem] font-semibold leading-none tracking-[-1.92px] text-black">
+              {name}
+            </h1>
+          )}
+
+          {!readOnly && (
+            <button
+              type="button"
+              onClick={startEditing}
+              aria-label={`Edit ${name}`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M2.25 15.75V12.5625L12.15 2.68125C12.3 2.54375 12.4658 2.4375 12.6473 2.3625C12.8288 2.2875 13.0192 2.25 13.2188 2.25C13.4183 2.25 13.612 2.2875 13.8 2.3625C13.988 2.4375 14.1505 2.55 14.2875 2.7L15.3187 3.75C15.4687 3.8875 15.5783 4.05 15.6473 4.2375C15.7163 4.425 15.7505 4.6125 15.75 4.8C15.75 5 15.7158 5.19075 15.6473 5.37225C15.5788 5.55375 15.4692 5.71925 15.3187 5.86875L5.4375 15.75H2.25Z"
+                  fill="#7D8280"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {!readOnly && onDelete && (
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={!canDelete}
+            aria-label={`Delete ${name}`}
+            className="ml-auto flex size-6 shrink-0 items-center justify-center disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M8.4 17L12 13.4L15.6 17L17 15.6L13.4 12L17 8.4L15.6 7L12 10.6L8.4 7L7 8.4L10.6 12L7 15.6L8.4 17ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
+                fill="#EF4444"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      <div className="flex h-[4rem] items-center justify-between rounded-[20px] bg-[#F16F33] px-[1rem]">
+        <p className="font-['Instrument_Sans'] text-[1rem] font-medium tracking-[-0.8px] text-[#FFFDEE]">
+          {servings} servings
+        </p>
+        <div className="flex size-9 items-center justify-center rounded-full bg-[#FDE2D3]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden
+          >
+            <path
+              d="M6.723 1.054C6.78917 1.0868 6.84725 1.13386 6.89307 1.19178C6.93889 1.2497 6.97131 1.31706 6.988 1.389C7.006 1.468 7.5 3.582 7.5 5C7.5 5.95 7.058 6.797 6.37 7.346C6.12 7.546 6 7.764 6 7.946V8.432C6 8.45534 6.00133 8.47733 6.004 8.498C6.038 8.746 6.161 9.667 6.276 10.622C6.389 11.559 6.5 12.581 6.5 13C6.5 13.5304 6.28929 14.0391 5.91421 14.4142C5.53914 14.7893 5.03043 15 4.5 15C3.96957 15 3.46086 14.7893 3.08579 14.4142C2.71071 14.0391 2.5 13.5304 2.5 13C2.5 12.58 2.611 11.56 2.724 10.622C2.839 9.667 2.962 8.746 2.996 8.498L3 8.432V7.946C3 7.764 2.88 7.546 2.63 7.346C2.27748 7.06499 1.99283 6.70815 1.7972 6.302C1.60156 5.89584 1.49998 5.45082 1.5 5C1.5 3.587 1.99 1.484 2.012 1.39C2.038 1.27884 2.10089 1.17977 2.19042 1.10894C2.27995 1.03812 2.39084 0.999715 2.505 1C2.785 1 3.012 1.227 3.012 1.507V4.505C3.00806 4.57253 3.018 4.64015 3.04121 4.70369C3.06442 4.76723 3.1004 4.82534 3.14695 4.87443C3.19349 4.92351 3.2496 4.96254 3.31181 4.9891C3.37402 5.01566 3.44102 5.02919 3.50866 5.02884C3.57631 5.0285 3.64316 5.0143 3.7051 4.98711C3.76705 4.95992 3.82276 4.92033 3.8688 4.87077C3.91484 4.82121 3.95024 4.76275 3.9728 4.69898C3.99537 4.63521 4.00463 4.56749 4 4.5V1.5C4 1.36739 4.05268 1.24022 4.14645 1.14645C4.24021 1.05268 4.36739 1 4.5 1C4.63261 1 4.75979 1.05268 4.85355 1.14645C4.94732 1.24022 5 1.36739 5 1.5V4.526C5.00278 4.65728 5.05761 4.78208 5.15241 4.87294C5.24721 4.96381 5.37422 5.01329 5.5055 5.0105C5.63678 5.00772 5.76158 4.95289 5.85244 4.85809C5.9433 4.7633 5.99278 4.63628 5.99 4.505V1.505C5.99 1.226 6.216 1 6.496 1C6.518 1 6.616 1 6.723 1.054ZM9 5.5C9 4.30653 9.47411 3.16193 10.318 2.31802C11.1619 1.47411 12.3065 1 13.5 1C13.6326 1 13.7598 1.05268 13.8536 1.14645C13.9473 1.24022 14 1.36739 14 1.5V7.473L14.019 7.65C14.0985 8.39634 14.1749 9.14301 14.248 9.89C14.371 11.146 14.5 12.554 14.5 13C14.5 13.5304 14.2893 14.0391 13.9142 14.4142C13.5391 14.7893 13.0304 15 12.5 15C11.9696 15 11.4609 14.7893 11.0858 14.4142C10.7107 14.0391 10.5 13.5304 10.5 13C10.5 12.554 10.629 11.146 10.752 9.89C10.815 9.253 10.878 8.643 10.925 8.191L10.945 8H10C9.73478 8 9.48043 7.89464 9.29289 7.70711C9.10536 7.51957 9 7.26522 9 7V5.5Z"
+              fill="#F16F33"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {!readOnly && (
+        <div className="flex flex-col gap-2">
+          <input
+            type="range"
+            min={0}
+            max={10}
+            value={servings}
+            onChange={(e) => onServingsChange(Number(e.target.value))}
+            className="w-full cursor-pointer accent-[#F16F33]"
+            aria-label="Servings"
+          />
+          <div className="flex justify-between font-['Instrument_Sans'] text-[1rem] font-medium text-black">
+            <span>0</span>
+            <span>10</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -18,7 +18,7 @@ export function SearchBar({ height = "medium", value, onChange }: SearchBarProps
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Search"
-            className="flex-1 outline-none bg-transparent text-[#0A3323] placeholder:text-[#0A3323]"
+            className="flex-1 outline-none text-[#0A3323] placeholder:text-[#0A3323]"
         />
     </div>
   );

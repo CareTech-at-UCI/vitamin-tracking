@@ -26,19 +26,15 @@ export default function VitaminDropdown({
         onClick={() => setOpen(!open)}
         className="flex justify-between items-center cursor-pointer group"
       >
-        <h3
-          className={`text-4xl font-primary font-semibold ${
-            isActive ? "text-accent" : "text-[#000000]"
-          }`}
-        >
+        <h3 className={`text-4xl font-primary font-semibold ${
+          isActive ? "text-[#F16F33]" : "text-[#000000]"
+        }`}>
           {title}
         </h3>
 
-        <span
-          className={`text-4xl ${
-            isActive ? "text-accent" : "text-secondary group-hover:text-accent"
-          }`}
-        >
+        <span className={`text-4xl ${
+          isActive ? "text-[#F16F33]" : "text-secondary group-hover:text-accent"
+        }`}>
           {open ? <HiChevronDown /> : <HiChevronRight />}
         </span>
       </div>

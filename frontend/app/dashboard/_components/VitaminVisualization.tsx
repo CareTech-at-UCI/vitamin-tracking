@@ -2,19 +2,13 @@
 
 import { useRef, useState } from "react";
 import { CircularProgressBar } from "./CircularProgressBar";
-
-/** IDs match `app/vitamin-information/page.jsx` query param `vitamin=` */
-const vitamins = [
-    { id: "vitamin-a", name: "Vitamin A", percentage: 28 },
-    { id: "vitamin-b12", name: "Vitamin B12", percentage: 54 },
-    { id: "vitamin-c", name: "Vitamin C", percentage: 65 },
-    { id: "vitamin-d", name: "Vitamin D", percentage: 90 },
-    { id: "vitamin-e", name: "Vitamin E", percentage: 42 },
-];
+import { useDashboardWeekVitamins } from "@/lib/dashboard-week-vitamins";
 
 export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [index, setIndex] = useState(0);
+    const { vitamins, isLoading, error } = useDashboardWeekVitamins();
+    const activeIndex = Math.min(index, Math.max(vitamins.length - 1, 0));
 
     const goTo = (i: number) => {
         const width = scrollRef.current?.offsetWidth ?? 0;
@@ -40,28 +34,38 @@ export function VitaminVisualization({ onToggle }: { onToggle?: () => void }) {
                 onScroll={onScroll}
                 className="flex overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory no-scrollbar w-full"
             >
-                {vitamins.map((v) => (
-                    <div key={v.id} className="snap-center shrink-0 w-full flex justify-center">
-                        <CircularProgressBar
-                            percentage={v.percentage}
-                            vitaminName={v.name}
-                            vitaminId={v.id}
-                        />
-                    </div>
-                ))}
+                {isLoading ? (
+                    <div className="w-full py-10 text-center text-sm text-[#0A3323]/70">Loading vitamin data...</div>
+                ) : error ? (
+                    <div className="w-full py-10 text-center text-sm text-[#0A3323]/70">{error}</div>
+                ) : vitamins.length > 0 ? (
+                    vitamins.map((v) => (
+                        <div key={v.id} className="snap-center shrink-0 w-full flex justify-center">
+                            <CircularProgressBar
+                                percentage={v.percentage}
+                                vitaminName={v.name}
+                                vitaminId={v.id}
+                            />
+                        </div>
+                    ))
+                ) : (
+                    <div className="w-full py-10 text-center text-sm text-[#0A3323]/70">No vitamin data available.</div>
+                )}
             </div>
 
             {/* Dot indicators */}
-            <div className="flex gap-2">
-                {vitamins.map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => goTo(i)}
-                        className={`w-2 h-2 rounded-full transition-colors ${i === index ? "bg-[#26612F]" : "bg-[#B5CEB5]"}`}
-                        aria-label={`Go to vitamin ${i + 1}`}
-                    />
-                ))}
-            </div>
+            {!isLoading && !error && vitamins.length > 0 && (
+                <div className="flex gap-2">
+                    {vitamins.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => goTo(i)}
+                            className={`w-2 h-2 rounded-full transition-colors ${i === activeIndex ? "bg-[#26612F]" : "bg-[#B5CEB5]"}`}
+                            aria-label={`Go to vitamin ${i + 1}`}
+                        />
+                    ))}
+                </div>
+            )}
 
             {onToggle && (
                 <div className="w-full flex justify-end md:hidden">
