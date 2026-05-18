@@ -1,1 +1,1 @@
-CREATE TYPE profile_picture_type as ENUM ('fox', 'monkey', 'cat');
+CREATE TYPE profile_picture_type AS ENUM ('tomato', 'blueberry', 'watermelon', 'grape');

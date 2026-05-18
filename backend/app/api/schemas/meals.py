@@ -7,7 +7,7 @@ Pydantic models and types for API Request and Response validation.
 
 from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 
 
@@ -61,3 +61,27 @@ class MealDeleteResponse(BaseModel):
 
     deleted: bool
     id: int
+
+
+class RecentFoodItem(BaseModel):
+    """Meal item formatted for the Recent Foods page."""
+
+    id: int
+    meal_id: int
+    name: str
+
+
+class RecentFoodsMeals(BaseModel):
+    """Recent food items grouped by meal type for one local day."""
+
+    breakfast: list[RecentFoodItem] = Field(default_factory=list)
+    lunch: list[RecentFoodItem] = Field(default_factory=list)
+    dinner: list[RecentFoodItem] = Field(default_factory=list)
+    snacks: list[RecentFoodItem] = Field(default_factory=list)
+
+
+class RecentFoodsDayResponse(BaseModel):
+    """Response from GET /api/v1/meals/recent-foods."""
+
+    date: date
+    meals: RecentFoodsMeals

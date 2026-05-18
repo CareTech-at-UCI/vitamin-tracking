@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function HomeHero() {
   return (
-    <section className="relative w-full overflow-hidden bg-[radial-gradient(58rem_32rem_at_90%_0%,#96c685_6%,#dbe9cf_45%,transparent_58%),radial-gradient(38rem_26rem_at_64%_102%,#72ab5f_18%,#c7dfba_52%,transparent_63%),var(--background)]">
+    <section className="relative hidden w-full overflow-hidden bg-[radial-gradient(58rem_32rem_at_90%_0%,#96c685_6%,#dbe9cf_45%,transparent_58%),radial-gradient(38rem_26rem_at_64%_102%,#72ab5f_18%,#c7dfba_52%,transparent_63%),var(--background)] lg:block">
       <div className="pointer-events-none absolute right-0 -top-[clamp(2rem,5vw,4rem)] z-0 hidden w-[clamp(18rem,38vw,42.182rem)] aspect-[674.92/630.05] lg:block">
         <Image
           src="/home-blob-1.png"
@@ -78,10 +78,16 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div className="hidden lg:grid lg:place-items-center">
-          <div className="grid aspect-4/5 w-full max-w-md place-items-center bg-[#cfcfd1] text-center text-[clamp(1.75rem,4vw,3rem)] font-medium text-black">
-            Image
-          </div>
+        <div className="hidden lg:flex lg:justify-center lg:place-items-center">
+          <Image
+            src="/assets/home/desktop.png"
+            alt="VitaMind app identifying foods on a desktop screen"
+            width={600}
+            height={400}
+            sizes="(min-width: 1024px) 520px, 0px"
+            className="h-auto w-full max-w-[520px]"
+            priority
+          />
         </div>
       </div>
     </section>
