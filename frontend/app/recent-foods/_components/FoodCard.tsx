@@ -14,7 +14,7 @@ const FoodCard: FC<Props> = ({ item }) => {
   return (
     <button
       type="button"
-      className="relative aspect-square w-full overflow-hidden rounded-2xl text-left shadow-sm transition hover:scale-[1.02] lg:h-26 lg:w-26 lg:shrink-0"
+      className="relative aspect-square w-full overflow-hidden rounded-2xl text-left shadow-sm transition hover:scale-[1.02] lg:h-[20%] lg:w-[20%] lg:shrink-0"
     >
       <img
         src={item.image}

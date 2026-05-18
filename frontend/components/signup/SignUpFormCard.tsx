@@ -2,33 +2,36 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { GoogleOAuth } from "@/components/login/GoogleOAuth"; 
+import { GoogleOAuth } from "@/components/login/GoogleOAuth";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-export function LoginFormCard() {
+export function SignUpFormCard() {
   const supabase = createClient();
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setErrorMessage("");
+    async function handleSignUp(e: React.SubmitEvent<HTMLFormElement>) {
+        e.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+            },
+        });
 
-    if (error) {
-      setErrorMessage(error.message);
-      return;
+        if (error) {
+            setErrorMessage(error.message);
+            console.error(error.message);
+            return;
+        }
+
+        setSuccessMessage("Account created! Check your email to confirm your account.");
+        console.log("Signup data:", data);
     }
-
-    router.push("/onboarding");
-  }
 
   return (
     <section className="w-full max-w-4xl py-1">
@@ -62,7 +65,7 @@ export function LoginFormCard() {
           <p
             className="w-full max-w-84 text-[36px] leading-none tracking-[-0.08em] lg:max-w-none lg:text-[3.35rem] lg:tracking-tight"
           >
-            Welcome back to
+            Welcome to
           </p>
           <h1 className="mt-1 w-full max-w-84 text-[48px] font-semibold leading-[0.92] tracking-[-0.06em] md:whitespace-nowrap lg:max-w-none lg:text-[5.1rem] lg:leading-[0.95] lg:tracking-tight">
             VitaMind
@@ -71,7 +74,7 @@ export function LoginFormCard() {
       </header>
 
       <form 
-        onSubmit={handleLogin}
+        onSubmit={handleSignUp}
         className="font-body text-[2rem] md:text-[1rem] mt-6 max-w-lg space-y-4 sm:mt-8 lg:mt-10" 
         style={{ color: "rgba(38, 97, 47, 1)" }}
       >
@@ -104,15 +107,18 @@ export function LoginFormCard() {
             <span className="inline-flex h-10 w-14.25 rounded-full border border-accent/65 bg-transparent" />
             Remember me
           </label>
-          <span className="pr-0.5 text-[20px] font-medium leading-none tracking-[-0.05em] text-accent">
-            Forgot Password?
-          </span>
         </div>
 
         <div className="pt-1 gap-5 lg:flex lg:justify-end items-center">
           {errorMessage && (
-            <p className="text-sm text-red-600">
+            <p className="text-body text-red-600">
               {errorMessage}
+            </p>
+          )}
+
+          {successMessage && (
+            <p className="text-[12px] text-body text-primary font-semibold">
+              {successMessage}
             </p>
           )}
 
@@ -120,8 +126,8 @@ export function LoginFormCard() {
             type="submit"
             className="inline-flex h-11 w-full items-center justify-center gap-1 rounded-full border border-accent/65 px-6 text-[1.25rem] font-medium leading-none text-primary transition hover:bg-accent-soft/50 lg:w-auto lg:min-w-32"
           >
-            Login
-            <Image src="/login-button.png" alt="" width={15} height={15} aria-hidden="true" />
+            Sign-Up
+            <Image src="/login-button.png" alt="Arrow Icon" width={15} height={15} aria-hidden="true" />
           </button>
         </div>
       </form>

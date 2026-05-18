@@ -1,106 +1,83 @@
-"use client"
+import ScanFoodFlow from "@/app/scan/_components/ScanFoodFlow";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+const recentFoods = Array.from({ length: 8 }, (_, index) => ({
+  id: index,
+  name: "Food Name",
+}));
 
-import Drawer from "./_components/Drawer"
-import FoodServing from "./_components/FoodServing"
-import LogCompleted from "./_components/LogCompleted"
+export default function ScanPage() {
+  return (
+    <main className="min-h-screen overflow-hidden bg-background px-6 py-10 text-secondary sm:px-10 lg:px-16">
+      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-[1180px] flex-col">
+        <header className="flex items-start justify-between gap-8">
+          <div className="w-full max-w-[740px]">
+            <h1 className="font-display text-5xl font-bold leading-none tracking-tight text-primary md:text-[64px]">
+              Scan Food
+            </h1>
 
-export default function Scan() {
-    const [step, setStep] = useState<"proceed" | "drawer" | "overlay">("proceed")
-    const [isProceedClosing, setIsProceedClosing] = useState(false)
-    const router = useRouter()
+            <label className="mt-8 flex min-h-12 items-center gap-3 rounded-[24px] border border-secondary/80 px-4 text-secondary">
+              <SearchIcon className="size-6 shrink-0" />
+              <span className="sr-only">Search recent foods</span>
+              <input
+                type="search"
+                placeholder="Search"
+                className="min-w-0 flex-1 bg-transparent font-display text-base outline-none [background-image:none] placeholder:text-secondary/80"
+              />
+            </label>
+          </div>
 
-    return (
-        <div className="relative block md:hidden min-h-screen overflow-hidden bg-black">
-            {step === "proceed" && (
-            <>
-                {/* Mock camera background */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                <div className="grid aspect-square w-[200px] grid-cols-2 grid-rows-2 gap-[42%]">
-                    <span className="rounded-tl-2xl border-l-[3px] border-t-[3px] border-white" />
-                    <span className="rounded-tr-2xl border-r-[3px] border-t-[3px] border-white" />
-                    <span className="rounded-bl-2xl border-b-[3px] border-l-[3px] border-white" />
-                    <span className="rounded-br-2xl border-b-[3px] border-r-[3px] border-white" />
-                </div>
-                </div>
+          <button
+            type="button"
+            aria-label="Open scan camera"
+            className="mt-[76px] hidden size-[52px] shrink-0 items-center justify-center rounded-full bg-primary text-2xl text-white shadow-sm transition hover:brightness-95 md:flex"
+          >
+            <CameraIcon className="size-6" />
+          </button>
+        </header>
 
-                {/* Proceed drawer */}
-                <div
-                    className={`fixed bottom-0 left-0 right-0 z-50 rounded-t-[40px] bg-[#FFFDEE] transition-transform duration-300 ${
-                        isProceedClosing ? "translate-y-full" : "translate-y-0"
-                    }`}
-                >
-                <div className="rounded-t-[36px] bg-[linear-gradient(90deg,#1A4D20_0%,#0F2414_100%)] px-6 pb-4 pt-6 text-white">
-                    <div className="mx-auto mb-8 h-2 w-24 rounded-full bg-white/80" />
+        <section className="mt-8">
+          <h2 className="font-display text-3xl font-semibold leading-none text-accent md:text-[40px]">
+            Recent
+          </h2>
 
-                    <h2 className="text-center text-[20px] font-semibold">
-                    Are you sure you wish to proceed?
-                    </h2>
-                </div>
+          <div className="mt-6 grid max-w-[1070px] grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-6">
+            {recentFoods.map((food) => (
+              <article
+                key={food.id}
+                className="relative aspect-[2.25/1] overflow-hidden rounded-lg bg-[linear-gradient(90deg,rgb(0_0_0_/_0.58),rgb(0_0_0_/_0.08)),url('/sample.png')] bg-cover bg-center shadow-sm"
+              >
+                <p className="absolute bottom-3 left-3 max-w-24 font-display text-base font-medium leading-tight text-white">
+                  {food.name}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
 
-                <div className="px-8 pb-8 pt-6">
-                    <p className="text-center font-medium text-black">
-                    We’ve paused the camera to prevent accidental scans.
-                    Tap “Confirm Scanning” to resume logging.
-                    </p>
+      <ScanFoodFlow />
+    </main>
+  );
+}
 
-                    <div className="mt-10 flex justify-center gap-4">
-                    <button
-                        onClick={() => router.push("/dashboard")}
-                        className="rounded-full bg-[#26612F] px-5 py-3 text-white"
-                    >
-                        Go to Dashboard
-                    </button>
+function SearchIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" strokeWidth="2.6" />
+      <path d="m16 16 5 5" stroke="currentColor" strokeLinecap="round" strokeWidth="2.6" />
+    </svg>
+  );
+}
 
-                    <button
-                        onClick={() => {
-                            setIsProceedClosing(true)
-
-                            setTimeout(() => {
-                                setStep("drawer")
-                                setIsProceedClosing(false)
-                            }, 300)
-                            }}
-                        className="rounded-full bg-[#F16F33] px-5 py-3 text-white"
-                    >
-                        Confirm Scanning
-                    </button>
-                    </div>
-                </div>
-                </div>
-            </>
-            )}            
-            {step === "drawer" && (
-                <Drawer
-                    trigger={
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                            Open Drawer
-                        </button>
-                    }
-                    onAction={() => setStep("overlay")}
-                >
-                    <div className="relative flex flex-col gap-[5rem]">
-                        <FoodServing name="Example" />
-                        <FoodServing name="Example WH" />
-
-                        <button className="absolute right-0 -bottom-[5rem] flex items-center justify-center w-[3rem] h-[3rem] rounded-full bg-[#F16F33] text-[#000000] text-2xl font-bold font-[Inter]">
-                            +
-                        </button>
-                    </div>
-                </Drawer>
-            )}
-
-            {step === "overlay" && (
-                <LogCompleted
-                    foodName="Pizza"
-                    imageSrc="/pizza.png"
-                    onClose={() => setStep("drawer")}
-                    onGoHome={() => router.push("/dashboard")}
-                    onContinue={() => router.push("/scan")}
-                />
-            )}
-        </div>
-    )
+function CameraIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7.2 7.4 8.7 5.2h6.6l1.5 2.2h2.3c1.1 0 1.9.8 1.9 1.9v7.6c0 1.1-.8 1.9-1.9 1.9H4.9c-1.1 0-1.9-.8-1.9-1.9V9.3c0-1.1.8-1.9 1.9-1.9h2.3Z"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="13" r="3.2" fill="var(--background)" />
+      <circle cx="18.1" cy="10.1" r="1" fill="var(--background)" />
+    </svg>
+  );
 }

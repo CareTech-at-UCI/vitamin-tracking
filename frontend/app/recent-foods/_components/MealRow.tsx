@@ -23,7 +23,7 @@ export default function MealRow({ title, items }: Props) {
     <section>
       <div className="mb-2 lg:w-fit">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="font-primary text-[28px] font-semibold leading-none text-accent">
+          <h3 className="font-primary text-[20px] sm:text-[40px] font-semibold tracking-[-0.08em] leading-none text-accent">
             {title}
           </h3>
 
@@ -45,9 +45,14 @@ export default function MealRow({ title, items }: Props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 lg:hidden">
+        <div
+          className="flex gap-3 overflow-x-auto pb-1 lg:hidden"
+          style={{ scrollbarWidth: "none" }}
+        >
           {items.map((item) => (
-            <FoodCard key={item.id} item={item} />
+            <div key={item.id} className="w-[calc((100%-1.5rem)/3)] shrink-0">
+              <FoodCard item={item} />
+            </div>
           ))}
         </div>
 
