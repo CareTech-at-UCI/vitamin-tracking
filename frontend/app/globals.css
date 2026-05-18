@@ -26,6 +26,8 @@
   --color-onboarding-cream-400: #fdf4df;
   --color-onboarding-cream-800: #ece1c6;
   --color-onboarding-orange-500: #ef7a3f;
+
+  --color-scan-backdrop: rgb(0 0 0 / 0.42);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -119,3 +121,47 @@ textarea {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.scan-serving-range {
+  height: 0.5rem;
+  cursor: pointer;
+  appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent) var(--scan-serving-progress, 20%),
+    #f7ddcf var(--scan-serving-progress, 20%),
+    #f7ddcf 100%
+  );
+}
+
+.scan-serving-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.125rem;
+  width: 1.125rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.scan-serving-range::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent) var(--scan-serving-progress, 20%),
+    #f7ddcf var(--scan-serving-progress, 20%),
+    #f7ddcf 100%
+  );
+}
+
+.scan-serving-range::-moz-range-thumb {
+  height: 1.125rem;
+  width: 1.125rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+}
