@@ -39,6 +39,16 @@ export type OnboardingDietRestriction = {
   is_custom: boolean;
 };
 
+/** Matches `profile_picture_type` enum; legacy values may appear until migration runs. */
+export type OnboardingProfilePicture =
+  | "tomato"
+  | "blueberry"
+  | "watermelon"
+  | "grape"
+  | "fox"
+  | "monkey"
+  | "cat";
+
 export type OnboardingState = {
   current_step: string | null;
   is_completed: boolean;
@@ -50,7 +60,7 @@ export type OnboardingState = {
   weight: number | null;
   activity_level: number | null;
   diet_restrictions: OnboardingDietRestriction[] | null;
-  profile_picture: "fox" | "monkey" | "cat" | null;
+  profile_picture: OnboardingProfilePicture | null;
 };
 
 export async function getOnboarding(): Promise<OnboardingState> {

@@ -12,7 +12,7 @@ CREATE TABLE users (
   weight NUMERIC(5, 2) NOT NULL CHECK (weight > 0),
   activity_level INTEGER NOT NULL CHECK (activity_level >= 1 AND activity_level <= 5),
   is_pregnant BOOLEAN,
-  -- profile_picture_type: ENUM('fox', 'monkey', 'cat')
+  -- profile_picture_type: ENUM('tomato', 'blueberry', 'watermelon', 'grape')
   profile_picture profile_picture_type,
   goal_type TEXT,
   -- Diet restriction labels (preset + custom), e.g. {"Vegetarian", "No Gluten"}

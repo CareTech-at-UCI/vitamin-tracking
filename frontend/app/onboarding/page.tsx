@@ -41,12 +41,15 @@ const AVATAR_OPTIONS = [
 
 type AvatarId = (typeof AVATAR_OPTIONS)[number]["id"];
 
-// !! TEMP mapping until DB enum is updated — kept from partner's implementation !!
-const AVATAR_TO_DB: Record<AvatarId, "fox" | "monkey" | "cat"> = {
-  tomato: "fox",
-  blueberry: "monkey",
-  watermelon: "cat",
-  grape: "fox",
+/** API `profile_picture` → form avatar (supports legacy enum until all DBs are migrated). */
+const PROFILE_PICTURE_TO_AVATAR: Record<string, AvatarId> = {
+  tomato: "tomato",
+  blueberry: "blueberry",
+  watermelon: "watermelon",
+  grape: "grape",
+  fox: "tomato",
+  monkey: "blueberry",
+  cat: "watermelon",
 };
 
 const SEX_TO_DB: Record<string, "male" | "female" | "other"> = {
@@ -59,12 +62,6 @@ const SEX_FROM_DB: Record<string, string> = {
   female: "F - Female",
   male: "M - Male",
   other: "X - Nonbinary/Intersex",
-};
-
-const AVATAR_FROM_DB: Record<string, AvatarId> = {
-  fox: "tomato",
-  monkey: "blueberry",
-  cat: "watermelon",
 };
 
 const STEP_KEYS = ["name_age", "health", "restrictions", "avatar"] as const;
@@ -164,7 +161,7 @@ export default function OnboardingPage() {
           );
         }
         if (data.profile_picture) {
-          const avatar = AVATAR_FROM_DB[data.profile_picture];
+          const avatar = PROFILE_PICTURE_TO_AVATAR[data.profile_picture];
           if (avatar) updates.selectedAvatar = avatar;
         }
 
@@ -256,7 +253,7 @@ export default function OnboardingPage() {
       );
       return { diet_restriction_ids: presetIds, custom_names: customNames };
     }
-    return { profile_picture: AVATAR_TO_DB[selectedAvatar] };
+    return { profile_picture: selectedAvatar };
   }
 
   async function handleNext() {
