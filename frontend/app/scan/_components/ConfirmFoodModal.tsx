@@ -56,6 +56,9 @@ function ConfirmFoodContent({
               servings={item.servings}
               canDelete={items.length > 1}
               onDelete={() => onDeleteItem(item.id)}
+              onNameChange={(foodName) =>
+                onUpdateItem({ ...item, name: foodName })
+              }
               onServingsChange={(servings) =>
                 onUpdateItem({ ...item, servings })
               }

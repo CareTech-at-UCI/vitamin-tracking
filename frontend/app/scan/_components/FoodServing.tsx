@@ -6,6 +6,7 @@ interface FoodServingProps {
   name: string;
   servings: number;
   onServingsChange: (value: number) => void;
+  onNameChange?: (name: string) => void;
   readOnly?: boolean;
   canDelete?: boolean;
   onDelete?: () => void;
@@ -15,12 +16,24 @@ export default function FoodServing({
   name,
   servings,
   onServingsChange,
+  onNameChange,
   readOnly = false,
   canDelete = false,
   onDelete,
 }: FoodServingProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [foodName, setFoodName] = useState(name);
+  const [draftName, setDraftName] = useState(name);
+
+  function startEditing() {
+    setDraftName(name);
+    setIsEditing(true);
+  }
+
+  function commitNameEdit() {
+    const nextName = draftName.trim() || name;
+    setIsEditing(false);
+    onNameChange?.(nextName);
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -28,24 +41,27 @@ export default function FoodServing({
         <div className="flex items-center gap-2">
           {isEditing && !readOnly ? (
             <input
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
-              onBlur={() => setIsEditing(false)}
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              onBlur={commitNameEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitNameEdit();
+              }}
               autoFocus
               className="font-['Montserrat_Alternates'] text-[2rem] font-semibold leading-none tracking-[-1.92px] text-black outline-none"
               aria-label="Food serving name"
             />
           ) : (
             <h1 className="pb-[5%] font-['Montserrat_Alternates'] text-[1.5rem] font-semibold leading-none tracking-[-1.92px] text-black">
-              {foodName}
+              {name}
             </h1>
           )}
 
           {!readOnly && (
             <button
               type="button"
-              onClick={() => setIsEditing(true)}
-              aria-label={`Edit ${foodName}`}
+              onClick={startEditing}
+              aria-label={`Edit ${name}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +85,7 @@ export default function FoodServing({
             type="button"
             onClick={onDelete}
             disabled={!canDelete}
-            aria-label={`Delete ${foodName}`}
+            aria-label={`Delete ${name}`}
             className="ml-auto flex size-6 shrink-0 items-center justify-center disabled:cursor-not-allowed disabled:opacity-35"
           >
             <svg
