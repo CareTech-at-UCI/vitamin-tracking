@@ -28,6 +28,13 @@ const EMPTY_MEALS: Meals = {
 
 
 
+function addDays(dateStr: string, delta: number) {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const d = new Date(year, month - 1, day);
+  d.setDate(d.getDate() + delta);
+  return d.toLocaleDateString("en-CA");
+}
+
 function getRecentDates(selectedDate: string, count = 2) {
   const dates: string[] = [];
   const [year, month, day] = selectedDate.split("-").map(Number);
@@ -52,6 +59,9 @@ export default function RecentFoodsPage() {
     if (isEditing) return [selectedDate];
     return getRecentDates(selectedDate, 2);
   }, [selectedDate, isEditing]);
+
+  const goToPreviousDate = () => setSelectedDate((prev) => addDays(prev, -1));
+  const goToNextDate = () => setSelectedDate((prev) => addDays(prev, 1));
 
   useEffect(() => {
     let isCurrentRequest = true;
