@@ -2,7 +2,7 @@
 Dashboard endpoints.
 """
 
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -27,9 +27,11 @@ async def get_dashboard_week(
     if anchor_date is None:
         anchor_date = datetime.utcnow().date()
 
-    # Generate rolling 7 day window.
+    # Generate rolling 7 day window (inclusive calendar days).
     start_date = anchor_date - timedelta(days=6)
     dates = [start_date + timedelta(days=i) for i in range(7)]
+    range_start = datetime.combine(start_date, time.min)
+    range_end = datetime.combine(anchor_date + timedelta(days=1), time.min)
 
     # Default empty response structure.
     empty_days = [{"date": current_date, "vitamins": []} for current_date in dates]
@@ -40,8 +42,8 @@ async def get_dashboard_week(
             supabase.table("meals")
             .select("*")
             .eq("user_id", str(user_id))
-            .gte("consumed_at", start_date.isoformat())
-            .lte("consumed_at", anchor_date.isoformat())
+            .gte("consumed_at", range_start.isoformat())
+            .lt("consumed_at", range_end.isoformat())
             .execute()
         )
 
