@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 export type DrawerSnap = "expanded" | "collapsed" | "dismissed";
 
@@ -14,8 +15,12 @@ type DrawerProps = {
   contentClassName?: string;
   overlayClassName?: string;
   showDragHandle?: boolean;
-  heightClassName?: string;
   fillHeight?: boolean;
+  heightClassName?: string;
+  collapsedClassName?: string;
+  onClose?: () => void;
+  closeButtonClassName?: string;
+  closeLabel?: string;
 };
 
 export function toggleDrawerCollapse(
@@ -39,8 +44,12 @@ export default function Drawer({
   contentClassName = "",
   overlayClassName = "",
   showDragHandle = true,
-  heightClassName = "h-[85vh]",
   fillHeight = true,
+  heightClassName = "h-[85vh]",
+  collapsedClassName = "translate-y-[88%]",
+  onClose,
+  closeButtonClassName = "",
+  closeLabel = "Close modal",
 }: DrawerProps) {
   const [internalSnap, setInternalSnap] = useState<DrawerSnap>(defaultSnap);
   const isControlled = snapProp !== undefined;
@@ -68,18 +77,31 @@ export default function Drawer({
       <button
         type="button"
         aria-label="Close drawer"
-        className={`fixed inset-0 z-[55] bg-black/30 backdrop-blur-sm ${overlayClassName}`}
+        className={`fixed inset-0 z-55 bg-black/30 backdrop-blur-sm ${overlayClassName}`}
         onClick={() => setSnap("dismissed")}
       />
 
       <div
         role="dialog"
         aria-modal
-        className={`fixed bottom-0 left-0 right-0 z-[60] flex flex-col rounded-t-2xl bg-[#FFFDEE] shadow-2xl transition-transform duration-300 "h-[85vh]" ${
-          isExpanded ? "translate-y-0" : "translate-y-[88%]"
+        className={`fixed bottom-0 left-0 right-0 z-60 flex flex-col rounded-t-2xl bg-[#FFFDEE] shadow-2xl transition-transform duration-300 ${heightClassName} ${
+          isExpanded ? "translate-y-0" : collapsedClassName
         } ${panelClassName}`}
         onClick={!isExpanded ? handleToggleCollapsed : undefined}
       >
+        {onClose ? (
+          <div
+            className="shrink-0"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <ModalCloseButton
+              onClick={onClose}
+              className={closeButtonClassName}
+              label={closeLabel}
+            />
+          </div>
+        ) : null}
+
         {showDragHandle && (
           <button
             type="button"

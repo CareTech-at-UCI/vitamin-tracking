@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import ConfirmFoodModal from "@/app/scan/_components/ConfirmFoodModal";
-import LogCompletedModal from "@/app/scan/_components/LogCompletedModal";
+import LogCompleted from "@/app/scan/_components/LogCompleted";
+import { type FoodItem } from "@/app/scan/_components/FoodItemRow";
 import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
 import ProceedStep from "@/app/scan/_components/ProceedStep";
 import { type DrawerSnap } from "@/app/scan/_components/Drawer";
@@ -18,7 +19,7 @@ export default function ScanFoodFlow() {
 function ScanFoodFlowSession() {
   const [step, setStep] = useState<ScanStep>("proceed");
   const [proceedSnap, setProceedSnap] = useState<DrawerSnap>("expanded");
-  const [loggedFoodNames, setLoggedFoodNames] = useState<string[]>([]);
+  const [loggedFoodItems, setLoggedFoodItems] = useState<FoodItem[]>([]);
   const {
     setNavOverlay,
     setCameraCaptureMode,
@@ -37,6 +38,10 @@ function ScanFoodFlowSession() {
   useEffect(() => {
     if (step === "proceed") {
       setNavOverlay(proceedSnap === "dismissed" ? "none" : "blur");
+      return;
+    }
+    if (step === "confirm" || step === "log-completed") {
+      setNavOverlay("blur");
       return;
     }
     setNavOverlay("none");
@@ -71,23 +76,40 @@ function ScanFoodFlowSession() {
 
   if (step === "confirm") {
     return (
-      <ConfirmFoodModal
-        onClose={() => setStep("closed")}
-        onAddMeal={(foodNames) => {
-          setLoggedFoodNames(foodNames);
-          setStep("log-completed");
-        }}
-      />
+      <>
+        <ScanCameraModal
+          paused
+          hideMobileCaptureButton
+          onClose={() => setStep("closed")}
+          onScan={() => {}}
+        />
+        <ConfirmFoodModal
+          onClose={() => setStep("scan")}
+          onAddMeal={(items) => {
+            setLoggedFoodItems(items);
+            setStep("log-completed");
+          }}
+        />
+      </>
     );
   }
 
   if (step === "log-completed") {
     return (
-      <LogCompletedModal
-        foodNames={loggedFoodNames}
-        onClose={() => setStep("closed")}
-        onContinueScanning={() => setStep("scan")}
-      />
+      <>
+        <ScanCameraModal
+          paused
+          hideMobileCaptureButton
+          onClose={() => setStep("closed")}
+          onScan={() => {}}
+        />
+        <LogCompleted
+          foodNames={loggedFoodItems.map((item) => item.name)}
+          foodItems={loggedFoodItems}
+          onClose={() => setStep("scan")}
+          onContinueScanning={() => setStep("scan")}
+        />
+      </>
     );
   }
 }
