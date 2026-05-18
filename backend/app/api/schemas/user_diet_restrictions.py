@@ -1,59 +1,37 @@
 """
-User Diet Restrictions schemas
-
-Pydantic models for user diet restriction API requests and responses.
+User diet restriction schemas.
 """
 
-from uuid import UUID
-from typing import List
-
-from pydantic import BaseModel, ConfigDict, Field
-
-
-class UserDietRestrictionsCreate(BaseModel):
-    """Request body for `POST /api/v1/user_diet_restrictions/`"""
-    model_config = ConfigDict(extra="forbid")
-    user_id: UUID
-    diet_id: int
-
-
-class UserDietRestrictionsBatchCreate(BaseModel):
-    """Request body for `POST /api/v1/user_diet_restrictions/batch`"""
-    model_config = ConfigDict(extra="forbid")
-    user_id: UUID
-    diet_ids: List[int] = Field(..., min_items=1)
-
-
-class UserDietRestrictionsRow(BaseModel):
-    """One row from `public.user_diet_restrictions`"""
-
-    model_config = ConfigDict(extra="ignore")
-
-    user_id: UUID
-    diet_id: int
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class UserDietRestrictionItem(BaseModel):
-    """one user-diet pairing"""
-    user_id: UUID
-    diet_id: int
-    name: str | None
-    is_custom: bool | None
+    """One diet restriction linked to a user."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    id: int
+    name: str
+    is_custom: bool
+
+
+class UserDietRestrictionSyncCreate(BaseModel):
+    """Request body for syncing a user's diet restrictions."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    diet_restriction_ids: list[int] = Field(default_factory=list)
+    custom_names: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_at_least_one(self):
+        if not self.diet_restriction_ids and not self.custom_names:
+            raise ValueError("Select at least one dietary restriction")
+        return self
 
 
 class ListUserDietRestrictionsResponse(BaseModel):
-    """Request body for both GET paths"""
-    items: List[UserDietRestrictionItem]
+    """Response for listing a user's diet restrictions."""
 
-
-class UserDietRestrictionsDelete(BaseModel):
-    """Request body for `DELETE /api/v1/user_diet_restrictions/user/{user_id}/diet/{diet_id}`"""
-    user_id: UUID
-    diet_id: int
-    deleted: bool = True
-
-
-class UserDietRestrictionsPut(BaseModel):
-    """Request body for `PUT /api/v1/user_diet_restrictions/user/{user_id}/sync"""
-    model_config = ConfigDict(extra="forbid")
-    diet_ids: List[int] = Field(..., min_items=1)
+    count: int
+    items: list[UserDietRestrictionItem]

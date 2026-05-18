@@ -20,6 +20,10 @@ from app.api.schemas.onboarding import (
     OnboardingStepResponse,
     RestrictionsStepPayload,
 )
+from app.api.services.user_diet_restrictions import (
+    list_user_diet_restrictions,
+    sync_user_diet_restrictions,
+)
 
 router = APIRouter()
 
@@ -56,7 +60,10 @@ async def get_onboarding(
     rows = response.data or []
     if not rows:
         raise HTTPException(status_code=404, detail="User not found")
-    return rows[0]
+
+    user = rows[0]
+    user["diet_restrictions"] = list_user_diet_restrictions(supabase, user_id)
+    return user
 
 
 @router.patch("/step/{step_key}", response_model=OnboardingStepResponse)
@@ -79,8 +86,18 @@ async def patch_onboarding_step(
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors()) from e
 
-    data: dict[str, Any] = body.model_dump(mode="json")
-    data["current_step"] = step_key
+    if step_key == "restrictions":
+        assert isinstance(body, RestrictionsStepPayload)
+        sync_user_diet_restrictions(
+            supabase,
+            user_id,
+            body.diet_restriction_ids,
+            body.custom_names,
+        )
+        data = {"current_step": step_key}
+    else:
+        data = body.model_dump(mode="json")
+        data["current_step"] = step_key
 
     try:
         response = (

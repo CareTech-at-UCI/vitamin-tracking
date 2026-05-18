@@ -14,6 +14,7 @@ import {
   fullOnboardingSchema,
   type OnboardingFormValues,
 } from "@/lib/onboarding/schemas";
+import { getPresetDietRestrictions } from "@/lib/diet-restrictions/api";
 import {
   getOnboarding,
   patchOnboardingStep,
@@ -29,16 +30,7 @@ const HEIGHT_INCH_OPTIONS = Array.from(
 
 const SEX_OPTIONS = ["F - Female", "M - Male", "X - Nonbinary/Intersex"];
 
-const RESTRICTION_OPTIONS = [
-  "Vegetarian",
-  "No Peanuts",
-  "Vegan",
-  "Pescatarian",
-  "No Gluten",
-  "Dairy Free",
-  "Halal",
-  "Kosher",
-];
+type PresetRestriction = { id: number; name: string };
 
 const AVATAR_OPTIONS = [
   { id: "tomato", label: "Tomato" },
@@ -108,8 +100,10 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [restrictionOptions, setRestrictionOptions] =
-    useState(RESTRICTION_OPTIONS);
+  const [presetRestrictions, setPresetRestrictions] = useState<PresetRestriction[]>(
+    [],
+  );
+  const [presetsLoaded, setPresetsLoaded] = useState(false);
 
   const {
     watch,
@@ -122,6 +116,21 @@ export default function OnboardingPage() {
     defaultValues: DEFAULT_VALUES,
     mode: "onTouched",
   });
+
+  const presetNameSet = new Set(
+    presetRestrictions.map((restriction) => restriction.name.toLowerCase()),
+  );
+
+  useEffect(() => {
+    getPresetDietRestrictions()
+      .then((items) => {
+        setPresetRestrictions(
+          items.map((item) => ({ id: item.id, name: item.name })),
+        );
+        setPresetsLoaded(true);
+      })
+      .catch(console.error);
+  }, []);
 
   // Prefill from GET /onboarding on mount and resume saved step
   useEffect(() => {
@@ -149,14 +158,10 @@ export default function OnboardingPage() {
         if (data.weight) updates.weight = String(data.weight);
         if (data.sex) updates.sex = SEX_FROM_DB[data.sex] ?? "";
         if (data.activity_level) updates.activityLevel = data.activity_level;
-        if (data.recommendations) {
-          updates.selectedRestrictions = data.recommendations;
-          const custom = data.recommendations.filter(
-            (r) => !RESTRICTION_OPTIONS.includes(r),
+        if (data.diet_restrictions?.length) {
+          updates.selectedRestrictions = data.diet_restrictions.map(
+            (restriction) => restriction.name,
           );
-          if (custom.length > 0) {
-            setRestrictionOptions((prev) => [...prev, ...custom]);
-          }
         }
         if (data.profile_picture) {
           const avatar = AVATAR_FROM_DB[data.profile_picture];
@@ -185,16 +190,20 @@ export default function OnboardingPage() {
   const stepCount = 4;
 
   const trimmedSearchValue = searchValue.trim();
-  const filteredRestrictions = restrictionOptions.filter((item) =>
-    item.toLowerCase().includes(searchValue.toLowerCase().trim()),
-  );
-  const unselectedRestrictions = filteredRestrictions.filter(
-    (item) => !selectedRestrictions.includes(item),
-  );
+  const unselectedRestrictions = presetRestrictions
+    .map((restriction) => restriction.name)
+    .filter((name) => !selectedRestrictions.includes(name))
+    .filter((name) =>
+      name.toLowerCase().includes(searchValue.toLowerCase().trim()),
+    );
   const canAddCustomRestriction =
     trimmedSearchValue.length > 0 &&
-    !restrictionOptions.some(
-      (item) => item.toLowerCase() === trimmedSearchValue.toLowerCase(),
+    !presetRestrictions.some(
+      (restriction) =>
+        restriction.name.toLowerCase() === trimmedSearchValue.toLowerCase(),
+    ) &&
+    !selectedRestrictions.some(
+      (name) => name.toLowerCase() === trimmedSearchValue.toLowerCase(),
     );
 
   function toggleRestriction(restriction: string) {
@@ -210,7 +219,6 @@ export default function OnboardingPage() {
 
   function addCustomRestriction() {
     if (!canAddCustomRestriction) return;
-    setRestrictionOptions((prev) => [...prev, trimmedSearchValue]);
     setValue(
       "selectedRestrictions",
       [...selectedRestrictions, trimmedSearchValue],
@@ -240,7 +248,13 @@ export default function OnboardingPage() {
       };
     }
     if (stepIndex === 2) {
-      return { recommendations: selectedRestrictions };
+      const presetIds = presetRestrictions
+        .filter((restriction) => selectedRestrictions.includes(restriction.name))
+        .map((restriction) => restriction.id);
+      const customNames = selectedRestrictions.filter(
+        (name) => !presetNameSet.has(name.toLowerCase()),
+      );
+      return { diet_restriction_ids: presetIds, custom_names: customNames };
     }
     return { profile_picture: AVATAR_TO_DB[selectedAvatar] };
   }
@@ -248,6 +262,7 @@ export default function OnboardingPage() {
   async function handleNext() {
     const valid = await trigger(STEP_FIELDS[currentStep]);
     if (!valid) return;
+    if (currentStep === 2 && !presetsLoaded) return;
 
     setIsLoading(true);
     try {
@@ -276,6 +291,7 @@ export default function OnboardingPage() {
   async function handleMobileFinish() {
     const valid = await trigger();
     if (!valid) return;
+    if (!presetsLoaded) return;
 
     setIsLoading(true);
     try {

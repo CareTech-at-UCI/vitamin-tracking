@@ -33,6 +33,12 @@ async function apiFetch(path: string, init: RequestInit = {}) {
   return res.json();
 }
 
+export type OnboardingDietRestriction = {
+  id: number;
+  name: string;
+  is_custom: boolean;
+};
+
 export type OnboardingState = {
   current_step: string | null;
   is_completed: boolean;
@@ -43,7 +49,7 @@ export type OnboardingState = {
   height: number | null;
   weight: number | null;
   activity_level: number | null;
-  recommendations: string[] | null;
+  diet_restrictions: OnboardingDietRestriction[] | null;
   profile_picture: "fox" | "monkey" | "cat" | null;
 };
 

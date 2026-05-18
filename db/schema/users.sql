@@ -15,7 +15,7 @@ CREATE TABLE users (
   -- profile_picture_type: ENUM('fox', 'monkey', 'cat')
   profile_picture profile_picture_type,
   goal_type TEXT,
-  -- DEEFAULT set to '{}' to represent an empty array
+  -- Diet restriction labels (preset + custom), e.g. {"Vegetarian", "No Gluten"}
   recommendations TEXT[] DEFAULT '{}',
 
   -- DEFAULT set to NOW() (current time)
