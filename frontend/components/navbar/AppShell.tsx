@@ -14,8 +14,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main
         className={
           showNav
-            ? "flex min-h-0 flex-1 flex-col pb-20 md:pb-0"
-            : "flex min-h-0 flex-1 flex-col"
+            ? "flex min-h-0 flex-1 flex-col overflow-y-auto pb-mobile-nav md:overflow-visible md:pb-0"
+            : "flex min-h-0 flex-1 flex-col overflow-y-auto"
         }
       >
         {children}

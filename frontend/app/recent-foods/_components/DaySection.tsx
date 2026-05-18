@@ -55,7 +55,7 @@ export default function DaySection({
   const isDayEmpty = dayItemCount === 0;
 
   return (
-    <section className="space-y-4">
+    <section className="min-w-0 space-y-4">
       <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 lg:grid-cols-[1fr_auto]">
         {!isEditing && (
           <button
@@ -97,13 +97,13 @@ export default function DaySection({
       {isDayEmpty ? (
         <DayEmptyState />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-16">
-          <div className="space-y-5">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-x-16">
+          <div className="min-w-0 space-y-5">
             <MealRow title="Breakfast" items={meals.breakfast} />
             <MealRow title="Lunch" items={meals.lunch} />
           </div>
 
-          <div className="space-y-5">
+          <div className="min-w-0 space-y-5">
             <MealRow title="Dinner" items={meals.dinner} />
             <MealRow title="Snacks" items={meals.snacks} />
           </div>

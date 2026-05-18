@@ -108,7 +108,7 @@ export default function RecentFoodsPage() {
   }, [recentDates]);
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden bg-background">
+    <div className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-background">
       <main className="flex min-h-0 min-w-0 flex-1 flex-col">
         {!isEditing && (
           <>
@@ -144,7 +144,7 @@ export default function RecentFoodsPage() {
           </>
         )}
 
-          <div className="space-y-10 lg:space-y-12 px-6 lg:px-12">
+          <div className="min-w-0 space-y-10 px-6 pb-mobile-content lg:space-y-12 lg:px-12 lg:pb-12">
             {loadError && (
               <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4 font-secondary text-sm text-red-900">
                 {loadError}
@@ -175,48 +175,47 @@ export default function RecentFoodsPage() {
               })}
         </div>
 
-        {isEditing && (
-          <div className="fixed bottom-15 right-18 z-30 flex gap-3.5">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="rounded-full border border-primary px-6 py-2.5 font-secondary text-[14px] font-medium leading-none text-primary transition hover:bg-primary/5"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="rounded-full bg-primary px-7 py-2.5 font-secondary text-[14px] font-medium leading-none text-white transition hover:opacity-90"
-            >
-              Save Changes
-            </button>
-          </div>
-        )}
-
-        {!isEditing && (
-          <>
-            <div className="fixed bottom-6 right-5 z-20 flex flex-col gap-3 lg:hidden">
-              <button
-                type="button"
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-4xl text-white shadow-lg"
-                aria-label="Add food"
-              >
-                <HiPlus />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditing(true)}
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-white shadow-lg"
-                aria-label="Edit foods"
-              >
-                <HiPencil />
-              </button>
-            </div>
-          </>
-        )}
       </main>
+
+      {isEditing && (
+        <div className="mobile-fab-anchor flex gap-3.5 md:right-18">
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            className="rounded-full border border-primary px-6 py-2.5 font-secondary text-[14px] font-medium leading-none text-primary transition hover:bg-primary/5"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            className="rounded-full bg-primary px-7 py-2.5 font-secondary text-[14px] font-medium leading-none text-white transition hover:opacity-90"
+          >
+            Save Changes
+          </button>
+        </div>
+      )}
+
+      {!isEditing && (
+        <div className="mobile-fab-anchor flex flex-col-reverse gap-3 lg:hidden">
+          <button
+            type="button"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-4xl text-white shadow-lg"
+            aria-label="Add food"
+          >
+            <HiPlus />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-3xl text-white shadow-lg"
+            aria-label="Edit foods"
+          >
+            <HiPencil />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,31 @@
 :root {
   --background: #FFFDEE;
   --foreground: #171717;
+
+  /* Mobile bottom nav (h-24) + device safe area — use for main padding & fixed UI */
+  --mobile-nav-safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* Raised scan button + wavy nav — extra clearance above the bar */
+  --mobile-nav-clearance: 7.5rem;
+  --mobile-nav-offset: calc(var(--mobile-nav-clearance) + var(--mobile-nav-safe-bottom));
+  /* Recent Foods FAB stack (2× h-16 buttons + gap) above the nav */
+  --mobile-fab-stack: 10.5rem;
+  --mobile-content-bottom: calc(var(--mobile-nav-offset) + var(--mobile-fab-stack));
+}
+
+/* Reliable mobile safe-area helpers (avoid arbitrary Tailwind + CSS var issues) */
+.pb-mobile-nav {
+  padding-bottom: var(--mobile-nav-offset);
+}
+
+.pb-mobile-content {
+  padding-bottom: var(--mobile-content-bottom);
+}
+
+.mobile-fab-anchor {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(var(--mobile-nav-offset) + 0.75rem);
+  z-index: 40;
 }
 
 @theme inline {

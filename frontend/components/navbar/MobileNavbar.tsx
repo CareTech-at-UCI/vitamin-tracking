@@ -13,7 +13,10 @@ export default function MobileNavbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 overflow-visible">
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 overflow-visible pb-[env(safe-area-inset-bottom,0px)]"
+      aria-label="Main navigation"
+    >
       <div className="relative h-24 overflow-visible">
         {/* Background — matches public/assets/nav/mobile-nav.svg */}
         <svg
