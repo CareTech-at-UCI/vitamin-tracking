@@ -13,6 +13,11 @@
   --color-primary-600: var(--primary_600);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
+  --color-cream: var(--cream);
+  --color-cream-muted: var(--cream_muted);
+  --color-secondary-light: var(--secondary_light);
+  --color-navbar: var(--navbar);
+  --color-navbar-active: var(--navbar_active);
 
   --font-display: var(--font-montserrat-alternates);
   --font-body: var(--font-instrument-sans);
@@ -38,6 +43,11 @@
     --secondary: #0A3323;
     --background: #FFFDEE;
     --accent: #F16F33;
+    --cream: #FDFAE7;
+    --cream_muted: #FDFAE7CC;
+    --secondary_light: #1a4a35;
+    --navbar: #06261B;
+    --navbar_active: #0D3325;
   }
 }
 
@@ -50,6 +60,11 @@
     --secondary: #0A3323;
     --background: #FFFDEE;
     --accent: #F16F33;
+    --cream: #FDFAE7;
+    --cream_muted: #FDFAE7CC;
+    --secondary_light: #1a4a35;
+    --navbar: #06261B;
+    --navbar_active: #0D3325;
   }
 }
 
