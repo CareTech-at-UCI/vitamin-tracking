@@ -26,6 +26,8 @@ const EMPTY_MEALS: Meals = {
   snacks: [],
 };
 
+
+
 function getRecentDates(selectedDate: string, count = 2) {
   const dates: string[] = [];
   const [year, month, day] = selectedDate.split("-").map(Number);
@@ -109,44 +111,41 @@ export default function RecentFoodsPage() {
   }, [recentDates]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
-      <div className="hidden lg:flex lg:min-h-screen lg:shrink-0 lg:bg-primary">
-        <Sidebar />
-      </div>
-
-      <main className="w-full px-6 pb-24 pt-8 sm:px-8 lg:flex-1 lg:px-14 lg:pt-14">
-        <div className="mx-auto max-w-295">
-          {!isEditing && (
-            <>
-              <div className="mb-5 flex items-start gap-4">
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/dashboard"
-                    className="font-primary text-4xl leading-none text-secondary transition hover:text-accent lg:text-[44px]"
-                    aria-label="Go back"
-                  >
-                    <HiChevronLeft />
-                  </Link>
-
-                  <h1 className="font-primary text-4xl font-bold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
-                    Recent Foods
-                  </h1>
-                </div>
-              </div>
-
-              <div className="mb-8 flex items-start justify-between gap-6">
-                <DatePicker value={selectedDate} onChange={setSelectedDate} />
-
-                <button
-                  type="button"
-                  className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
+    <div className="flex min-h-screen overflow-x-hidden bg-background">
+      <main className="flex-1 min-w-0">
+        {!isEditing && (
+          <>
+            <div className="mb-5 flex items-start gap-4 px-6 pt-10 lg:px-12 lg:pt-14">
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="font-primary text-4xl sm:text-6xl leading-none text-secondary transition hover:text-accent"
+                  aria-label="Go back"
                 >
-                  <HiCheck />
-                  Categorize by Meal
-                </button>
+                  <HiChevronLeft />
+                </Link>
+
+                <h1 className="font-primary text-4xl font-semibold leading-none text-secondary sm:text-5xl lg:text-[64px] tracking-tight">
+                  Recent Foods
+                </h1>
               </div>
-            </>
-          )}
+            </div>
+
+            <div className="mb-8 flex items-center justify-between gap-3 px-6 lg:px-12">
+              <div className="w-full md:w-auto">
+                <DatePicker value={selectedDate} onChange={setSelectedDate} />
+              </div>
+
+              <button
+                type="button"
+                className="hidden rounded-full bg-accent px-3 py-2 gap-1 font-secondary text-sm font-medium leading-none text-white lg:flex cursor-pointer"
+              >
+                <HiCheck />
+                Categorize by Meal
+              </button>
+            </div>
+          </>
+        )}
 
           <div className="space-y-10 lg:space-y-12">
             {loadError && (
@@ -164,17 +163,18 @@ export default function RecentFoodsPage() {
             {recentDates.map((date) => {
               const meals = mealsByDate[date] ?? EMPTY_MEALS;
 
-              return (
-                <DaySection
-                  key={date}
-                  date={date}
-                  meals={meals}
-                  isEditing={isEditing}
-                  onEdit={() => setIsEditing(true)}
-                />
-              );
-            })}
-          </div>
+            return (
+              <DaySection
+                key={date}
+                date={date}
+                meals={meals}
+                isEditing={isEditing}
+                onEdit={() => setIsEditing(true)}
+                onPreviousDate={goToPreviousDate}
+                onNextDate={goToNextDate}
+              />
+            );
+          })}
         </div>
 
         {isEditing && (
@@ -216,8 +216,6 @@ export default function RecentFoodsPage() {
                 <HiPencil />
               </button>
             </div>
-
-            <div className="fixed bottom-0 left-0 right-0 h-10 bg-primary lg:hidden" />
           </>
         )}
       </main>
