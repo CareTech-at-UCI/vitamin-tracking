@@ -1,6 +1,4 @@
 const DEFAULT_BASE = "http://127.0.0.1:8000";
-export const DEMO_RECENT_FOODS_USER_ID =
-  process.env.NEXT_PUBLIC_DEMO_USER_ID ?? "869d8252-7373-4741-b888-8ee8a17a46ec";
 
 export type RecentFoodsMealKey = "breakfast" | "lunch" | "dinner" | "snacks";
 
@@ -24,7 +22,7 @@ export function getRecentFoodsApiBaseUrl(): string {
 
 export async function getRecentFoodsDay(
   date: string,
-  userId = DEMO_RECENT_FOODS_USER_ID,
+  userId: string,
 ): Promise<RecentFoodsDayResponse> {
   const base = getRecentFoodsApiBaseUrl();
   const url = new URL(`${base}/api/v1/meals/recent-foods`);

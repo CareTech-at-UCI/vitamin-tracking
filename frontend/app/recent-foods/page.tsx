@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import DaySection from "@/app/recent-foods/_components/DaySection";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
+import { createClient } from "@/utils/supabase/client";
 import { getRecentFoodsDay, type RecentFoodsApiMeals } from "@/lib/recent-foods/recent-foods-api";
 
 const FOOD_IMAGE =
@@ -57,10 +58,25 @@ export default function RecentFoodsPage() {
       setIsLoading(true);
       setLoadError(null);
 
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        if (!isCurrentRequest) return;
+        setLoadError(
+          authError?.message ?? "Sign in to view your recent foods.",
+        );
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const days = await Promise.all(
           recentDates.map(async (date) => {
-            const response = await getRecentFoodsDay(date);
+            const response = await getRecentFoodsDay(date, user.id);
             return [
               date,
               {
