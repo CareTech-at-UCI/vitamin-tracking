@@ -50,7 +50,9 @@ export function OnboardingShell({
       <main ref={mainRef} className="h-screen snap-y snap-proximity overflow-y-auto bg-[#FDFAE7] text-[#3b6b3c] md:min-h-screen md:h-auto md:snap-none md:overflow-visible">
         <div className="mx-auto flex min-h-screen w-full max-w-[1240px] flex-col px-4 py-6 md:px-12 md:py-8 lg:px-16">
           <OnboardingProgress currentStep={currentStep} stepCount={stepCount} />
-          <div className="flex flex-1 flex-col pt-8 pb-0 font-body md:pt-10 lg:pt-12">{children}</div>
+          <div className="onboarding-form flex flex-1 flex-col pt-8 pb-0 font-body md:pt-10 lg:pt-12">
+            {children}
+          </div>
         </div>
       </main>
       {showScrollToTop ? (

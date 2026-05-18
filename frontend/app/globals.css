@@ -102,9 +102,10 @@ body {
   box-sizing: border-box;
 }
 
-input:not([type="range"]),
-select,
-textarea {
+/* Onboarding form fields only */
+.onboarding-form input:not([type="range"]),
+.onboarding-form select,
+.onboarding-form textarea {
   background-image: linear-gradient(
     90deg,
     #F0E7CF 0%,

@@ -1,16 +1,23 @@
+import Link from "next/link";
+import { ROUTES } from "@/constants/routes";
+
 interface ProgressBarProps {
   percentage: number;
   vitaminName: string;
+  vitaminId: string;
 }
 
-export function ProgressBar({ percentage, vitaminName }: ProgressBarProps) {
+export function ProgressBar({ percentage, vitaminName, vitaminId }: ProgressBarProps) {
   return (
     <div className="flex flex-col gap-2 mb-[1vh]">
       
         <div className="flex items-center gap-1">
-            <span className="font-body font-medium text-[13.88px] md:text-[1.25rem] leading-none tracking-[-0.05em] text-[#000000]">
+            <Link
+              href={ROUTES.vitaminDetails(vitaminId)}
+              className="font-body font-medium text-[13.88px] md:text-[1.25rem] leading-none tracking-[-0.05em] text-[#000000] hover:underline cursor-pointer"
+            >
                 {vitaminName}
-            </span>
+            </Link>
         </div>
 
         <div className="flex items-center gap-4">

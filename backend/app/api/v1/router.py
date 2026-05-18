@@ -36,4 +36,5 @@ router.include_router(
 router.include_router(nutrients.router, prefix="/nutrients", tags=["nutrients"])
 router.include_router(meal_nutrients.router, prefix="/meal-nutrients", tags=["meal-nutrients"])
 router.include_router(nutrient_goals.router, prefix="/nutrient-goals", tags=["nutrient-goals"])
+router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 router.include_router(onboarding.router, prefix="/onboarding", tags=["onboarding"])
