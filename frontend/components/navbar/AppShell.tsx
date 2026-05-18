@@ -6,7 +6,7 @@ import MobileNavbar from "./MobileNavbar";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const showNav = pathname !== "/";
+  const showNav = pathname !== "/" && pathname !== "/login" && pathname !== "/signup";
 
   return (
     <>
