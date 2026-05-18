@@ -47,11 +47,11 @@ function ProceedContent({
           Scanning” to resume logging.
         </p>
 
-        <div className="mt-10 flex flex-row justify-center gap-4">
+        <div className="mt-10 flex flex-row flex-nowrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={onDashboard}
-            className="rounded-full bg-[#26612F] px-3 py-3 text-white"
+            className="min-w-0 flex-1 rounded-full bg-[#26612F] px-3 py-3 text-center text-sm text-white sm:flex-none sm:px-5 sm:text-base"
           >
             Go to Dashboard
           </button>
@@ -59,7 +59,7 @@ function ProceedContent({
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-full bg-[#F16F33] px-5 py-3 text-white"
+            className="min-w-0 flex-1 rounded-full bg-[#F16F33] px-3 py-3 text-center text-sm text-white sm:flex-none sm:px-5 sm:text-base"
           >
             Confirm Scanning
           </button>

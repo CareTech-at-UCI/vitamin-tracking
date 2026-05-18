@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ModalShell from "@/components/ModalShell";
@@ -119,18 +118,18 @@ function LogCompletedContent({
           Your {foodLabel} has been successfully added to your daily log.
         </p>
 
-        <div className="flex w-full justify-between gap-3 pt-2">
+        <div className="flex w-full flex-row flex-wrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
             onClick={onGoHome}
-            className="flex h-12 w-32 items-center justify-center rounded-[20px] bg-[#26612F] font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
+            className="flex h-[50px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-3 font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
           >
             Go to Home
           </button>
           <button
             type="button"
             onClick={onContinueScanning}
-            className="flex h-12 w-32 items-center justify-center rounded-[20px] bg-[#F16F33] font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
+            className="flex h-[50px] max-w-[118px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-3 font-body text-[0.9rem] font-medium tracking-[-0.8px] text-[#FDFAE7]"
           >
             Continue Scanning
           </button>
@@ -140,7 +139,7 @@ function LogCompletedContent({
   }
 
   return (
-    <div className="flex aspect-[1076/679]">
+    <div className="flex min-h-[520px] max-h-[min(680px,calc(100svh-8rem))]">
       <div className="flex w-[53%] shrink-0 items-center justify-center p-10">
         <Image
           src={imageSrc}
@@ -151,13 +150,13 @@ function LogCompletedContent({
         />
       </div>
 
-      <div className="flex flex-1 flex-col items-center px-10 pb-[92px] pt-[102px] text-center">
-        <div className="flex flex-col items-center gap-[59px]">
+      <div className="flex min-w-0 flex-1 flex-col justify-between px-10 py-10 text-center">
+        <div className="flex flex-col items-center gap-10 pt-8">
           <div className="flex size-[98px] shrink-0 items-center justify-center rounded-full bg-[#6FAF6B]">
             <CheckmarkIcon />
           </div>
 
-          <h2 className="font-display text-[40px] font-semibold leading-none tracking-[-0.08em] text-scan-green-dark">
+          <h2 className="font-display text-[40px] font-semibold leading-none tracking-[-0.08em] text-secondary">
             Log completed
           </h2>
 
@@ -166,17 +165,18 @@ function LogCompletedContent({
           </p>
         </div>
 
-        <div className="mt-[118px] flex w-[92%] items-center gap-6">
-          <Link
-            href="/dashboard"
-            className="flex h-[62px] flex-[145] items-center justify-center rounded-[20px] bg-scan-green font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-scan-green/35"
+        <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-4 pt-8">
+          <button
+            type="button"
+            onClick={onGoHome}
+            className="flex h-[62px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#26612F] px-4 font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#26612F]/35"
           >
             Go to Home
-          </Link>
+          </button>
           <button
             type="button"
             onClick={onContinueScanning}
-            className="h-[62px] flex-[199] rounded-[20px] bg-scan-orange font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-scan-orange/35"
+            className="flex h-[62px] max-w-[145px] shrink-0 items-center justify-center rounded-[20px] bg-[#F16F33] px-4 font-body text-xl font-medium leading-none tracking-[-0.05em] text-[#FDFAE7] transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[#F16F33]/35"
           >
             Continue Scanning
           </button>
@@ -240,8 +240,8 @@ export default function LogCompleted({
           ariaLabel="Log completed"
           onClose={onClose}
           className="z-100"
-          panelClassName="max-w-[1076px] overflow-hidden rounded-2xl bg-[#FDFAE7] text-scan-green-dark"
-          closeButtonClassName="text-scan-green-dark"
+          panelClassName="max-w-[1076px] overflow-hidden rounded-2xl bg-cream text-secondary"
+          closeButtonClassName="text-secondary"
         >
           <LogCompletedContent
             foodNames={foodNames}
