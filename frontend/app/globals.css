@@ -22,6 +22,9 @@
   --font-primary: var(--font-montserrat);
   --font-secondary: var(--font-instrument);
 
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
   --color-onboarding-cream-200: #fff7ea;
   --color-onboarding-cream-400: #fdf4df;
   --color-onboarding-cream-800: #ece1c6;
@@ -44,7 +47,7 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
+    --background: #FDFAE7;
     --foreground: #ededed;
     --primary: #26612F;
     --primary_600: #0F3D2E;

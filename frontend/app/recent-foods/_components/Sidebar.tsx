@@ -1,5 +1,7 @@
 "use client";
 
+import { JSX } from "react";
+
 export default function Sidebar(): JSX.Element {
   return (
     <div className="w-32 bg-primary flex items-start justify-center py-6">

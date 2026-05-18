@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { OnboardingStepAvatar } from "@/app/onboarding/ui/avatar";
-import { OnboardingStepHeightWeight } from "@/app/onboarding/ui/height-weight";
-import { OnboardingNav } from "@/app/onboarding/ui/nav";
-import { OnboardingStepNameAge } from "@/app/onboarding/ui/name-age";
-import { OnboardingStepRestrictions } from "@/app/onboarding/ui/restrictions";
-import { OnboardingShell } from "@/app/onboarding/ui/shell";
+import { OnboardingStepAvatar } from "@/app/onboarding/_components/avatar";
+import { OnboardingStepHeightWeight } from "@/app/onboarding/_components/height-weight";
+import { OnboardingNav } from "@/app/onboarding/_components/nav";
+import { OnboardingStepNameAge } from "@/app/onboarding/_components/name-age";
+import { OnboardingStepRestrictions } from "@/app/onboarding/_components/restrictions";
+import { OnboardingShell } from "@/app/onboarding/_components/shell";
 
 const HEIGHT_FEET_OPTIONS = ["3 ft", "4 ft", "5 ft", "6 ft", "7 ft", "8 ft"];
 

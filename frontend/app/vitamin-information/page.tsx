@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import Sidebar from "@/components/recent-foods/Sidebar";
-import VitaminDropdown from "@/components/recent-foods/VitaminDropdown";
+import Sidebar from "@/app/recent-foods/_components/Sidebar";
+import VitaminDropdown from "@/app/recent-foods/_components/VitaminDropdown";
 
 export default function VitaminInfoPage() {
   const searchParams = useSearchParams();
@@ -25,10 +25,8 @@ export default function VitaminInfoPage() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar />
-
-      <div className="flex-1 px-20 pt-14 pb-16">
-        <h1 className="text-5xl font-primary text-secondary font-semibold mb-10">
+      <div className="flex-1 sm:px-20 px-6 sm:pt-14 pt-10 pb-16">
+        <h1 className="text-4xl sm:text-6xl font-primary text-secondary font-semibold mb-10">
           What are vitamins and why are they important?
         </h1>
 
