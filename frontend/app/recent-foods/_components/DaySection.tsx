@@ -1,4 +1,5 @@
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import DayEmptyState from "./DayEmptyState";
 import MealRow from "./MealRow";
 
 type FoodItem = {
@@ -33,6 +34,15 @@ function formatHeading(dateStr: string) {
   });
 }
 
+function countDayItems(meals: Meals) {
+  return (
+    meals.breakfast.length +
+    meals.lunch.length +
+    meals.dinner.length +
+    meals.snacks.length
+  );
+}
+
 export default function DaySection({
   date,
   meals,
@@ -41,6 +51,9 @@ export default function DaySection({
   onPreviousDate,
   onNextDate,
 }: Props) {
+  const dayItemCount = countDayItems(meals);
+  const isDayEmpty = dayItemCount === 0;
+
   return (
     <section className="space-y-4">
       <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 lg:grid-cols-[1fr_auto]">
@@ -81,17 +94,21 @@ export default function DaySection({
         )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-16">
-        <div className="space-y-5">
-          <MealRow title="Breakfast" items={meals.breakfast} />
-          <MealRow title="Lunch" items={meals.lunch} />
-        </div>
+      {isDayEmpty ? (
+        <DayEmptyState />
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-16">
+          <div className="space-y-5">
+            <MealRow title="Breakfast" items={meals.breakfast} />
+            <MealRow title="Lunch" items={meals.lunch} />
+          </div>
 
-        <div className="space-y-5">
-          <MealRow title="Dinner" items={meals.dinner} />
-          <MealRow title="Snacks" items={meals.snacks} />
+          <div className="space-y-5">
+            <MealRow title="Dinner" items={meals.dinner} />
+            <MealRow title="Snacks" items={meals.snacks} />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

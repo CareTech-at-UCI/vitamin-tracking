@@ -9,10 +9,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const showNav = pathname !== "/" && pathname !== "/login" && pathname !== "/signup" && pathname !== "/onboarding";
 
   return (
-    <>
+    <div className="flex min-h-dvh flex-col">
       {showNav && <Navbar />}
-      <main className={showNav ? "flex-1 pb-20 md:pb-0" : "flex-1"}>{children}</main>
+      <main
+        className={
+          showNav
+            ? "flex min-h-0 flex-1 flex-col pb-20 md:pb-0"
+            : "flex min-h-0 flex-1 flex-col"
+        }
+      >
+        {children}
+      </main>
       {showNav && <MobileNavbar />}
-    </>
+    </div>
   );
 }

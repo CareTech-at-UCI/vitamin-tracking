@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import Sidebar from "@/app/recent-foods/_components/Sidebar";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import DaySection from "@/app/recent-foods/_components/DaySection";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
@@ -35,30 +34,18 @@ function addDays(dateStr: string, delta: number) {
   return d.toLocaleDateString("en-CA");
 }
 
-function getRecentDates(selectedDate: string, count = 2) {
-  const dates: string[] = [];
-  const [year, month, day] = selectedDate.split("-").map(Number);
-
-  for (let i = 0; i < count; i++) {
-    const d = new Date(year, month - 1, day);
-    d.setDate(d.getDate() - i);
-    dates.push(d.toLocaleDateString("en-CA"));
-  }
-
-  return dates;
+function todayLocalIsoDate() {
+  return new Date().toLocaleDateString("en-CA");
 }
 
 export default function RecentFoodsPage() {
-  const [selectedDate, setSelectedDate] = useState("2026-05-08");
+  const [selectedDate, setSelectedDate] = useState(todayLocalIsoDate);
   const [isEditing, setIsEditing] = useState(false);
   const [mealsByDate, setMealsByDate] = useState<Record<string, Meals>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const recentDates = useMemo(() => {
-    if (isEditing) return [selectedDate];
-    return getRecentDates(selectedDate, 2);
-  }, [selectedDate, isEditing]);
+  const recentDates = useMemo(() => [selectedDate], [selectedDate]);
 
   const goToPreviousDate = () => setSelectedDate((prev) => addDays(prev, -1));
   const goToNextDate = () => setSelectedDate((prev) => addDays(prev, 1));
@@ -121,8 +108,8 @@ export default function RecentFoodsPage() {
   }, [recentDates]);
 
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-background">
-      <main className="flex-1 min-w-0">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden bg-background">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col">
         {!isEditing && (
           <>
             <div className="mb-5 flex items-start gap-4 px-6 pt-10 lg:px-12 lg:pt-14">
@@ -157,7 +144,7 @@ export default function RecentFoodsPage() {
           </>
         )}
 
-          <div className="space-y-10 lg:space-y-12">
+          <div className="space-y-10 lg:space-y-12 px-6 lg:px-12">
             {loadError && (
               <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4 font-secondary text-sm text-red-900">
                 {loadError}
@@ -170,21 +157,22 @@ export default function RecentFoodsPage() {
               </p>
             )}
 
-            {recentDates.map((date) => {
-              const meals = mealsByDate[date] ?? EMPTY_MEALS;
+            {!isLoading &&
+              recentDates.map((date) => {
+                const meals = mealsByDate[date] ?? EMPTY_MEALS;
 
-            return (
-              <DaySection
-                key={date}
-                date={date}
-                meals={meals}
-                isEditing={isEditing}
-                onEdit={() => setIsEditing(true)}
-                onPreviousDate={goToPreviousDate}
-                onNextDate={goToNextDate}
-              />
-            );
-          })}
+                return (
+                  <DaySection
+                    key={date}
+                    date={date}
+                    meals={meals}
+                    isEditing={isEditing}
+                    onEdit={() => setIsEditing(true)}
+                    onPreviousDate={goToPreviousDate}
+                    onNextDate={goToNextDate}
+                  />
+                );
+              })}
         </div>
 
         {isEditing && (
