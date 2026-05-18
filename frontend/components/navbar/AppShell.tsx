@@ -3,10 +3,14 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import MobileNavbar from "./MobileNavbar";
+import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const showNav = pathname !== "/" && pathname !== "/login" && pathname !== "/signup" && pathname !== "/onboarding";
+  const { navOverlay } = useScanChrome();
+  const showNav =
+    pathname !== "/" && pathname !== "/login" && pathname !== "/signup" && pathname !== "/onboarding";
+  const navBlocked = navOverlay === "blur";
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -20,7 +24,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       >
         {children}
       </main>
-      {showNav && <MobileNavbar />}
+      {showNav && (
+        <div
+          className={
+            navBlocked
+              ? "pointer-events-none md:pointer-events-auto"
+              : undefined
+          }
+          aria-hidden={navBlocked}
+        >
+          <MobileNavbar />
+        </div>
+      )}
     </div>
   );
 }

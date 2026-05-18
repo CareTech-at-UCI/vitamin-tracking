@@ -37,17 +37,17 @@ export function HomeInfoSection() {
       <div className="mx-auto h-full w-full min-h-screen">
         <div className="sm:hidden px-6">
           <Image src="/sample.png" alt="Sample photo of scan" width={121} height={121} className="my-4" />
-          <div className="h-px border-b" />
+          <div className="h-px border-b border-primary" />
           <div className="pt-2">
             {infoCards.map((card) => (
-              <div key={card.title} className="border-b">
+              <div key={card.title} className="border-b border-primary">
                 <button
                   type="button"
                   onClick={() => toggleCard(card.title)}
                   aria-expanded={expandedCard === card.title}
-                  className="flex w-full items-start justify-between gap-3 py-2.5 text-left text-[#0A3323]"
+                  className="flex w-full items-start justify-between gap-3 py-2.5 text-left text-primary"
                 >
-                  <span className="min-w-0 flex-1 font-display text-xl font-medium leading-snug text-foreground">
+                  <span className="min-w-0 flex-1 font-display text-xl font-medium leading-snug text-primary">
                     {card.title}
                   </span>
                   <span
@@ -63,7 +63,7 @@ export function HomeInfoSection() {
                   }`}
                 >
                   <div className="min-h-0 overflow-hidden">
-                    <div className="[font-family:var(--font-display)] pb-4 text-sm text-[#26612F] leading-relaxed text-foreground">
+                    <div className="[font-family:var(--font-display)] pb-4 text-sm text-primary leading-relaxed">
                       {card.body}
                     </div>
                   </div>

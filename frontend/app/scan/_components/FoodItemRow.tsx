@@ -14,6 +14,7 @@ type FoodItemRowProps = {
   canDelete: boolean;
   onChange: (item: FoodItem) => void;
   onDelete: () => void;
+  readOnly?: boolean;
 };
 
 export default function FoodItemRow({
@@ -21,6 +22,7 @@ export default function FoodItemRow({
   canDelete,
   onChange,
   onDelete,
+  readOnly = false,
 }: FoodItemRowProps) {
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -36,7 +38,7 @@ export default function FoodItemRow({
     <article className="grid gap-3 font-display text-secondary">
       <div className="relative mx-auto w-full max-w-[644px]">
         <div className="flex min-w-0 items-center justify-center gap-3 px-12">
-          {isEditingName ? (
+          {isEditingName && !readOnly ? (
             <input
               type="text"
               value={item.name}
@@ -54,32 +56,36 @@ export default function FoodItemRow({
             </h3>
           )}
 
-          <button
-            type="button"
-            onClick={() => setIsEditingName(true)}
-            aria-label={`Edit ${item.name}`}
-            className="flex size-8 shrink-0 items-center justify-center text-neutral-500 transition hover:text-accent"
-          >
-            <Image
-              src="/assets/scan/material-symbols_edit.svg"
-              alt=""
-              width={32}
-              height={32}
-              aria-hidden="true"
-              className="size-6"
-            />
-          </button>
+          {!readOnly && (
+            <button
+              type="button"
+              onClick={() => setIsEditingName(true)}
+              aria-label={`Edit ${item.name}`}
+              className="flex size-8 shrink-0 items-center justify-center text-neutral-500 transition hover:text-accent"
+            >
+              <Image
+                src="/assets/scan/material-symbols_edit.svg"
+                alt=""
+                width={32}
+                height={32}
+                aria-hidden="true"
+                className="size-6"
+              />
+            </button>
+          )}
         </div>
 
-        <button
-          type="button"
-          onClick={onDelete}
-          disabled={!canDelete}
-          aria-label={`Delete ${item.name}`}
-          className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-accent transition hover:bg-accent/10 disabled:cursor-not-allowed disabled:opacity-35"
-        >
-          <DeleteIcon className="size-5" />
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={!canDelete}
+            aria-label={`Delete ${item.name}`}
+            className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-accent transition hover:bg-accent/10 disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            <DeleteIcon className="size-5" />
+          </button>
+        )}
       </div>
 
       <div className="mx-auto w-full max-w-[644px]">
@@ -104,8 +110,9 @@ export default function FoodItemRow({
           step="1"
           value={item.servings}
           onChange={(event) => updateServings(Number(event.target.value))}
+          disabled={readOnly}
           aria-label={`${item.name} servings`}
-          className="scan-serving-range mt-4 w-full"
+          className="scan-serving-range mt-4 w-full disabled:opacity-70"
           style={{
             "--scan-serving-progress": `${item.servings * 10}%`,
           } as React.CSSProperties}
