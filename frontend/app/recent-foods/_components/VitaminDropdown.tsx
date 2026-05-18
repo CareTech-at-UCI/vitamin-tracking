@@ -3,13 +3,17 @@
 import { useState, useEffect, JSX } from "react";
 import { HiChevronDown, HiChevronRight } from "react-icons/hi";
 
-type VitaminDropdownProps = { 
-  id: string; 
-  title: string; 
-  isActive?: boolean; 
+type VitaminDropdownProps = {
+  id: string;
+  title: string;
+  isActive?: boolean;
 };
 
-export default function VitaminDropdown({ id, title, isActive = false }: VitaminDropdownProps): JSX.Element {
+export default function VitaminDropdown({
+  id,
+  title,
+  isActive = false,
+}: VitaminDropdownProps): JSX.Element {
   const [open, setOpen] = useState(isActive);
 
   useEffect(() => {
@@ -67,21 +71,21 @@ export default function VitaminDropdown({ id, title, isActive = false }: Vitamin
           </div>
 
           <div className="sm:hidden block">
-              <h1 className="font-bold text-xl">Plant Sources</h1>
-              <ul className="font-medium list-disc ml-5 text-md">
-                <li>Orange/yellow vegetables</li>
-                <li>Leafy greens</li>
-              </ul>
-            </div>
+            <h1 className="font-bold text-xl">Plant Sources</h1>
+            <ul className="font-medium list-disc ml-5 text-md">
+              <li>Orange/yellow vegetables</li>
+              <li>Leafy greens</li>
+            </ul>
+          </div>
 
-            <div className="sm:hidden block">
-              <h1 className="font-bold text-xl">Animal Sources</h1>
-              <ul className="font-medium list-disc ml-5 text-md">
-                <li>Liver</li>
-                <li>Eggs</li>
-                <li>Milk products</li>
-              </ul>
-            </div>
+          <div className="sm:hidden block">
+            <h1 className="font-bold text-xl">Animal Sources</h1>
+            <ul className="font-medium list-disc ml-5 text-md">
+              <li>Liver</li>
+              <li>Eggs</li>
+              <li>Milk products</li>
+            </ul>
+          </div>
         </div>
       )}
     </div>
