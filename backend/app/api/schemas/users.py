@@ -19,6 +19,7 @@ class SexType(str, Enum):
 
 
 class ProfilePictureType(str, Enum):
+    # !! ENUMS CURRENTLY REFER TO WRONG PROFILE PICTURES, CORRECT SET = {tomato, watermelon, grape, blueberry} !!
     fox = "fox"
     monkey = "monkey"
     cat = "cat"
@@ -39,7 +40,10 @@ class UserUpdate(BaseModel):
     is_pregnant: bool | None = None
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
-    recommendations: list[str] | None = None
+    recommendations: list[str] | None = Field(
+        default=None,
+        description="Diet restriction labels (preset and custom).",
+    )
 
     @model_validator(mode="after")
     def validate_pregnancy_requires_female(self):
@@ -97,7 +101,10 @@ class UserCreate(BaseModel):
     is_pregnant: bool | None = None
     profile_picture: ProfilePictureType | None = None
     goal_type: str | None = None
-    recommendations: list[str] | None = None
+    recommendations: list[str] | None = Field(
+        default=None,
+        description="Diet restriction labels (preset and custom).",
+    )
 
     @model_validator(mode="after")
     def validate_pregnancy_requires_female(self):
