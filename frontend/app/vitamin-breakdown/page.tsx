@@ -13,7 +13,7 @@ import {
   getWeeklyVitaminBreakdown,
   type VitaminBreakdownResponse,
   type VitaminDetail,
-} from "@/app/vitamin-breakdown/api";
+} from "@/lib/vitamin-breakdown/api";
 
 type ViewMode = "daily" | "weekly";
 
