@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import Drawer from "./_components/Drawer"
-import FoodServing from "./_components/FoodServing"
-import LogCompleted from "./_components/LogCompleted"
+import Drawer from "./Drawer"
+import FoodServing from "./FoodServing"
+import LogCompleted from "./LogCompleted"
 
 export default function Scan() {
     const [step, setStep] = useState<"proceed" | "drawer" | "overlay">("proceed")
