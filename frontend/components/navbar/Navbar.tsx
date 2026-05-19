@@ -9,7 +9,7 @@ import { profilePictureToAvatarSrc } from "@/lib/profile/avatars";
 
 const NAV_LINKS = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Scan", href: "/scan" },
+  { label: "Vitamin Breakdown", href: "/vitamin-breakdown" },
   { label: "Recent Foods", href: "/recent-foods" },
 ] as const;
 

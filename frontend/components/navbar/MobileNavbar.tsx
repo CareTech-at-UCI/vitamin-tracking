@@ -126,14 +126,14 @@ export default function MobileNavbar() {
             </span>
           </Link>
 
-          {/* Scan */}
+          {/* Vitamin Breakdown */}
           <Link
-            href="/scan"
+            href="/vitamin-breakdown"
             className="flex flex-col items-center gap-1 min-w-[48px]"
           >
             <Icon icon="fluent:food-egg-20-filled" width={25} height={25} color={pathname === "/scan" ? "var(--color-accent, #cc6b3a)" : "var(--color-cream-muted, #b8b0a0)"} />
             <span className={`text-[10px] font-body font-medium ${pathname === "/scan" ? "text-accent" : "text-cream-muted"}`}>
-              Scan
+              Vitamins
             </span>
           </Link>
 
