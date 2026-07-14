@@ -10,6 +10,7 @@ from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.schemas.user_diet_restrictions import UserDietRestrictionItem
+from app.api.schemas.user_dietary_plans import UserDietaryPlanItem
 from app.api.schemas.users import ProfilePictureType, SexType
 
 
@@ -39,6 +40,15 @@ class RestrictionsStepPayload(BaseModel):
     custom_names: list[str] = Field(default_factory=list)
 
 
+class DietaryPlansStepPayload(BaseModel):
+    """Dietary plans synced to `user_dietary_plans`."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    dietary_plan_ids: list[int] = Field(default_factory=list)
+    custom_names: list[str] = Field(default_factory=list)
+
+
 class AvatarStepPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -56,6 +66,7 @@ class OnboardingStateResponse(BaseModel):
     weight: Decimal | None = None
     activity_level: int | None = None
     diet_restrictions: list[UserDietRestrictionItem] | None = None
+    dietary_plans: list[UserDietaryPlanItem] | None = None
     profile_picture: ProfilePictureType | None = None
 
 

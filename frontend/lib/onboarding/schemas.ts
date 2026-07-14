@@ -32,6 +32,10 @@ export const restrictionsSchema = z.object({
   selectedRestrictions: z.array(z.string()),
 });
 
+export const dietaryPlansSchema = z.object({
+  selectedDietaryPlans: z.array(z.string()),
+});
+
 export const avatarSchema = z.object({
   selectedAvatar: z.enum(["tomato", "blueberry", "watermelon", "grape"], {
     error: "Please select an avatar",
@@ -47,6 +51,7 @@ export const fullOnboardingSchema = z.object({
   sex: healthSchema.shape.sex,
   activityLevel: healthSchema.shape.activityLevel,
   selectedRestrictions: restrictionsSchema.shape.selectedRestrictions,
+  selectedDietaryPlans: dietaryPlansSchema.shape.selectedDietaryPlans,
   selectedAvatar: avatarSchema.shape.selectedAvatar,
 });
 

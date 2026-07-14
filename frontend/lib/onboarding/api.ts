@@ -39,6 +39,12 @@ export type OnboardingDietRestriction = {
   is_custom: boolean;
 };
 
+export type OnboardingDietaryPlan = {
+  id: number;
+  name: string;
+  is_custom: boolean;
+};
+
 /** Matches `profile_picture_type` enum; legacy values may appear until migration runs. */
 export type OnboardingProfilePicture =
   | "tomato"
@@ -60,6 +66,7 @@ export type OnboardingState = {
   weight: number | null;
   activity_level: number | null;
   diet_restrictions: OnboardingDietRestriction[] | null;
+  dietary_plans: OnboardingDietaryPlan[] | null;
   profile_picture: OnboardingProfilePicture | null;
 };
 
