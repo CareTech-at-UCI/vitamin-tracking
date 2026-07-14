@@ -9,12 +9,14 @@ import { OnboardingStepHeightWeight } from "@/app/onboarding/_components/height-
 import { OnboardingNav } from "@/app/onboarding/_components/nav";
 import { OnboardingStepNameAge } from "@/app/onboarding/_components/name-age";
 import { OnboardingStepRestrictions } from "@/app/onboarding/_components/restrictions";
+import { OnboardingStepDietaryPlans } from "@/app/onboarding/_components/dietary-plans";
 import { OnboardingShell } from "@/app/onboarding/_components/shell";
 import {
   fullOnboardingSchema,
   type OnboardingFormValues,
 } from "@/lib/onboarding/schemas";
 import { getPresetDietRestrictions } from "@/lib/diet-restrictions/api";
+import { getPresetDietaryPlans } from "@/lib/dietary-plans/api";
 import {
   getOnboarding,
   patchOnboardingStep,
@@ -31,6 +33,7 @@ const HEIGHT_INCH_OPTIONS = Array.from(
 const SEX_OPTIONS = ["F - Female", "M - Male", "X - Nonbinary/Intersex"];
 
 type PresetRestriction = { id: number; name: string };
+type PresetDietaryPlan = { id: number; name: string };
 
 const AVATAR_OPTIONS = [
   { id: "tomato", label: "Tomato" },
@@ -64,20 +67,22 @@ const SEX_FROM_DB: Record<string, string> = {
   other: "X - Nonbinary/Intersex",
 };
 
-const STEP_KEYS = ["name_age", "health", "restrictions", "avatar"] as const;
+const STEP_KEYS = ["name_age", "health", "restrictions", "dietary_plans", "avatar"] as const;
 
 const STEP_NAME_TO_INDEX: Record<string, number> = {
   name_age: 0,
   health: 1,
   restrictions: 2,
-  avatar: 3,
+  dietary_plans: 3,
+  avatar: 4,
 };
 
 const STEP_FIELDS: Record<number, (keyof OnboardingFormValues)[]> = {
   0: ["name", "age"],
   1: ["heightFeet", "heightInches", "weight", "sex"],
   2: ["selectedRestrictions"],
-  3: ["selectedAvatar"],
+  3: ["selectedDietaryPlans"],
+  4: ["selectedAvatar"],
 };
 
 const DEFAULT_VALUES: OnboardingFormValues = {
@@ -89,6 +94,7 @@ const DEFAULT_VALUES: OnboardingFormValues = {
   sex: "",
   activityLevel: 3,
   selectedRestrictions: [],
+  selectedDietaryPlans: [],
   selectedAvatar: "tomato",
 };
 
@@ -97,7 +103,11 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [dietaryPlansSearchValue, setDietaryPlansSearchValue] = useState("");
   const [presetRestrictions, setPresetRestrictions] = useState<PresetRestriction[]>(
+    [],
+  );
+  const [presetDietaryPlans, setPresetDietaryPlans] = useState<PresetDietaryPlan[]>(
     [],
   );
   const [presetsLoaded, setPresetsLoaded] = useState(false);
@@ -118,14 +128,24 @@ export default function OnboardingPage() {
     presetRestrictions.map((restriction) => restriction.name.toLowerCase()),
   );
 
+  const dietaryPlanNameSet = new Set(
+    presetDietaryPlans.map((plan) => plan.name.toLowerCase()),
+  );
+
   useEffect(() => {
-    getPresetDietRestrictions()
-      .then((items) => {
+    Promise.all([
+      getPresetDietRestrictions().then((items) => {
         setPresetRestrictions(
           items.map((item) => ({ id: item.id, name: item.name })),
         );
-        setPresetsLoaded(true);
-      })
+      }),
+      getPresetDietaryPlans().then((items) => {
+        setPresetDietaryPlans(
+          items.map((item) => ({ id: item.id, name: item.name })),
+        );
+      }),
+    ])
+      .then(() => setPresetsLoaded(true))
       .catch(console.error);
   }, []);
 
@@ -160,6 +180,11 @@ export default function OnboardingPage() {
             (restriction) => restriction.name,
           );
         }
+        if (data.dietary_plans?.length) {
+          updates.selectedDietaryPlans = data.dietary_plans.map(
+            (plan) => plan.name,
+          );
+        }
         if (data.profile_picture) {
           const avatar = PROFILE_PICTURE_TO_AVATAR[data.profile_picture];
           if (avatar) updates.selectedAvatar = avatar;
@@ -182,9 +207,10 @@ export default function OnboardingPage() {
   const sex = watch("sex");
   const activityLevel = watch("activityLevel");
   const selectedRestrictions = watch("selectedRestrictions");
+  const selectedDietaryPlans = watch("selectedDietaryPlans");
   const selectedAvatar = watch("selectedAvatar");
 
-  const stepCount = 4;
+  const stepCount = 5;
 
   const trimmedSearchValue = searchValue.trim();
   const unselectedRestrictions = presetRestrictions
@@ -201,6 +227,23 @@ export default function OnboardingPage() {
     ) &&
     !selectedRestrictions.some(
       (name) => name.toLowerCase() === trimmedSearchValue.toLowerCase(),
+    );
+
+  const trimmedDietaryPlansSearchValue = dietaryPlansSearchValue.trim();
+  const unselectedDietaryPlans = presetDietaryPlans
+    .map((plan) => plan.name)
+    .filter((name) => !selectedDietaryPlans.includes(name))
+    .filter((name) =>
+      name.toLowerCase().includes(dietaryPlansSearchValue.toLowerCase().trim()),
+    );
+  const canAddCustomDietaryPlan =
+    trimmedDietaryPlansSearchValue.length > 0 &&
+    !presetDietaryPlans.some(
+      (plan) =>
+        plan.name.toLowerCase() === trimmedDietaryPlansSearchValue.toLowerCase(),
+    ) &&
+    !selectedDietaryPlans.some(
+      (name) => name.toLowerCase() === trimmedDietaryPlansSearchValue.toLowerCase(),
     );
 
   function toggleRestriction(restriction: string) {
@@ -222,6 +265,27 @@ export default function OnboardingPage() {
       { shouldValidate: true },
     );
     setSearchValue("");
+  }
+
+  function toggleDietaryPlan(plan: string) {
+    const exists = selectedDietaryPlans.includes(plan);
+    setValue(
+      "selectedDietaryPlans",
+      exists
+        ? selectedDietaryPlans.filter((item) => item !== plan)
+        : [...selectedDietaryPlans, plan],
+      { shouldValidate: true },
+    );
+  }
+
+  function addCustomDietaryPlan() {
+    if (!canAddCustomDietaryPlan) return;
+    setValue(
+      "selectedDietaryPlans",
+      [...selectedDietaryPlans, trimmedDietaryPlansSearchValue],
+      { shouldValidate: true },
+    );
+    setDietaryPlansSearchValue("");
   }
 
   function buildStepPayload(stepIndex: number): Record<string, unknown> {
@@ -253,13 +317,22 @@ export default function OnboardingPage() {
       );
       return { diet_restriction_ids: presetIds, custom_names: customNames };
     }
+    if (stepIndex === 3) {
+      const presetIds = presetDietaryPlans
+        .filter((plan) => selectedDietaryPlans.includes(plan.name))
+        .map((plan) => plan.id);
+      const customNames = selectedDietaryPlans.filter(
+        (name) => !dietaryPlanNameSet.has(name.toLowerCase()),
+      );
+      return { dietary_plan_ids: presetIds, custom_names: customNames };
+    }
     return { profile_picture: selectedAvatar };
   }
 
   async function handleNext() {
     const valid = await trigger(STEP_FIELDS[currentStep]);
     if (!valid) return;
-    if (currentStep === 2 && !presetsLoaded) return;
+    if ((currentStep === 2 || currentStep === 3) && !presetsLoaded) return;
 
     setIsLoading(true);
     try {
@@ -431,6 +504,22 @@ export default function OnboardingPage() {
             ref={(el) => { sectionRefs.current[3] = el; }}
             className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
           >
+            <OnboardingStepDietaryPlans
+              searchValue={dietaryPlansSearchValue}
+              selectedDietaryPlans={selectedDietaryPlans}
+              suggestedDietaryPlans={unselectedDietaryPlans}
+              canAddCustomDietaryPlan={canAddCustomDietaryPlan}
+              onSearchChange={setDietaryPlansSearchValue}
+              onAddCustomDietaryPlan={addCustomDietaryPlan}
+              onToggleDietaryPlan={toggleDietaryPlan}
+              onClearSearch={() => setDietaryPlansSearchValue("")}
+              dietaryPlansError={errors.selectedDietaryPlans?.message}
+            />
+          </div>
+          <div
+            ref={(el) => { sectionRefs.current[4] = el; }}
+            className="flex min-h-[70svh] scroll-mt-28 snap-start flex-col justify-center py-8"
+          >
             <OnboardingStepAvatar
               selectedAvatar={selectedAvatar}
               avatars={AVATAR_OPTIONS}
@@ -495,6 +584,19 @@ export default function OnboardingPage() {
             />
           ) : null}
           {currentStep === 3 ? (
+            <OnboardingStepDietaryPlans
+              searchValue={dietaryPlansSearchValue}
+              selectedDietaryPlans={selectedDietaryPlans}
+              suggestedDietaryPlans={unselectedDietaryPlans}
+              canAddCustomDietaryPlan={canAddCustomDietaryPlan}
+              onSearchChange={setDietaryPlansSearchValue}
+              onAddCustomDietaryPlan={addCustomDietaryPlan}
+              onToggleDietaryPlan={toggleDietaryPlan}
+              onClearSearch={() => setDietaryPlansSearchValue("")}
+              dietaryPlansError={errors.selectedDietaryPlans?.message}
+            />
+          ) : null}
+          {currentStep === 4 ? (
             <OnboardingStepAvatar
               selectedAvatar={selectedAvatar}
               avatars={AVATAR_OPTIONS}

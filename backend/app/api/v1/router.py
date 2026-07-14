@@ -15,6 +15,7 @@ from .endpoints import (
     dashboard,
     todos,
     diet_restrictions,
+    dietary_plans,
     user_diet_restrictions,
     nutrients,
     nutrient_goals,
@@ -30,6 +31,7 @@ router.include_router(meals.router, prefix="/meals", tags=["meals"])
 router.include_router(meal_items.router, prefix="/meal_items", tags=["meal_items"])
 router.include_router(todos.router, prefix="/todos", tags=["todos"])
 router.include_router(diet_restrictions.router, prefix="/diet_restrictions", tags=["diet_restrictions"])
+router.include_router(dietary_plans.router, prefix="/dietary_plans", tags=["dietary_plans"])
 router.include_router(
     user_diet_restrictions.router,
     prefix="/user-diet-restrictions",

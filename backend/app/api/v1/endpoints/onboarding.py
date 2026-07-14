@@ -19,10 +19,15 @@ from app.api.schemas.onboarding import (
     OnboardingStateResponse,
     OnboardingStepResponse,
     RestrictionsStepPayload,
+    DietaryPlansStepPayload,
 )
 from app.api.services.user_diet_restrictions import (
     list_user_diet_restrictions,
     sync_user_diet_restrictions,
+)
+from app.api.services.user_dietary_plans import (
+    list_user_dietary_plans,
+    sync_user_dietary_plans,
 )
 
 router = APIRouter()
@@ -31,6 +36,7 @@ STEP_SCHEMAS: dict[str, type] = {
     "name_age": NameAgeStepPayload,
     "health": HealthStepPayload,
     "restrictions": RestrictionsStepPayload,
+    "dietary_plans": DietaryPlansStepPayload,
     "avatar": AvatarStepPayload,
 }
 
@@ -63,6 +69,7 @@ async def get_onboarding(
 
     user = rows[0]
     user["diet_restrictions"] = list_user_diet_restrictions(supabase, user_id)
+    user["dietary_plans"] = list_user_dietary_plans(supabase, user_id)
     return user
 
 
@@ -92,6 +99,15 @@ async def patch_onboarding_step(
             supabase,
             user_id,
             body.diet_restriction_ids,
+            body.custom_names,
+        )
+        data = {"current_step": step_key}
+    elif step_key == "dietary_plans":
+        assert isinstance(body, DietaryPlansStepPayload)
+        sync_user_dietary_plans(
+            supabase,
+            user_id,
+            body.dietary_plan_ids,
             body.custom_names,
         )
         data = {"current_step": step_key}
