@@ -35,6 +35,24 @@ async def _ensure_user_exists(user_id: UUID, supabase: Client) -> None:
 
     if not (response.data or []):
         raise HTTPException(status_code=404, detail="User not found")
+    
+@router.get("/me", response_model=ListUserDietRestrictionsResponse)
+async def get_my_diet_restrictions(
+    user_id: str = Depends(get_current_user_id),
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """List diet restrictions for the authenticated user."""
+    await _ensure_user_exists(UUID(user_id), supabase)
+
+    items = list_user_diet_restrictions(
+        supabase,
+        user_id,
+    )
+
+    return {
+        "count": len(items),
+        "items": items,
+    }
 
 
 @router.get("/user/{user_id}", response_model=ListUserDietRestrictionsResponse)
@@ -64,6 +82,7 @@ async def sync_user_diet_restrictions_endpoint(
     )
     items = list_user_diet_restrictions(supabase, str(user_id))
     return {"count": len(items), "items": items}
+
 
 
 @router.put("/me/sync", response_model=ListUserDietRestrictionsResponse)
