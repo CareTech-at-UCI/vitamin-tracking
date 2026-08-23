@@ -6,17 +6,17 @@ The props are defined as follows
 
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
 */
-type DietaryPlanCardProps = {
+type DietaryRestrictionPlanCardProps = {
     title: "Height" | "Weight";
     imperial: string | number;
     metric: string | number;
 };
 
-export default function DietaryPlanCard({
+export default function DietaryRestrictionPlanCard({
     title,
     imperial,
     metric,
-}: DietaryPlanCardProps) {
+}: DietaryRestrictionPlanCardProps) {
     return (
         <div
             className="
