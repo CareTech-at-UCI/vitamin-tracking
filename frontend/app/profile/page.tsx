@@ -2,8 +2,7 @@
 import HeightWeightCard from "./_components/HeightWeightCard";
 import PersonalInfoCard from "./_components/PersonalInfoCard";
 import ActivityLevelCards from "./_components/ActivityLevelCards";
-import DietaryRestrictionCard from "./_components/DietaryRestrictionPlanCard";
-import DietaryPlanCard from "./_components/DietaryPlanCard";
+import DietaryRestrictionPlanCard from "./_components/DietaryRestrictionPlanCard";
 import { useEffect, useState } from "react";
 import { getOnboarding } from "@/lib/onboarding/api";
 import { profilePictureToAvatarSrc } from "@/lib/profile/avatars";
