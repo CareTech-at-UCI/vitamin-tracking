@@ -71,6 +71,7 @@ export default function ActivityLevelCards({
                                 rounded-[20px]
                                 bg-[#FFFDEE]
                                 box-border
+                                scale-75
                                 ${
                                     isSelected
                                         ? "border border-[#F16F33] shadow-[0_4px_4px_0_#F16F33]"

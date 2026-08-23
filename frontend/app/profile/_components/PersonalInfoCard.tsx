@@ -35,6 +35,7 @@ export default function PersonalInfoCard({
                 bg-[#FFFDEE]
                 shadow-[0_4px_4px_0_#0A3323]
                 box-border
+                scale-75
             "
         >
             {/* Icon + text */}
