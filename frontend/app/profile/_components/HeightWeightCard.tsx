@@ -5,6 +5,7 @@ The props are defined as follows
     imperial: the specific value for that respective field in imperial units (e.g., 5' 11" or 165.4 for height & weight respectively)
 
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
+Metric conversions are implemented in page.tsx, assuming rounding to 1 decimal place
 */
 type HeightWeightCardProps = {
     title: "Height" | "Weight";
@@ -19,40 +20,14 @@ export default function HeightWeightCard({
 }: HeightWeightCardProps) {
     return (
         <div
-            className="
-                flex
-                w-full
-                max-w-[334px]
-                aspect-[334/196]
-                flex-col
-                justify-center
-                items-center
-                shrink-0
-                rounded-[20px]
-                border
-                border-[#0A3323]
-                bg-[#FFFDEE]
-                shadow-[0_4px_4px_0_#0A3323]
-                box-border
-            "
+            className="flex w-full max-w-[334px] aspect-[334/196] flex-col justify-center items-center shrink-0 rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] box-border"
         >
             {/* Icon + text */}
             <div className="flex w-[88%] h-[61%] items-center justify-center gap-[7%]">
 
                 {/* Icon box */}
                 <div
-                    className="
-                        flex
-                        aspect-square
-                        h-full
-                        shrink-0
-                        items-start
-                        justify-center
-                        rounded-[20px]
-                        bg-[#C2D8B2]
-                        p-[9%]
-                        box-border
-                    "
+                    className="flex aspect-square h-full shrink-0 items-start justify-center rounded-[20px] bg-[#C2D8B2] p-[9%] box-border"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

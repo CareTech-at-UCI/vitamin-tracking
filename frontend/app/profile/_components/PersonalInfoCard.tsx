@@ -20,41 +20,14 @@ export default function PersonalInfoCard({
 }: PersonalInfoCardProps) {
     return (
         <div
-            className="
-                flex
-                w-full
-                max-w-[334px]
-                aspect-[334/196]
-                flex-col
-                justify-center
-                items-center
-                shrink-0
-                rounded-[20px]
-                border
-                border-[#0A3323]
-                bg-[#FFFDEE]
-                shadow-[0_4px_4px_0_#0A3323]
-                box-border
-                scale-75
-            "
+            className="flex w-full max-w-[334px] aspect-[334/196] flex-col justify-center items-center shrink-0 rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] box-border scale-75"
         >
             {/* Icon + text */}
             <div className="flex w-[88%] h-[61%] items-center justify-center gap-[7%]">
 
                 {/* Icon box */}
                 <div
-                    className="
-                        flex
-                        aspect-square
-                        h-full
-                        shrink-0
-                        items-start
-                        justify-center
-                        rounded-[20px]
-                        bg-[#FFE0BA]
-                        p-[9%]
-                        box-border
-                    "
+                    className="flex aspect-square h-full shrink-0 items-start justify-center rounded-[20px] bg-[#FFE0BA] p-[9%] box-border"
                 >
                     <IoMdPerson
                         className="w-full h-full"
