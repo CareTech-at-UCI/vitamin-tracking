@@ -7,6 +7,7 @@ The props are defined as follows
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
 */
 
+import { FaCalendarDay } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
 
 type PersonalInfoCardProps = {
@@ -18,19 +19,23 @@ export default function PersonalInfoCard({
     title,
     content,
 }: PersonalInfoCardProps) {
+    const Icon = title === "Age" ? FaCalendarDay : IoMdPerson;
+
     return (
         <div
-            className="flex w-full max-w-[334px] aspect-[334/196] flex-col justify-center items-center shrink-0 rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] box-border scale-75"
+            className={`flex h-[18vh] shrink-0 items-center justify-start rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] ${
+                title === "Sex" ? "w-[23vw]" : "w-[18vw]"
+            }`}
         >
             {/* Icon + text */}
-            <div className="flex w-[88%] h-[61%] items-center justify-center gap-[7%]">
+            <div className="flex h-[61%] w-full items-center gap-[7%] px-[8%]">
 
                 {/* Icon box */}
                 <div
-                    className="flex aspect-square h-full shrink-0 items-start justify-center rounded-[20px] bg-[#FFE0BA] p-[9%] box-border"
+                    className="flex aspect-square h-full shrink-0 items-start justify-center rounded-[20px] bg-[#FFE0BA] p-[9%]"
                 >
-                    <IoMdPerson
-                        className="w-full h-full"
+                    <Icon
+                        className="h-full w-full"
                         color="#0A3323"
                     />
                 </div>

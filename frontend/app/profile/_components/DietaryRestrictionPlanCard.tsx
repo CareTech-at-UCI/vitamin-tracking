@@ -18,7 +18,7 @@ export default function DietaryRestrictionPlanCard({
             {titles.map((title, index) => (
                 <div
                     key={`${title}-${index}`}
-                    className="flex h-[171px] w-[413px] shrink-0 flex-row items-center gap-5 rounded-[20px] border border-[#0A3323] shadow-[0_4px_4px_0_#0A3323] bg-[#FFFDEE] px-5 py-4"
+                    className="flex h-[171px] w-[413px] flex-row items-center gap-5 rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] px-5 py-4 shadow-[0_4px_4px_0_#0A3323]"
                 >
                     {/* Image placeholder */}
                     <div className="h-full w-[140px] shrink-0 rounded-[12px] bg-[#D9D9D9]" />
