@@ -49,8 +49,3 @@ export async function getPresetDietaryPlans(): Promise<DietaryPlan[]> {
   const data = await apiFetch("/api/v1/dietary_plans/?is_custom=false&limit=100");
   return data.items ?? [];
 }
-
-export async function getUserDietPlans(): Promise<UserDietPlan[]> {
-  const data = await apiFetch("/api/v1/user-diet-plans/me");
-  return data.items ?? [];
-}

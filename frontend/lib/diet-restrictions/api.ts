@@ -50,8 +50,5 @@ export async function getPresetDietRestrictions(): Promise<DietRestriction[]> {
   return data.items ?? [];
 }
 
-export async function getUserDietRestrictions(): Promise<UserDietRestriction[]> {
-  const data = await apiFetch("/api/v1/user-diet-restrictions/me");
-  return data.items ?? [];
-}
+
 
