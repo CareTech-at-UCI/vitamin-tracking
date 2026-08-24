@@ -1,5 +1,7 @@
 "use client";
 
+// All styling according to figma
+
 import HeightWeightCard from "./_components/HeightWeightCard";
 import PersonalInfoCard from "./_components/PersonalInfoCard";
 import ActivityLevelCards from "./_components/ActivityLevelCards";
@@ -163,7 +165,7 @@ export default function Profile() {
                     />
                 </div>
 
-                {/* Edit Profile Button */}
+                {/* Edit Profile Button, CHANGE HREF WHEN EDITING IS IMPLEMENTED */}
                 <button
                     type="button"
                     onClick={() => {}}
@@ -174,7 +176,7 @@ export default function Profile() {
                 </button>
             </div>
 
-            {/* Personal Info */}
+            {/* Personal Info: Age + Sex */}
             <section className="flex w-full flex-col items-start">
                 <h2
                     className="p-[1.75rem] font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"

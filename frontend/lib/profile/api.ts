@@ -1,6 +1,6 @@
 /**
- * Profile API client — all HTTP calls to the FastAPI profile endpoints.
- */
+Profile API, impelements all created endpoints in /v1/profile.py
+*/
 
 import { createClient } from "@/utils/supabase/client";
 
@@ -104,6 +104,8 @@ export type ProfileDietaryPlansUpdate = {
     custom_names: string[];
 };
 
+// General profile get + update
+
 export async function getProfile(): Promise<Profile> {
     return apiFetch("/api/v1/profile/");
 }
@@ -116,6 +118,8 @@ export async function updateProfile(
         body: JSON.stringify(profile),
     });
 }
+
+// Diet Restrictions + Plans, they have their own functions for updating and therefore are implemented separately
 
 export async function updateProfileDietRestrictions(
     restrictions: ProfileDietRestrictionsUpdate

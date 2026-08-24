@@ -4,8 +4,10 @@ The props are defined as follows
     selected: the selected activity level
 
 Though activity levels are defined numerically in the db, they are converted to strings in the page.tsx file
+All styling according to figma
 
-NOTE: currently there are 5 activity levels defined in the db but only 4 on the frontend, currently no logic to account for this
+** NOTE: currently there are 5 activity levels defined in the db but only 4 on the frontend, no logic to account for this **
+
 */
 
 import { FaCouch, FaWalking, FaRunning } from "react-icons/fa";
@@ -57,7 +59,7 @@ export default function ActivityLevelCards({
                     return (
                         <div
                             key={title}
-                            className={`relative flex h-[18vh] w-[18vw] flex-col items-center justify-center rounded-[20px] bg-[#FFFDEE] ${
+                            className={`relative flex h-[18vh] w-[18vw] flex-col items-center justify-center rounded-[20px] bg-[#FFFDEE] pt-[2vh] ${
                                 isSelected
                                     ? "border border-[#F16F33] shadow-[0_4px_4px_0_#F16F33]"
                                     : "border border-[#0A3323] shadow-[0_4px_4px_0_#0A3323]"

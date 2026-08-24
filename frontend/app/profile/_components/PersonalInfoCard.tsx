@@ -5,6 +5,7 @@ The props are defined as follows
     content: the value for the information (e.g., "Male", "24 yrs")
 
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
+Metric conversions are implemented in page.tsx, assuming rounding to 1 decimal place
 */
 
 import { FaCalendarDay } from "react-icons/fa";
@@ -42,11 +43,11 @@ export default function PersonalInfoCard({
 
                 {/* Text */}
                 <div className="flex min-w-0 flex-col justify-center">
-                    <span className="font-['Instrument_Sans'] text-[clamp(1rem,2.1vw,1.875rem)] font-medium leading-normal text-[#346B3B]">
+                    <span className="font-['Instrument_Sans'] text-[clamp(1rem,2.1vw,1.85rem)] font-medium leading-normal text-[#346B3B]">
                         {title}
                     </span>
 
-                    <span className="font-['Instrument_Sans'] text-[clamp(1.5rem,2.8vw,2.5rem)] font-semibold leading-normal text-[#346B3B]">
+                    <span className="font-['Instrument_Sans'] text-[clamp(1.3rem,2.5vw,2.5rem)] font-semibold leading-normal text-[#346B3B]">
                         {content}
                     </span>
                 </div>

@@ -6,6 +6,8 @@ The props are defined as follows
 
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
 Metric conversions are implemented in page.tsx, assuming rounding to 1 decimal place
+
+All styling according to figma
 */
 type HeightWeightCardProps = {
     title: "Height" | "Weight";
