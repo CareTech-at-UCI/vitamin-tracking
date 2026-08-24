@@ -1,10 +1,8 @@
-/* Height/Weight card -- Displays the height/weight information on the profile page
+/* Height/Weight card -- Displays dietary restrictions + plans information
 
 The props are defined as follows
-    title: either "Height" or "Weight"
-    imperial: the specific value for that respective field in imperial units (e.g., 5' 11" or 165.4 for height & weight respectively)
+    titles: array of titles to be mapped
 
-As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
 All styling according to figma
 
 ** NOTE: There are no dietary restriction/plan descriptions implemented in the DB to my knowledge, so only titles are rendered

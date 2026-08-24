@@ -3,6 +3,7 @@
 The props are defined as follows
     title: either "Height" or "Weight"
     imperial: the specific value for that respective field in imperial units (e.g., 5' 11" or 165.4 for height & weight respectively)
+    metric: the converted imperial value to the metric system for display
 
 As both these fields have consistent styling, their display has been generalized under the same type of card with cusotmizable props to account for the difference
 Metric conversions are implemented in page.tsx, assuming rounding to 1 decimal place
