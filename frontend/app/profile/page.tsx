@@ -226,7 +226,7 @@ export default function Profile() {
             </section>
 
             {/* Dietary Plans */}
-            <section className="flex w-full flex-col items-start gap-[1.5rem] px-[1.5vw]">
+            <section className="flex w-full flex-col items-start gap-[1.5rem] px-[1.5vw] py-[3vh]">
                 <h2
                     className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
                 >
