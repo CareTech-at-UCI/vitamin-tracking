@@ -46,28 +46,6 @@ async def _ensure_user_exists(
         )
 
 
-@router.get(
-    "/me",
-    response_model=ListUserDietaryPlansResponse,
-)
-async def get_my_dietary_plans(
-    user_id: str = Depends(get_current_user_id),
-    supabase: Client = Depends(get_supabase_admin),
-):
-    """List dietary plans for the authenticated user."""
-
-    await _ensure_user_exists(UUID(user_id), supabase)
-
-    items = list_user_dietary_plans(
-        supabase,
-        user_id,
-    )
-
-    return {
-        "count": len(items),
-        "items": items,
-    }
-
 
 @router.get(
     "/user/{user_id}",

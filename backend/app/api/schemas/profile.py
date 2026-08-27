@@ -1,8 +1,11 @@
 """
-Profile schemas.
+Profile schemas
 
 Pydantic models for profile API request and response validation.
 """
+
+# NOTE: currently though dealt with logically here, there is no frontend use of the custom restrictions/plans, also there are no accompanying descriptions for 
+# restrictions + plans, so that is not implemented in the schema here, though it is expected in the Figma --> may have to update db schema if implementing
 
 from datetime import date
 from decimal import Decimal
@@ -50,7 +53,7 @@ class ProfileUpdatePayload(BaseModel):
     )
     profile_picture: ProfilePictureType | None = None
 
-
+# Diet Restrictions + Plans have separate payload, but are receieved with the rest of the info in the ProfileResponse to streamline retrieval in the frontend
 class ProfileDietRestrictionsUpdatePayload(BaseModel):
     """Payload for replacing a user's dietary restrictions."""
 

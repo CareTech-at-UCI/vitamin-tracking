@@ -1,5 +1,5 @@
 """
-Profile endpoints.
+Profile endpoints
 """
 
 from typing import Any
@@ -128,7 +128,6 @@ async def update_profile(
                 detail="User not found",
             )
     else:
-        # Verify the user exists even if no fields were supplied.
         try:
             response = (
                 supabase
@@ -198,6 +197,7 @@ async def update_profile(
 
     return profile
 
+# diet restrictions + plans implemented separately
 
 @router.put(
     "/diet-restrictions",
