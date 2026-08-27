@@ -14,21 +14,23 @@ import Image from "next/image";
 import { HiPencil } from "react-icons/hi";
 
 export default function Profile() {
+    const [loading, setLoading] = useState(true);
+
     const [avatarSrc, setAvatarSrc] = useState(
         "/assets/avatars/tomato.svg"
     );
-    const [name, setName] = useState("Peter T. Anteater");
-    const [firstName, setFirstName] = useState("Peter");
+    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
 
-    const [feet, setFeet] = useState(1);
-    const [inches, setInches] = useState(1);
-    const [metricHeight, setMetricHeight] = useState(1);
+    const [feet, setFeet] = useState(0);
+    const [inches, setInches] = useState(0);
+    const [metricHeight, setMetricHeight] = useState(0);
 
-    const [weight, setWeight] = useState(1000);
-    const [metricWeight, setMetricWeight] = useState(100.0);
+    const [weight, setWeight] = useState(0);
+    const [metricWeight, setMetricWeight] = useState(0);
 
-    const [sex, setSex] = useState("Male");
-    const [age, setAge] = useState(100);
+    const [sex, setSex] = useState("");
+    const [age, setAge] = useState(0);
 
     const [activity, setActivity] = useState("Sedentary");
 
@@ -97,7 +99,7 @@ export default function Profile() {
                 setMetricWeight(Math.round((weight / 2.20462) * 10) / 10);
 
                 const sexValue = data.sex ?? "";
-                setSex(sexValue ? sexValue.charAt(0).toUpperCase() + sexValue.slice(1): "");
+                setSex(sexValue ? sexValue.charAt(0).toUpperCase() + sexValue.slice(1) : "");
 
                 if (data.date_of_birth) {setAge(calculateAge(data.date_of_birth));}
 
@@ -113,15 +115,28 @@ export default function Profile() {
                     "Failed to fetch user profile:",
                     error
                 );
+            })
+            .finally(() => {
+                setLoading(false);
             });
     }, []);
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen w-full items-center justify-center">
+                <p className="font-[Instrument_Sans] text-lg text-[#26612F]">
+                    Loading profile...
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex w-full flex-col items-start gap-[1rem] p-[1.75rem]">
 
             {/* Profile Header */}
             <div className="flex w-full flex-col items-start gap-[1.5rem] p-[1.75rem]">
-                <div className="flex origin-left flex-row items-center gap-[1vw] ">
+                <div className="flex origin-left flex-row items-center gap-[1vw]">
 
                     {/* Profile picture */}
                     <Image
@@ -205,13 +220,7 @@ export default function Profile() {
                     Activity Levels
                 </h2>
 
-                <ActivityLevelCards
-                    selected={activity as
-                        | "Sedentary"
-                        | "Light"
-                        | "Moderate"
-                        | "Very Active"}
-                />
+                <ActivityLevelCards selected={ activity as | "Sedentary" | "Light" | "Moderate" | "Very Active" }/>
             </section>
 
             {/* Dietary Restrictions */}
