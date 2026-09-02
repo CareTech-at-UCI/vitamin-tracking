@@ -136,49 +136,49 @@ export default function Profile() {
 
             {/* Profile Header */}
             <div className="flex w-full flex-col items-start gap-[1.5rem] p-[1.75rem]">
-                <div className="flex origin-left flex-row items-center gap-[1vw]">
+                    <div className="flex origin-left flex-row items-center gap-[1vw]">
 
-                    {/* Profile picture */}
-                    <Image
-                        src={avatarSrc}
-                        alt="Profile"
-                        width={200}
-                        height={200}
-                        loading="eager"
-                        className="h-[12.5rem] w-[12.5rem] shrink-0 rounded-full object-cover"
-                    />
-
-                    {/* Profile text */}
-                    <div className="flex flex-col gap-[0.5rem]">
-                        <h1
-                            className="font-[Montserrat_Alternates] text-[clamp(2.5rem,4vw,4rem)] font-semibold leading-none tracking-[-8%] text-[#0A3323]"
-                        >
-                            {firstName}
-                        </h1>
-
-                        <p
-                            className="font-[Instrument_Sans] text-[clamp(1.5rem,2vw,2rem)] font-medium leading-none tracking-[-2%] text-[#26612F]"
-                        >
-                            {name}
-                        </p>
-                    </div>
-
-                    {/* Height */}
-                    <div className="ml-[10vw]">
-                        <HeightWeightCard
-                            title="Height"
-                            imperial={`${feet}’ ${inches}’’`}
-                            metric={`${metricHeight} cm`}
+                        {/* Profile picture */}
+                        <Image
+                            src={avatarSrc}
+                            alt="Profile"
+                            width={200}
+                            height={200}
+                            loading="eager"
+                            className="h-[12.5rem] w-[12.5rem] shrink-0 rounded-full object-cover"
                         />
-                    </div>
 
-                    {/* Weight */}
-                    <HeightWeightCard
-                        title="Weight"
-                        imperial={weight}
-                        metric={`${metricWeight} kg`}
-                    />
-                </div>
+                        {/* Profile text */}
+                        <div className="flex flex-col gap-[0.5rem]">
+                            <h1
+                                className="font-[Montserrat_Alternates] text-[clamp(2.5rem,4vw,4rem)] font-semibold leading-none tracking-[-8%] text-[#0A3323]"
+                            >
+                                {firstName}
+                            </h1>
+
+                            <p
+                                className="font-[Instrument_Sans] text-[clamp(1.5rem,2vw,2rem)] font-medium leading-none tracking-[-2%] text-[#26612F]"
+                            >
+                                {name}
+                            </p>
+                        </div>
+
+                        {/* Height */}
+                        <div className="ml-[10vw]">
+                            <HeightWeightCard
+                                title="Height"
+                                imperial={`${feet}’ ${inches}’’`}
+                                metric={`${metricHeight} cm`}
+                            />
+                        </div>
+
+                        {/* Weight */}
+                        <HeightWeightCard
+                            title="Weight"
+                            imperial={weight}
+                            metric={`${metricWeight} kg`}
+                        />
+                    </div>    
 
                 {/* Edit Profile Button, CHANGE HREF WHEN EDITING IS IMPLEMENTED */}
                 <button
@@ -233,6 +233,7 @@ export default function Profile() {
 
                 <DietaryRestrictionPlanCard
                     titles={dietRestrictions}
+                    emptyMessage="No dietary restrictions added yet."
                 />
             </section>
 
@@ -246,6 +247,7 @@ export default function Profile() {
 
                 <DietaryRestrictionPlanCard
                     titles={dietPlans}
+                    emptyMessage="No dietary plans added yet."
                 />
             </section>
         </div>

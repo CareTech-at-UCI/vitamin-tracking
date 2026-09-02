@@ -10,11 +10,26 @@ All styling according to figma
 */
 type DietaryRestrictionPlanCardProps = {
     titles: string[];
+    emptyMessage?: string;
 };
 
 export default function DietaryRestrictionPlanCard({
     titles,
+    emptyMessage,
 }: DietaryRestrictionPlanCardProps) {
+    if (titles.length === 0 && emptyMessage) {
+        return (
+            <div className="flex h-[171px] w-[413px] flex-row items-center gap-5 rounded-[20px] border border-dashed border-[#7FA27B] bg-[#FFFDEE] px-5 py-4">
+                <div className="flex h-full w-[140px] shrink-0 items-center justify-center rounded-[12px] bg-[#E3EEDC]">
+                    <span className="font-[Montserrat_Alternates] text-[40px] font-semibold text-[#5F8A58]">-</span>
+                </div>
+                <span className="font-[Instrument_Sans] text-[24px] font-medium leading-[100%] text-[#26612F]">
+                    {emptyMessage}
+                </span>
+            </div>
+        );
+    }
+
     return (
         <div className="flex w-full flex-row flex-wrap gap-6">
             {titles.map((title, index) => (
