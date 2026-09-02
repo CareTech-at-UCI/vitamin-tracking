@@ -8,7 +8,7 @@ export default function ScanLanding() {
   const { startScanSession } = useScanChrome();
 
   return (
-    <main className="min-h-[100dvh] overflow-x-hidden bg-background px-4 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] pt-7 text-secondary sm:px-8 sm:py-10 lg:px-16">
+    <main className="min-h-[100dvh] overflow-x-hidden bg-background px-10 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] pt-7 text-secondary sm:px-8 sm:py-10 lg:px-16">
       <div className="mx-auto flex w-full max-w-[980px] flex-col">
         <header className="flex flex-col gap-6 border-b border-primary/10 pb-7 sm:pb-8 md:flex-row md:items-end md:justify-between md:gap-10">
           <div className="shrink-0">

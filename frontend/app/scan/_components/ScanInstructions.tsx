@@ -35,9 +35,6 @@ export default function ScanInstructions({ onStartScan }: ScanInstructionsProps)
             How to scan
           </h2>
         </div>
-        <p className="hidden font-body text-sm text-secondary/60 sm:block">
-          About a minute
-        </p>
       </div>
 
       <div
@@ -152,10 +149,7 @@ function StepCounter({ current, total }: { current: number; total: number }) {
   return (
     <div className="flex items-center gap-2.5">
       <span className="rounded-full bg-background px-3.5 py-1.5 font-primary text-sm font-semibold text-accent shadow-sm sm:text-base">
-        Step {current}
-      </span>
-      <span className="font-primary text-xs font-medium tracking-wide text-white/55">
-        of {total}
+        Step {current} of {total}
       </span>
     </div>
   );
