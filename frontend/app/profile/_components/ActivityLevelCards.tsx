@@ -88,7 +88,7 @@ export default function ActivityLevelCards({
                                 </span>
 
                                 <span
-                                    className="mt-3 font-['Instrument_Sans'] text-[20px] font-normal leading-[100%] text-[#346B3B]"
+                                    className="mt-3 font-['Instrument_Sans'] text-[20px] font-normal leading-[100%] text-[#346B3B] pb-[0.25rem]"
                                 >
                                     {description}
                                 </span>

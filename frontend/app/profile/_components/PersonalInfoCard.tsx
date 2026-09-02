@@ -24,12 +24,10 @@ export default function PersonalInfoCard({
 
     return (
         <div
-            className={`flex h-[18vh] shrink-0 items-center justify-start rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] ${
-                title === "Sex" ? "w-[23vw]" : "w-[18vw]"
-            }`}
+            className={"flex h-[18vh] shrink-0 items-center justify-start rounded-[20px] border border-[#0A3323] bg-[#FFFDEE] shadow-[0_4px_4px_0_#0A3323] w-[23vw]"}
         >
             {/* Icon + text */}
-            <div className="flex h-[61%] w-full items-center gap-[7%] px-[8%]">
+            <div className="flex h-[61%] w-full min-w-0 items-center gap-[7%] px-[8%]">
 
                 {/* Icon box */}
                 <div
