@@ -54,7 +54,7 @@ export default function Navbar() {
           href="/scan"
           className="flex items-center gap-2 rounded-full bg-cream px-5 py-2 font-body text-xl font-medium text-navbar transition-opacity hover:opacity-90"
         >
-          Scan Now
+          Scan
           <HiCamera className="h-6 w-6" />
         </Link>
         <Link href="/profile" className="shrink-0">
