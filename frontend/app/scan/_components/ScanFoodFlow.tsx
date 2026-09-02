@@ -13,6 +13,11 @@ type ScanStep = "proceed" | "scan" | "confirm" | "log-completed" | "closed";
 
 export default function ScanFoodFlow() {
   const { scanStartSignal } = useScanChrome();
+
+  // Keep the camera flow unmounted until the user starts a scan from the
+  // instructions, desktop camera button, or mobile navigation.
+  if (scanStartSignal === 0) return null;
+
   return <ScanFoodFlowSession key={scanStartSignal} />;
 }
 
