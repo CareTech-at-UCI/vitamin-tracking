@@ -35,6 +35,8 @@ async def _ensure_user_exists(user_id: UUID, supabase: Client) -> None:
 
     if not (response.data or []):
         raise HTTPException(status_code=404, detail="User not found")
+    
+
 
 
 @router.get("/user/{user_id}", response_model=ListUserDietRestrictionsResponse)
@@ -64,6 +66,7 @@ async def sync_user_diet_restrictions_endpoint(
     )
     items = list_user_diet_restrictions(supabase, str(user_id))
     return {"count": len(items), "items": items}
+
 
 
 @router.put("/me/sync", response_model=ListUserDietRestrictionsResponse)
