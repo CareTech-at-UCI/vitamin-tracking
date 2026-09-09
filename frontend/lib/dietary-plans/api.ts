@@ -39,6 +39,12 @@ export type DietaryPlan = {
   is_custom: boolean | null;
 };
 
+export type UserDietPlan = {
+  id: number;
+  name: string;
+  is_custom: boolean;
+};
+
 export async function getPresetDietaryPlans(): Promise<DietaryPlan[]> {
   const data = await apiFetch("/api/v1/dietary_plans/?is_custom=false&limit=100");
   return data.items ?? [];

@@ -31,7 +31,7 @@ export function OnboardingStepHeightWeight({
   onSexChange,
   onActivityLevelChange,
 }: OnboardingStepHeightWeightProps) {
-  const activityLevels = [1, 2, 3, 4, 5];
+  const activityLevels = [1, 2, 3, 4];
   const sliderProgress = ((activityLevel - 1) / (activityLevels.length - 1)) * 100;
 
   return (
@@ -90,7 +90,7 @@ export function OnboardingStepHeightWeight({
               <input
                 type="range"
                 min={1}
-                max={5}
+                max={4}
                 step={1}
                 value={activityLevel}
                 onChange={(event) => onActivityLevelChange(Number(event.target.value))}
