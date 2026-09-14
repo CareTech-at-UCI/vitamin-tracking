@@ -25,6 +25,7 @@ function ScanFoodFlowSession() {
   const [step, setStep] = useState<ScanStep>("proceed");
   const [proceedSnap, setProceedSnap] = useState<DrawerSnap>("expanded");
   const [loggedFoodItems, setLoggedFoodItems] = useState<FoodItem[]>([]);
+  const [cameraReady, setCameraReady] = useState(false);
   const {
     setNavOverlay,
     setCameraCaptureMode,
@@ -32,9 +33,11 @@ function ScanFoodFlowSession() {
   } = useScanChrome();
 
   useEffect(() => {
-    registerOpenConfirmStep(() => setStep("confirm"));
+    registerOpenConfirmStep(() => {
+      if (cameraReady) setStep("confirm");
+    });
     return () => registerOpenConfirmStep(null);
-  }, [registerOpenConfirmStep]);
+  }, [cameraReady, registerOpenConfirmStep]);
 
   useEffect(() => {
     setCameraCaptureMode(step === "scan");
@@ -67,6 +70,7 @@ function ScanFoodFlowSession() {
           hideMobileCaptureButton={step === "scan"}
           onClose={() => setStep("closed")}
           onScan={() => setStep("confirm")}
+          onReadyChange={setCameraReady}
         />
         {step === "proceed" && (
           <ProceedStep
@@ -87,6 +91,7 @@ function ScanFoodFlowSession() {
           hideMobileCaptureButton
           onClose={() => setStep("closed")}
           onScan={() => {}}
+          onReadyChange={setCameraReady}
         />
         <ConfirmFoodModal
           onClose={() => setStep("scan")}
@@ -107,6 +112,7 @@ function ScanFoodFlowSession() {
           hideMobileCaptureButton
           onClose={() => setStep("closed")}
           onScan={() => {}}
+          onReadyChange={setCameraReady}
         />
         <LogCompleted
           foodNames={loggedFoodItems.map((item) => item.name)}
