@@ -7,7 +7,7 @@ import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { navOverlay } = useScanChrome();
+  const { cameraCaptureMode, navOverlay } = useScanChrome();
   const showNav =
     pathname !== "/" && pathname !== "/login" && pathname !== "/signup" && pathname !== "/onboarding";
   const navBlocked = navOverlay === "blur";
@@ -26,12 +26,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </main>
       {showNav && (
         <div
-          className={
-            navBlocked
-              ? "pointer-events-none md:pointer-events-auto"
-              : undefined
-          }
-          aria-hidden={navBlocked}
+          className={`${
+            navBlocked ? "pointer-events-none md:pointer-events-auto" : ""
+          } ${cameraCaptureMode ? "hidden md:block" : ""}`}
+          aria-hidden={navBlocked || cameraCaptureMode}
         >
           <MobileNavbar />
         </div>

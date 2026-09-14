@@ -67,7 +67,6 @@ function ScanFoodFlowSession() {
       <>
         <ScanCameraModal
           paused={step === "proceed" && proceedSnap === "expanded"}
-          hideMobileCaptureButton={step === "scan"}
           onClose={() => setStep("closed")}
           onScan={() => setStep("confirm")}
           onReadyChange={setCameraReady}

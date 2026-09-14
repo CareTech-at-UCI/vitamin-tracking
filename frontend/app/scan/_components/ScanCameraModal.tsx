@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { SwitchCamera } from "lucide-react";
+import { SwitchCamera, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 
@@ -132,6 +132,7 @@ function useCameraStream(enabled: boolean) {
 }
 
 function ScanCameraContent({
+  onClose,
   onScan,
   paused,
   layout,
@@ -143,6 +144,7 @@ function ScanCameraContent({
   onSwitchCamera,
   onRetry,
 }: {
+  onClose: () => void;
   onScan: () => void;
   paused?: boolean;
   layout: "mobile" | "desktop";
@@ -188,7 +190,7 @@ function ScanCameraContent({
       className={
         isMobile
           ? "relative flex min-h-0 flex-1 flex-col overflow-hidden px-6 pb-10 pt-12"
-          : "relative flex aspect-[1.58/1] min-h-[430px] flex-col overflow-hidden px-8 py-8 sm:px-9 sm:py-9"
+          : "relative flex aspect-[1.58/1] min-h-107.5 flex-col overflow-hidden px-8 py-8 sm:px-9 sm:py-9"
       }
     >
       <video
@@ -204,13 +206,30 @@ function ScanCameraContent({
         }`}
       />
 
-      <h2
-        className={`relative z-10 font-semibold leading-none text-white [font-family:var(--font-montserrat-alternates)] ${
-          isMobile ? "text-2xl" : "text-3xl md:text-[34px]"
+      <div
+        className={`relative z-10 flex items-center ${
+          isMobile ? "justify-between pt-2" : ""
         }`}
       >
-        Scan Food
-      </h2>
+        <h2
+          className={`font-semibold leading-none text-white [font-family:var(--font-montserrat-alternates)] ${
+            isMobile ? "text-4xl" : "text-3xl md:text-[34px]"
+          }`}
+        >
+          Scan Food
+        </h2>
+
+        {isMobile && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close camera and return to scan instructions"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black/35 text-white transition hover:bg-black/55 focus:outline-none focus:ring-2 focus:ring-white/40"
+          >
+            <X className="size-6" aria-hidden="true" />
+          </button>
+        )}
+      </div>
 
       <div
         className={`relative z-10 flex flex-1 items-center justify-center ${
@@ -234,7 +253,9 @@ function ScanCameraContent({
           <>
             <div
               className={`grid aspect-square grid-cols-2 grid-rows-2 gap-[42%] ${
-                isMobile ? "w-[200px]" : "w-[min(28vw,220px)] min-w-32"
+                isMobile
+                  ? "w-[min(58vw,320px)]"
+                  : "w-[min(28vw,220px)] min-w-32"
               }`}
               aria-hidden
             >
@@ -267,7 +288,7 @@ function ScanCameraContent({
           onClick={openPhotoLibrary}
           aria-label="Upload food photo"
           disabled={paused}
-          className="flex size-[50px] items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/20 disabled:opacity-50"
+          className="flex size-12.5 items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/20 disabled:opacity-50"
         >
           <Image
             src="/assets/scan/upload.svg"
@@ -284,7 +305,7 @@ function ScanCameraContent({
             onClick={onScan}
             disabled={paused || status !== "ready"}
             aria-label="Scan food"
-            className="flex size-[80px] items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-primary/35 disabled:opacity-50"
+            className="flex size-20 items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-primary/35 disabled:opacity-50"
           >
             <Image
               src="/assets/scan/cam.svg"
@@ -297,14 +318,14 @@ function ScanCameraContent({
           </button>
         )}
 
-        {canSwitchCamera && status === "ready" && (
+        {(canSwitchCamera || isMobile) && status === "ready" && (
           <button
             type="button"
             onClick={onSwitchCamera}
-            disabled={paused}
+            disabled={paused || !canSwitchCamera}
             aria-label="Switch camera"
             title="Switch camera"
-            className="flex size-[50px] items-center justify-center rounded-full bg-[#D9D9D9] text-black transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/20 disabled:opacity-50"
+            className="flex size-12.5 items-center justify-center rounded-full bg-[#D9D9D9] text-black transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/20 disabled:opacity-50"
           >
             <SwitchCamera className="size-6" aria-hidden="true" />
           </button>
@@ -363,6 +384,7 @@ export default function ScanCameraModal({
       {/* Mobile: full-screen camera behind proceed drawer */}
       <div className="fixed inset-0 z-40 flex min-h-svh flex-col bg-black text-white md:hidden">
         <ScanCameraContent
+          onClose={onClose}
           onScan={onScan}
           paused={paused}
           layout="mobile"
@@ -381,6 +403,7 @@ export default function ScanCameraModal({
           closeButtonClassName="text-white hover:bg-white/10"
         >
           <ScanCameraContent
+            onClose={onClose}
             onScan={onScan}
             paused={paused}
             layout="desktop"
