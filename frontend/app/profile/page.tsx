@@ -215,7 +215,7 @@ export default function Profile() {
             {/* Activity Levels */}
             <section className="flex w-full flex-col items-start gap-[1.5rem] p-[1.75rem]">
                 <h2
-                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
+                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem]"
                 >
                     Activity Levels
                 </h2>
@@ -226,7 +226,7 @@ export default function Profile() {
             {/* Dietary Restrictions */}
             <section className="flex w-full flex-col items-start gap-[1.5rem] px-[1.5vw]">
                 <h2
-                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
+                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem]"
                 >
                     Dietary Restrictions
                 </h2>
