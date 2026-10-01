@@ -10,14 +10,10 @@ import FoodItemRow, { type FoodItem } from "@/app/scan/_components/FoodItemRow";
 import FoodServing from "@/app/scan/_components/FoodServing";
 
 type ConfirmFoodModalProps = {
+  initialItems: FoodItem[];
   onClose: () => void;
   onAddMeal: (items: FoodItem[]) => void;
 };
-
-const initialFoodItems: FoodItem[] = [
-  { id: 1, name: "Food Name", servings: 2 },
-  { id: 2, name: "Food Name", servings: 2 },
-];
 
 function ConfirmFoodContent({
   items,
@@ -89,10 +85,11 @@ function ConfirmFoodContent({
 }
 
 export default function ConfirmFoodModal({
+  initialItems,
   onClose,
   onAddMeal,
 }: ConfirmFoodModalProps) {
-  const [items, setItems] = useState(initialFoodItems);
+  const [items, setItems] = useState(initialItems);
   const [snap, setSnap] = useState<DrawerSnap>("expanded");
 
   const totalServings = useMemo(

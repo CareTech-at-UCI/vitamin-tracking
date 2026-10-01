@@ -8,6 +8,7 @@ import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
 import ProceedStep from "@/app/scan/_components/ProceedStep";
 import { type DrawerSnap } from "@/app/scan/_components/Drawer";
 import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
+import { inferFoodImage } from "@/lib/scan/api";
 
 type ScanStep = "proceed" | "scan" | "confirm" | "log-completed" | "closed";
 
@@ -25,19 +26,13 @@ function ScanFoodFlowSession() {
   const [step, setStep] = useState<ScanStep>("proceed");
   const [proceedSnap, setProceedSnap] = useState<DrawerSnap>("expanded");
   const [loggedFoodItems, setLoggedFoodItems] = useState<FoodItem[]>([]);
-  const [cameraReady, setCameraReady] = useState(false);
+  const [detectedFoodItems, setDetectedFoodItems] = useState<FoodItem[]>([]);
+  const [scanning, setScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
   const {
     setNavOverlay,
     setCameraCaptureMode,
-    registerOpenConfirmStep,
   } = useScanChrome();
-
-  useEffect(() => {
-    registerOpenConfirmStep(() => {
-      if (cameraReady) setStep("confirm");
-    });
-    return () => registerOpenConfirmStep(null);
-  }, [cameraReady, registerOpenConfirmStep]);
 
   useEffect(() => {
     setCameraCaptureMode(step === "scan");
@@ -60,6 +55,27 @@ function ScanFoodFlowSession() {
     setStep("scan");
   }
 
+  async function handleScan(image: Blob) {
+    setScanning(true);
+    setScanError(null);
+    try {
+      const foodNames = await inferFoodImage(image);
+      if (foodNames.length === 0) {
+        throw new Error("No food was detected. Reframe the food and try again.");
+      }
+      setDetectedFoodItems(
+        foodNames.map((name, index) => ({ id: index + 1, name, servings: 1 })),
+      );
+      setStep("confirm");
+    } catch (error) {
+      setScanError(
+        error instanceof Error ? error.message : "Food recognition failed. Please try again.",
+      );
+    } finally {
+      setScanning(false);
+    }
+  }
+
   if (step === "closed") return null;
 
   if (step === "proceed" || step === "scan") {
@@ -68,8 +84,9 @@ function ScanFoodFlowSession() {
         <ScanCameraModal
           paused={step === "proceed" && proceedSnap === "expanded"}
           onClose={() => setStep("closed")}
-          onScan={() => setStep("confirm")}
-          onReadyChange={setCameraReady}
+          onScan={handleScan}
+          scanning={scanning}
+          scanError={scanError}
         />
         {step === "proceed" && (
           <ProceedStep
@@ -90,9 +107,9 @@ function ScanFoodFlowSession() {
           hideMobileCaptureButton
           onClose={() => setStep("closed")}
           onScan={() => {}}
-          onReadyChange={setCameraReady}
         />
         <ConfirmFoodModal
+          initialItems={detectedFoodItems}
           onClose={() => setStep("scan")}
           onAddMeal={(items) => {
             setLoggedFoodItems(items);
@@ -111,7 +128,6 @@ function ScanFoodFlowSession() {
           hideMobileCaptureButton
           onClose={() => setStep("closed")}
           onScan={() => {}}
-          onReadyChange={setCameraReady}
         />
         <LogCompleted
           foodNames={loggedFoodItems.map((item) => item.name)}

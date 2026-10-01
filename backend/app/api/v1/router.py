@@ -24,6 +24,7 @@ from .endpoints import (
     meal_nutrients,
     vitamin_breakdown,
     onboarding,
+    scan,
 )
 
 router = APIRouter()
@@ -43,3 +44,4 @@ router.include_router(nutrient_goals.router, prefix="/nutrient-goals", tags=["nu
 router.include_router(vitamin_breakdown.router, prefix="/vitamin-breakdown", tags=["vitamin-breakdown"])
 router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 router.include_router(onboarding.router, prefix="/onboarding", tags=["onboarding"])
+router.include_router(scan.router, prefix="/scan", tags=["scan"])

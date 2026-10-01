@@ -23,6 +23,7 @@ httptools==0.7.1
 httpx==0.28.1
 hyperframe==6.1.0
 idna==3.11
+inference-sdk==1.6.0
 Jinja2==3.1.6
 markdown-it-py==4.0.0
 MarkupSafe==3.0.3

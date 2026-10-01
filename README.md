@@ -42,7 +42,7 @@ At CareTech, our main mission is to build projects to promote early-disease dete
 ### 0. Prerequisites
 
 - **Node.js** and **pnpm** or **npm** — for the Next.js frontend
-- **Python 3** — for the FastAPI backend
+- **Python 3.12** — for the FastAPI backend (`inference-sdk` does not currently support Python 3.13 or newer)
 
 ### 1. Clone the repository and use the workshop branch
 
@@ -65,7 +65,11 @@ Open a terminal at the **repository root**, then:
 
 ```bash
 cd backend
-python3 -m venv .venv
+# macOS / Linux
+python3.12 -m venv .venv
+
+# Windows
+# py -3.12 -m venv .venv
 ```
 
 Activate the virtual environment:
@@ -76,7 +80,7 @@ Activate the virtual environment:
 Install dependencies (this is the same install the project expects):
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 If `fastapi` is not found or installs incorrectly, try:

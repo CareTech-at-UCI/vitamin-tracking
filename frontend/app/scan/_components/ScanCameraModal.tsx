@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import { SwitchCamera, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
+import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
 
 type ScanCameraModalProps = {
   onClose: () => void;
-  onScan: () => void;
+  onScan: (image: Blob) => void;
   paused?: boolean;
   hideMobileCaptureButton?: boolean;
   onReadyChange?: (ready: boolean) => void;
+  scanning?: boolean;
+  scanError?: string | null;
 };
 
 type CameraStatus = "idle" | "requesting" | "ready" | "error";
@@ -143,9 +146,13 @@ function ScanCameraContent({
   canSwitchCamera,
   onSwitchCamera,
   onRetry,
+  videoRef,
+  onCapture,
+  scanning,
+  scanError,
 }: {
   onClose: () => void;
-  onScan: () => void;
+  onScan: (image: Blob) => void;
   paused?: boolean;
   layout: "mobile" | "desktop";
   hideCaptureButton?: boolean;
@@ -155,9 +162,12 @@ function ScanCameraContent({
   canSwitchCamera: boolean;
   onSwitchCamera: () => void;
   onRetry: () => void;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  onCapture: () => void;
+  scanning: boolean;
+  scanError: string | null;
 }) {
   const isMobile = layout === "mobile";
-  const videoRef = useRef<HTMLVideoElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   function openPhotoLibrary() {
@@ -168,7 +178,8 @@ function ScanCameraContent({
   }
 
   function handlePhotoSelected(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files?.[0]) onScan();
+    const file = event.target.files?.[0];
+    if (file) onScan(file);
   }
 
   useEffect(() => {
@@ -183,7 +194,7 @@ function ScanCameraContent({
     return () => {
       videoElement.srcObject = null;
     };
-  }, [stream]);
+  }, [stream, videoRef]);
 
   return (
     <div
@@ -269,9 +280,20 @@ function ScanCameraContent({
                 Starting camera...
               </p>
             )}
+            {scanning && (
+              <p className="absolute rounded-full bg-black/75 px-4 py-2 text-sm text-white backdrop-blur-sm" aria-live="polite">
+                Identifying food...
+              </p>
+            )}
           </>
         )}
       </div>
+
+      {scanError && (
+        <p role="alert" className="relative z-10 mb-3 text-center text-sm font-medium text-white">
+          {scanError}
+        </p>
+      )}
 
       <div className="relative z-10 flex min-h-20 items-center justify-center gap-7">
         <input
@@ -287,7 +309,7 @@ function ScanCameraContent({
           type="button"
           onClick={openPhotoLibrary}
           aria-label="Upload food photo"
-          disabled={paused}
+          disabled={paused || scanning}
           className="flex size-12.5 items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-white/20 disabled:opacity-50"
         >
           <Image
@@ -302,8 +324,8 @@ function ScanCameraContent({
         {!hideCaptureButton && (
           <button
             type="button"
-            onClick={onScan}
-            disabled={paused || status !== "ready"}
+            onClick={onCapture}
+            disabled={paused || scanning || status !== "ready"}
             aria-label="Scan food"
             className="flex size-20 items-center justify-center rounded-full transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-primary/35 disabled:opacity-50"
           >
@@ -356,6 +378,8 @@ export default function ScanCameraModal({
   paused = false,
   hideMobileCaptureButton = false,
   onReadyChange,
+  scanning = false,
+  scanError = null,
 }: ScanCameraModalProps) {
   const {
     stream,
@@ -365,6 +389,29 @@ export default function ScanCameraModal({
     switchCamera,
     retry,
   } = useCameraStream(!paused);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const { registerOpenConfirmStep } = useScanChrome();
+
+  const captureImage = useCallback(() => {
+    const video = window.matchMedia("(min-width: 768px)").matches
+      ? desktopVideoRef.current
+      : mobileVideoRef.current;
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d")?.drawImage(video, 0, 0);
+    canvas.toBlob((blob) => {
+      if (blob) onScan(blob);
+    }, "image/jpeg", 0.9);
+  }, [onScan]);
+
+  useEffect(() => {
+    registerOpenConfirmStep(status === "ready" && !scanning ? captureImage : null);
+    return () => registerOpenConfirmStep(null);
+  }, [captureImage, registerOpenConfirmStep, scanning, status]);
 
   useEffect(() => {
     onReadyChange?.(status === "ready");
@@ -377,6 +424,9 @@ export default function ScanCameraModal({
     canSwitchCamera,
     onSwitchCamera: switchCamera,
     onRetry: retry,
+    onCapture: captureImage,
+    scanning,
+    scanError,
   };
 
   return (
@@ -389,6 +439,7 @@ export default function ScanCameraModal({
           paused={paused}
           layout="mobile"
           hideCaptureButton={hideMobileCaptureButton}
+          videoRef={mobileVideoRef}
           {...cameraProps}
         />
       </div>
@@ -407,6 +458,7 @@ export default function ScanCameraModal({
             onScan={onScan}
             paused={paused}
             layout="desktop"
+            videoRef={desktopVideoRef}
             {...cameraProps}
           />
         </ModalShell>

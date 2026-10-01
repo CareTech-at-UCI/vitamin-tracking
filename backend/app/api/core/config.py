@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     # API
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
+    # Roboflow
+    roboflow_api_url: str = "https://serverless.roboflow.com"
+    roboflow_api_key: str
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
