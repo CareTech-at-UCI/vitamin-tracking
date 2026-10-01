@@ -62,6 +62,7 @@ export type OnboardingState = {
   last_name: string | null;
   date_of_birth: string | null;
   sex: "male" | "female" | "other" | null;
+  nutrition_status: "standard" | "pregnancy" | "lactation" | null;
   height: number | null;
   weight: number | null;
   activity_level: number | null;

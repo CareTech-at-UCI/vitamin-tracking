@@ -13,8 +13,8 @@ export const nameAgeSchema = z.object({
     .min(1, "Age is required")
     .refine((v) => {
       const n = Number(v);
-      return Number.isFinite(n) && n >= 1 && n <= 120;
-    }, "Age must be between 1 and 120"),
+      return Number.isInteger(n) && n >= 1 && n <= 120;
+    }, "Age must be a whole number between 1 and 120"),
 });
 
 export const healthSchema = z.object({
@@ -25,6 +25,8 @@ export const healthSchema = z.object({
     .min(1, "Weight is required")
     .refine((v) => Number(v) > 0, "Weight must be greater than 0"),
   sex: z.string().min(1, "Sex is required"),
+  nutritionStatus: z.enum(["", "standard", "pregnancy", "lactation"])
+    .refine((value): boolean => value !== "", "Please select a pregnancy/breastfeeding status"),
   activityLevel: z.number().min(1).max(5),
 });
 
@@ -49,10 +51,22 @@ export const fullOnboardingSchema = z.object({
   heightInches: healthSchema.shape.heightInches,
   weight: healthSchema.shape.weight,
   sex: healthSchema.shape.sex,
+  nutritionStatus: healthSchema.shape.nutritionStatus,
   activityLevel: healthSchema.shape.activityLevel,
   selectedRestrictions: restrictionsSchema.shape.selectedRestrictions,
   selectedDietaryPlans: dietaryPlansSchema.shape.selectedDietaryPlans,
   selectedAvatar: avatarSchema.shape.selectedAvatar,
+}).superRefine((values, context) => {
+  if (
+    (values.nutritionStatus === "pregnancy" || values.nutritionStatus === "lactation") &&
+    (Number(values.age) < 14 || Number(values.age) > 50)
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["nutritionStatus"],
+      message: "Automatic pregnancy/breastfeeding targets are available for ages 14–50 only.",
+    });
+  }
 });
 
 export type OnboardingFormValues = z.infer<typeof fullOnboardingSchema>;

@@ -79,7 +79,7 @@ const STEP_NAME_TO_INDEX: Record<string, number> = {
 
 const STEP_FIELDS: Record<number, (keyof OnboardingFormValues)[]> = {
   0: ["name", "age"],
-  1: ["heightFeet", "heightInches", "weight", "sex"],
+  1: ["heightFeet", "heightInches", "weight", "sex", "nutritionStatus"],
   2: ["selectedRestrictions"],
   3: ["selectedDietaryPlans"],
   4: ["selectedAvatar"],
@@ -92,6 +92,7 @@ const DEFAULT_VALUES: OnboardingFormValues = {
   heightInches: "",
   weight: "",
   sex: "",
+  nutritionStatus: "",
   activityLevel: 3,
   selectedRestrictions: [],
   selectedDietaryPlans: [],
@@ -102,6 +103,7 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const [dietaryPlansSearchValue, setDietaryPlansSearchValue] = useState("");
   const [presetRestrictions, setPresetRestrictions] = useState<PresetRestriction[]>(
@@ -174,6 +176,7 @@ export default function OnboardingPage() {
         }
         if (data.weight) updates.weight = String(data.weight);
         if (data.sex) updates.sex = SEX_FROM_DB[data.sex] ?? "";
+        if (data.nutrition_status) updates.nutritionStatus = data.nutrition_status;
         if (data.activity_level) updates.activityLevel = data.activity_level;
         if (data.diet_restrictions?.length) {
           updates.selectedRestrictions = data.diet_restrictions.map(
@@ -205,6 +208,7 @@ export default function OnboardingPage() {
   const heightInches = watch("heightInches");
   const weight = watch("weight");
   const sex = watch("sex");
+  const nutritionStatus = watch("nutritionStatus");
   const activityLevel = watch("activityLevel");
   const selectedRestrictions = watch("selectedRestrictions");
   const selectedDietaryPlans = watch("selectedDietaryPlans");
@@ -305,6 +309,7 @@ export default function OnboardingPage() {
         height: feet * 12 + inches,
         weight: Number(weight),
         sex: SEX_TO_DB[sex] ?? "other",
+        nutrition_status: nutritionStatus,
         activity_level: activityLevel,
       };
     }
@@ -334,11 +339,13 @@ export default function OnboardingPage() {
     if (!valid) return;
     if ((currentStep === 2 || currentStep === 3) && !presetsLoaded) return;
 
+    setSaveError(null);
     setIsLoading(true);
     try {
       await patchOnboardingStep(STEP_KEYS[currentStep], buildStepPayload(currentStep));
     } catch (err) {
       console.error(err);
+      setSaveError(err instanceof Error ? err.message : "Could not save onboarding. Please try again.");
       setIsLoading(false);
       return;
     }
@@ -352,6 +359,7 @@ export default function OnboardingPage() {
         router.push("/dashboard");
       } catch (err) {
         console.error(err);
+        setSaveError(err instanceof Error ? err.message : "Could not save onboarding. Please try again.");
         setIsLoading(false);
       }
     }
@@ -363,6 +371,7 @@ export default function OnboardingPage() {
     if (!valid) return;
     if (!presetsLoaded) return;
 
+    setSaveError(null);
     setIsLoading(true);
     try {
       for (let i = 0; i < stepCount; i++) {
@@ -372,6 +381,7 @@ export default function OnboardingPage() {
       router.push("/dashboard");
     } catch (err) {
       console.error(err);
+      setSaveError(err instanceof Error ? err.message : "Could not save onboarding. Please try again.");
       setIsLoading(false);
     }
   }
@@ -398,7 +408,7 @@ export default function OnboardingPage() {
     heightInches !== "" &&
     weight.trim().length > 0 &&
     Number(weight) > 0 &&
-    sex !== "";
+    sex !== "" && nutritionStatus !== "";
   const isSection2Complete = selectedRestrictions.length > 0;
 
   const snapToSection = useCallback((index: number) => {
@@ -445,6 +455,7 @@ export default function OnboardingPage() {
   return (
     <OnboardingShell currentStep={currentStep} stepCount={stepCount}>
       <>
+        {saveError && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-4 text-sm text-red-700">{saveError}</p>}
         {/* Mobile: all sections visible with snap scrolling */}
         <div className="flex flex-col md:hidden">
           <div
@@ -469,6 +480,9 @@ export default function OnboardingPage() {
               heightInches={heightInches}
               weight={weight}
               sex={sex}
+              nutritionStatus={nutritionStatus}
+              onNutritionStatusChange={(value) => setValue("nutritionStatus", value, { shouldValidate: true })}
+              nutritionStatusError={errors.nutritionStatus?.message}
               activityLevel={activityLevel}
               heightFeetOptions={HEIGHT_FEET_OPTIONS}
               heightInchOptions={HEIGHT_INCH_OPTIONS}
@@ -555,6 +569,9 @@ export default function OnboardingPage() {
               heightInches={heightInches}
               weight={weight}
               sex={sex}
+              nutritionStatus={nutritionStatus}
+              onNutritionStatusChange={(value) => setValue("nutritionStatus", value, { shouldValidate: true })}
+              nutritionStatusError={errors.nutritionStatus?.message}
               activityLevel={activityLevel}
               heightFeetOptions={HEIGHT_FEET_OPTIONS}
               heightInchOptions={HEIGHT_INCH_OPTIONS}

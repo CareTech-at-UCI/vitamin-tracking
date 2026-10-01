@@ -6,6 +6,7 @@ Pydantic models for onboarding API request and response validation.
 
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -29,6 +30,7 @@ class HealthStepPayload(BaseModel):
     weight: Decimal = Field(gt=0, max_digits=5, decimal_places=2)
     sex: SexType
     activity_level: int = Field(ge=1, le=5)
+    nutrition_status: Literal["standard", "pregnancy", "lactation"]
 
 
 class RestrictionsStepPayload(BaseModel):
@@ -65,6 +67,7 @@ class OnboardingStateResponse(BaseModel):
     height: Decimal | None = None
     weight: Decimal | None = None
     activity_level: int | None = None
+    nutrition_status: Literal["standard", "pregnancy", "lactation"] | None = None
     diet_restrictions: list[UserDietRestrictionItem] | None = None
     dietary_plans: list[UserDietaryPlanItem] | None = None
     profile_picture: ProfilePictureType | None = None
@@ -77,3 +80,4 @@ class OnboardingStepResponse(BaseModel):
 
 class OnboardingCompleteResponse(BaseModel):
     message: str = "Onboarding complete"
+    omitted_goal_symbols: list[str] = Field(default_factory=list)

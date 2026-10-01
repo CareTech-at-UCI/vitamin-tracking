@@ -1,10 +1,14 @@
 import type { CSSProperties } from "react";
+import type { OnboardingFormValues } from "@/lib/onboarding/schemas";
 
 type OnboardingStepHeightWeightProps = {
   heightFeet: string;
   heightInches: string;
   weight: string;
   sex: string;
+  nutritionStatus: OnboardingFormValues["nutritionStatus"];
+  onNutritionStatusChange: (value: OnboardingFormValues["nutritionStatus"]) => void;
+  nutritionStatusError?: string;
   activityLevel: number;
   heightFeetOptions: string[];
   heightInchOptions: string[];
@@ -25,6 +29,9 @@ export function OnboardingStepHeightWeight({
   heightInches,
   weight,
   sex,
+  nutritionStatus,
+  onNutritionStatusChange,
+  nutritionStatusError,
   activityLevel,
   heightFeetOptions,
   heightInchOptions,
@@ -91,6 +98,31 @@ export function OnboardingStepHeightWeight({
                 error={sexError}
               />
             </div>
+          </div>
+          <div className="space-y-3">
+            <label className="flex flex-col gap-3 text-base text-[#4f6f49] md:text-lg">
+              Pregnancy or breastfeeding status
+              <select
+                value={nutritionStatus}
+                onChange={(event) => onNutritionStatusChange(event.target.value as OnboardingFormValues["nutritionStatus"])}
+                aria-invalid={!!nutritionStatusError}
+                className="min-h-12 w-full rounded-[20px] border border-[#efe4c8] bg-[#fff6e3] px-4 text-base text-[#3b6b3c]"
+              >
+                <option value="">Select status</option>
+                <option value="standard">Neither / not applicable</option>
+                <option value="pregnancy">Pregnant</option>
+                <option value="lactation">Breastfeeding</option>
+              </select>
+            </label>
+            <p className="text-sm text-[#4f6f49]">
+              Used with your age and sex to set daily dietary targets. Pregnancy and breastfeeding targets are available for ages 14–50.
+            </p>
+            {sex === "X - Nonbinary/Intersex" && nutritionStatus === "standard" && (
+              <p className="text-sm text-[#4f6f49]">
+                We’ll set the targets shared by the reference’s male and female categories. Targets that differ need an individual review.
+              </p>
+            )}
+            {nutritionStatusError && <p className="text-sm text-red-500">{nutritionStatusError}</p>}
           </div>
           <div className="space-y-3 md:space-y-4">
             <p className="text-base leading-7 text-[#4f6f49] md:text-lg md:leading-7">

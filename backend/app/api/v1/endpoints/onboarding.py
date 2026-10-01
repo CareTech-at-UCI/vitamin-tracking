@@ -11,6 +11,7 @@ from supabase import Client
 
 from app.api.deps.auth import get_current_user_id
 from app.api.deps.supabase import get_supabase_admin
+from app.api.services.nutrient_targets import calculate_targets, resolve_goal_rows
 from app.api.schemas.onboarding import (
     AvatarStepPayload,
     HealthStepPayload,
@@ -49,6 +50,7 @@ REQUIRED_FIELDS = [
     "height",
     "weight",
     "activity_level",
+    "nutrition_status",
 ]
 
 
@@ -133,7 +135,7 @@ async def complete_onboarding(
     user_id: str = Depends(get_current_user_id),
     supabase: Client = Depends(get_supabase_admin),
 ):
-    """Verifies all required steps are complete and marks onboarding done."""
+    """Calculate dietary targets, then atomically save goals and completion."""
     try:
         response = supabase.table("users").select("*").eq("id", user_id).execute()
     except Exception as e:
@@ -144,6 +146,11 @@ async def complete_onboarding(
         raise HTTPException(status_code=404, detail="User not found")
 
     user = rows[0]
+    if user.get("is_completed") and user.get("nutrient_goal_rule_version"):
+        return {
+            "message": "Onboarding complete",
+            "omitted_goal_symbols": (user.get("nutrient_goal_context") or {}).get("omitted_symbols", []),
+        }
     missing = [f for f in REQUIRED_FIELDS if not user.get(f)]
     if missing:
         raise HTTPException(
@@ -152,14 +159,32 @@ async def complete_onboarding(
         )
 
     try:
-        supabase.table("users").update(
-            {
-                "is_completed": True,
-                "current_step": "complete",
-                "onboarding_completed_at": datetime.now(timezone.utc).isoformat(),
-            }
-        ).eq("id", user_id).execute()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database update failed: {e}") from e
+        calculation = calculate_targets(
+            user["date_of_birth"], user["sex"], user["nutrition_status"],
+            today=datetime.now(timezone.utc).date(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    return {"message": "Onboarding complete"}
+    try:
+        nutrients = supabase.table("nutrients").select("id,symbol,unit").execute().data or []
+        goals = resolve_goal_rows(calculation["goals"], nutrients)
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Nutrient references are unavailable. Please try again after the reference data is configured.") from exc
+
+    try:
+        supabase.rpc("complete_onboarding_with_goals", {
+            "p_user_id": user_id,
+            "p_goals": goals,
+            "p_rule_version": calculation["rule_version"],
+            "p_context": {
+                "date_of_birth": user["date_of_birth"],
+                "sex": user["sex"], "nutrition_status": user["nutrition_status"],
+                "age": calculation["age"],
+                "omitted_symbols": calculation["omitted_symbols"],
+            },
+        }).execute()
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Could not save nutrient goals and complete onboarding. Please retry.") from exc
+
+    return {"message": "Onboarding complete", "omitted_goal_symbols": calculation["omitted_symbols"]}
