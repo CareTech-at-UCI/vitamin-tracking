@@ -1,0 +1,9 @@
+age,vitamin_D_pregnancy,vitamin_D,vitamin_B9_breastfeeding,vitamin_B9_pregnancy,vitamin_B9,vitamin_B12_male,vitamin_B6_male,vitamin_C_male,vitamin_E_male,omega3_male,vitamin_B12_female,vitamin_B6_female,vitamin_C_female,vitamin_E_female,omega3_female,vitamin_B12_pregnancy,vitamin_B6_pregnancy,vitamin_C_pregnancy,vitamin_E_pregnancy,omega3_pregnancy,vitamin_B12_lactation,vitamin_B6_lactation,vitamin_C_lactation,vitamin_E_lactation,omega3_lactation
+Birth to 6 months*,-1,10 mcg,-1,-1,65 mcg,0.4 mcg,0.1 mg,40 mg,4 mg,0.5 g,0.4 mcg,0.1 mg,40 mg,4 mg,0.5 g,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+7–12 months*,-1,10 mcg,-1,-1,80 mcg,0.5 mcg,0.3 mg,50 mg,5 mg,0.5 g,0.5 mcg,0.3 mg,50 mg,5 mg,0.5 g,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+1–3 years** ,-1,15 mcg,-1,-1,150 mcg,0.9 mcg,0.5 mg,15 mg,6 mg,0.7 g,0.9 mcg,0.5 mg,15 mg,6 mg,0.7 g,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+4–8 years**,-1,15 mcg,-1,-1,200 mcg,1.2 mcg,0.6 mg,25 mg,7 mg,0.9 g,1.2 mcg,0.6 mg,25 mg,7 mg,0.9 g,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+9–13 years**,-1,15 mcg,-1,-1,300 mcg,1.8 mcg,1.0 mg,45 mg,11 mg,1.2 g,1.8 mcg,1.0 mg,45 mg,11 mg,1.0 g,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+14–18 years**,15 mcg,15 mcg,500 mcg,600 mcg,400 mcg,2.4 mcg,1.3 mg,75 mg,15 mg,1.6 g,2.4 mcg,1.2 mg,65 mg,15 mg,1.1 g,2.6 mcg,1.9 mcg,80 mg,15 mg,1.4 g,2.8 mcg,2.0 mcg,115 mg,19 mg,1.3 g
+19–50 years**,15 mcg,15 mcg,500 mcg,600 mcg,400 mcg,2.4 mcg,1.3 mg,90 mg,15 mg,1.6 g,2.4 mcg,1.3 mg,75 mg,15 mg,1.1 g,2.6 mcg,1.9 mcg,85 mg,15 mg,1.4 g,2.8 mcg,2.0 mcg,120 mg,19 mg,1.3 g
+51+ years**,15 mcg,20 mcg,500 mcg,600 mcg,400 mcg,2.4 mcg,1.7 mg,90 mg,15 mg,1.6 g,2.4 mcg,1.5 mg,75 mg,15 mg,1.1 g,2.6 mcg,-1,85 mg,15 mg,-1,2.8 mcg,-1,120 mg,19 mg,-1
