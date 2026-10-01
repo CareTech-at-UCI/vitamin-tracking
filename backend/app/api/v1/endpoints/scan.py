@@ -5,8 +5,9 @@ from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from inference_sdk import InferenceConfiguration, InferenceHTTPClient
+from pydantic import ValidationError
 from supabase import Client
 
 from app.api.core.config import get_settings
@@ -31,12 +32,8 @@ def get_roboflow_client() -> InferenceHTTPClient:
     ).configure(InferenceConfiguration(api_key_transport="header"))
 
 
-@router.post("/infer")
-async def infer_food(
-    image: UploadFile,
-    supabase: Client = Depends(get_supabase_admin),
-) -> dict:
-    """Run the Roboflow model on an uploaded image and attach matching food_items as `foods`."""
+async def read_image(image: UploadFile) -> bytes:
+    """Validate an uploaded image's type and size and return its bytes."""
     if image.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(status_code=415, detail="Upload a JPEG, PNG, or WebP image.")
 
@@ -45,6 +42,16 @@ async def infer_food(
         raise HTTPException(status_code=400, detail="The uploaded image is empty.")
     if len(image_bytes) > MAX_IMAGE_BYTES:
         raise HTTPException(status_code=413, detail="The image must be 10 MB or smaller.")
+    return image_bytes
+
+
+@router.post("/infer")
+async def infer_food(
+    image: UploadFile,
+    supabase: Client = Depends(get_supabase_admin),
+) -> dict:
+    """Run the Roboflow model on an uploaded image and attach matching food_items as `foods`."""
+    image_bytes = await read_image(image)
 
     suffix = Path(image.filename or "capture.jpg").suffix or ".jpg"
     temporary_path: Path | None = None
@@ -78,11 +85,19 @@ async def infer_food(
 
 @router.post("/log", response_model=ScanLogResponse, status_code=201)
 async def log_scanned_meal(
-    body: ScanLogCreate,
+    payload: str = Form(..., description="JSON-encoded ScanLogCreate"),
+    image: UploadFile | None = File(default=None),
     user_id: str = Depends(get_current_user_id),
     supabase: Client = Depends(get_supabase_admin),
 ):
-    """Log confirmed foods as a meal for the authenticated user, copying nutrients from food_item_nutrients."""
+    """Log confirmed foods as a meal for the authenticated user and store the optional scan photo."""
+    try:
+        body = ScanLogCreate.model_validate_json(payload)
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=exc.errors(include_url=False, include_context=False)) from exc
+
+    image_bytes = await read_image(image) if image is not None else None
+
     try:
         items, unmatched = scan_service.resolve_food_items(supabase, body)
     except Exception as exc:
@@ -100,4 +115,10 @@ async def log_scanned_meal(
     except Exception as exc:
         raise HTTPException(status_code=500, detail="Failed to log meal.") from exc
 
-    return {"meal_id": meal_id, "items": items, "nutrients": nutrients}
+    image_path = None
+    if image_bytes is not None and image is not None:
+        image_path = scan_service.save_meal_image(
+            supabase, user_id, meal_id, image_bytes, image.content_type or ""
+        )
+
+    return {"meal_id": meal_id, "items": items, "nutrients": nutrients, "image_path": image_path}

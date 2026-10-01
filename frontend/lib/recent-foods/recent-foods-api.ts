@@ -6,6 +6,7 @@ export type RecentFoodsApiItem = {
   id: number;
   meal_id: number;
   name: string;
+  image_path: string | null;
 };
 
 export type RecentFoodsApiMeals = Record<RecentFoodsMealKey, RecentFoodsApiItem[]>;

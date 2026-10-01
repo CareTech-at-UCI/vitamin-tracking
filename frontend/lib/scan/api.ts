@@ -39,6 +39,7 @@ export type LogMealResponse = {
   meal_id: number;
   items: { food_item_id: number; name: string; servings: number }[];
   nutrients: LoggedNutrient[];
+  image_path: string | null;
 };
 
 function getApiBaseUrl(): string {
@@ -85,6 +86,7 @@ export async function inferFoodImage(image: Blob): Promise<DetectedFood[]> {
 
 export async function logScannedMeal(
   items: LogMealItem[],
+  image?: Blob | null,
   consumedAt: Date = new Date(),
 ): Promise<LogMealResponse> {
   const supabase = createClient();
@@ -92,13 +94,10 @@ export async function logScannedMeal(
   const token = data.session?.access_token;
   if (!token) throw new Error("Please sign in to log meals.");
 
-  const response = await fetch(`${getApiBaseUrl()}/api/v1/scan/log`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
+  const formData = new FormData();
+  formData.append(
+    "payload",
+    JSON.stringify({
       type: mealTypeForTime(consumedAt),
       consumed_at: consumedAt.toISOString(),
       items: items.map((item) =>
@@ -107,6 +106,15 @@ export async function logScannedMeal(
           : { name: item.name, servings: item.servings },
       ),
     }),
+  );
+  if (image) {
+    formData.append("image", image, image instanceof File ? image.name : "capture.jpg");
+  }
+
+  const response = await fetch(`${getApiBaseUrl()}/api/v1/scan/log`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
   });
 
   if (!response.ok) {

@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -94,19 +95,23 @@ class ScanEndpointTests(TestCase):
         food_item_nutrients = table_returning([
             {"food_item_id": 3, "quantity": 8.4, "nutrients": {"id": 1, "name": "Vitamin C", "symbol": "C", "unit": "mg"}},
         ])
+        meal_scans = Mock()
         self.supabase.table.side_effect = lambda name: {
             "food_items": food_items,
             "food_item_nutrients": food_item_nutrients,
+            "meal_scans": meal_scans,
         }[name]
         self.supabase.rpc.return_value.execute.return_value = Mock(data=42)
+        bucket = self.supabase.storage.from_.return_value
 
         response = self.client.post(
             "/scan/log",
-            json={
+            data={"payload": json.dumps({
                 "type": "lunch",
                 "consumed_at": "2026-10-01T12:30:00-07:00",
                 "items": [{"food_item_id": 3, "servings": 2}],
-            },
+            })},
+            files={"image": ("apple.jpg", b"jpeg data", "image/jpeg")},
         )
 
         self.assertEqual(response.status_code, 201)
@@ -118,17 +123,65 @@ class ScanEndpointTests(TestCase):
         self.assertEqual(rpc_params["p_user_id"], USER_ID)
         self.assertEqual(rpc_params["p_items"], [{"food_item_id": 3, "servings": 2}])
 
+        self.supabase.storage.from_.assert_called_with("scan-images")
+        uploaded_path, uploaded_bytes, _ = bucket.upload.call_args.args
+        self.assertTrue(uploaded_path.startswith(f"{USER_ID}/42/"))
+        self.assertTrue(uploaded_path.endswith(".jpg"))
+        self.assertEqual(uploaded_bytes, b"jpeg data")
+        self.assertEqual(body["image_path"], uploaded_path)
+        meal_scans.insert.assert_called_once_with(
+            {"user_id": USER_ID, "meal_id": 42, "image_path": uploaded_path}
+        )
+
+    def test_log_keeps_meal_when_image_upload_fails(self) -> None:
+        food_items = table_returning([{"id": 3, "name": "apple"}])
+        food_item_nutrients = table_returning([])
+        self.supabase.table.side_effect = lambda name: {
+            "food_items": food_items,
+            "food_item_nutrients": food_item_nutrients,
+        }[name]
+        self.supabase.rpc.return_value.execute.return_value = Mock(data=7)
+        self.supabase.storage.from_.return_value.upload.side_effect = RuntimeError("storage down")
+
+        response = self.client.post(
+            "/scan/log",
+            data={"payload": json.dumps({
+                "type": "dinner",
+                "consumed_at": "2026-10-01T19:00:00Z",
+                "items": [{"food_item_id": 3, "servings": 1}],
+            })},
+            files={"image": ("apple.png", b"png data", "image/png")},
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["meal_id"], 7)
+        self.assertIsNone(response.json()["image_path"])
+
+    def test_log_rejects_unsupported_image_before_logging(self) -> None:
+        response = self.client.post(
+            "/scan/log",
+            data={"payload": json.dumps({
+                "type": "lunch",
+                "consumed_at": "2026-10-01T12:30:00Z",
+                "items": [{"food_item_id": 3, "servings": 1}],
+            })},
+            files={"image": ("food.gif", b"gif data", "image/gif")},
+        )
+
+        self.assertEqual(response.status_code, 415)
+        self.supabase.rpc.assert_not_called()
+
     def test_log_resolves_manual_names_and_rejects_unknown(self) -> None:
         food_items = table_returning([])
         self.supabase.table.return_value = food_items
 
         response = self.client.post(
             "/scan/log",
-            json={
+            data={"payload": json.dumps({
                 "type": "snack",
                 "consumed_at": "2026-10-01T15:00:00Z",
                 "items": [{"name": "Mystery Stew", "servings": 1}],
-            },
+            })},
         )
 
         self.assertEqual(response.status_code, 422)

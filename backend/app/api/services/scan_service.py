@@ -4,14 +4,20 @@ Scan services
 Maps model predictions to food_items and logs confirmed foods as meals with nutrients.
 """
 
+import logging
 import re
 from typing import Any
+from uuid import uuid4
 
 from supabase import Client
 
 from app.api.schemas.scan import ScanLogCreate
 
+logger = logging.getLogger(__name__)
+
 FOOD_ITEM_COLUMNS = "id, class_id, name, description, serving_description, serving_size_g"
+SCAN_IMAGES_BUCKET = "scan-images"
+IMAGE_EXTENSIONS = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
 
 
 def to_food_slug(name: str) -> str:
@@ -88,6 +94,37 @@ def log_meal(supabase: Client, user_id: str, body: ScanLogCreate, items: list[di
         },
     ).execute()
     return int(response.data)
+
+
+def save_meal_image(
+    supabase: Client,
+    user_id: str,
+    meal_id: int,
+    image_bytes: bytes,
+    content_type: str,
+) -> str | None:
+    """Store the scan photo for a logged meal. Best-effort: the meal stays logged if this fails."""
+    image_path = f"{user_id}/{meal_id}/{uuid4()}.{IMAGE_EXTENSIONS[content_type]}"
+    bucket = supabase.storage.from_(SCAN_IMAGES_BUCKET)
+    try:
+        bucket.upload(image_path, image_bytes, {"content-type": content_type})
+    except Exception:
+        logger.exception("Failed to upload scan image for meal %s", meal_id)
+        return None
+
+    try:
+        supabase.table("meal_scans").insert(
+            {"user_id": user_id, "meal_id": meal_id, "image_path": image_path}
+        ).execute()
+    except Exception:
+        logger.exception("Failed to record scan image for meal %s", meal_id)
+        try:
+            bucket.remove([image_path])
+        except Exception:
+            logger.exception("Failed to remove orphaned scan image %s", image_path)
+        return None
+
+    return image_path
 
 
 def summarize_nutrients(supabase: Client, items: list[dict[str, Any]]) -> list[dict[str, Any]]:

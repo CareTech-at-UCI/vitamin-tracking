@@ -144,6 +144,21 @@ async def get_recent_foods_for_day(
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Supabase meal items query failed: {exc}") from exc
 
+    try:
+        scans_response = (
+            supabase.table("meal_scans")
+            .select("meal_id, image_path")
+            .in_("meal_id", meal_ids)
+            .order("created_at")
+            .execute()
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Supabase meal scans query failed: {exc}") from exc
+
+    image_path_by_meal_id: dict[int, str] = {}
+    for scan in scans_response.data or []:
+        image_path_by_meal_id.setdefault(scan["meal_id"], scan["image_path"])
+
     for item in items_response.data or []:
         meal_key = meal_type_by_id.get(item.get("meal_id"))
         if meal_key not in grouped_items:
@@ -153,6 +168,7 @@ async def get_recent_foods_for_day(
                 "id": item["id"],
                 "meal_id": item["meal_id"],
                 "name": item["item_name"],
+                "image_path": image_path_by_meal_id.get(item["meal_id"]),
             }
         )
 

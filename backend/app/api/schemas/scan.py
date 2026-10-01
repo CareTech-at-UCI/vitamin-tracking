@@ -56,3 +56,4 @@ class ScanLogResponse(BaseModel):
     meal_id: int
     items: list[LoggedFoodItem]
     nutrients: list[LoggedNutrient]
+    image_path: str | None = None

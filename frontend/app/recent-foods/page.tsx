@@ -6,10 +6,16 @@ import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import DaySection from "@/app/recent-foods/_components/DaySection";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 import { createClient } from "@/utils/supabase/client";
-import { getRecentFoodsDay, type RecentFoodsApiMeals } from "@/lib/recent-foods/recent-foods-api";
+import {
+  getRecentFoodsDay,
+  type RecentFoodsApiItem,
+  type RecentFoodsApiMeals,
+} from "@/lib/recent-foods/recent-foods-api";
 
 const FOOD_IMAGE =
   "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=600&q=80";
+const SCAN_IMAGES_BUCKET = "scan-images";
+const SIGNED_URL_TTL_SECONDS = 60 * 60;
 
 type FoodItem = {
   id: number;
@@ -77,29 +83,41 @@ export default function RecentFoodsPage() {
         const days = await Promise.all(
           recentDates.map(async (date) => {
             const response = await getRecentFoodsDay(date, user.id);
+
+            const imagePaths = [
+              ...new Set(
+                Object.values(response.meals)
+                  .flat()
+                  .map((item) => item.image_path)
+                  .filter((path): path is string => Boolean(path)),
+              ),
+            ];
+            const signedUrlByPath = new Map<string, string>();
+            if (imagePaths.length > 0) {
+              const { data: signedUrls } = await supabase.storage
+                .from(SCAN_IMAGES_BUCKET)
+                .createSignedUrls(imagePaths, SIGNED_URL_TTL_SECONDS);
+              for (const signed of signedUrls ?? []) {
+                if (signed.path && signed.signedUrl) {
+                  signedUrlByPath.set(signed.path, signed.signedUrl);
+                }
+              }
+            }
+
+            const toFoodItems = (items: RecentFoodsApiItem[]): FoodItem[] =>
+              items.map((item) => ({
+                id: item.id,
+                name: item.name,
+                image: (item.image_path && signedUrlByPath.get(item.image_path)) || FOOD_IMAGE,
+              }));
+
             return [
               date,
               {
-                breakfast: response.meals.breakfast.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  image: FOOD_IMAGE,
-                })),
-                lunch: response.meals.lunch.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  image: FOOD_IMAGE,
-                })),
-                dinner: response.meals.dinner.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  image: FOOD_IMAGE,
-                })),
-                snacks: response.meals.snacks.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  image: FOOD_IMAGE,
-                })),
+                breakfast: toFoodItems(response.meals.breakfast),
+                lunch: toFoodItems(response.meals.lunch),
+                dinner: toFoodItems(response.meals.dinner),
+                snacks: toFoodItems(response.meals.snacks),
               } satisfies Meals,
             ] as const;
           }),

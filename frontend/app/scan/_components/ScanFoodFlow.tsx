@@ -27,6 +27,7 @@ function ScanFoodFlowSession() {
   const [proceedSnap, setProceedSnap] = useState<DrawerSnap>("expanded");
   const [loggedFoodItems, setLoggedFoodItems] = useState<FoodItem[]>([]);
   const [detectedFoodItems, setDetectedFoodItems] = useState<FoodItem[]>([]);
+  const [scannedImage, setScannedImage] = useState<Blob | null>(null);
   const [scanning, setScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
   const {
@@ -71,6 +72,7 @@ function ScanFoodFlowSession() {
           foodItemId: food.foodItemId,
         })),
       );
+      setScannedImage(image);
       setStep("confirm");
     } catch (error) {
       setScanError(
@@ -118,7 +120,7 @@ function ScanFoodFlowSession() {
           onClose={() => setStep("scan")}
           onAddMeal={async (items) => {
             const itemsToLog = items.filter((item) => item.servings > 0);
-            await logScannedMeal(itemsToLog);
+            await logScannedMeal(itemsToLog, scannedImage);
             setLoggedFoodItems(itemsToLog);
             setStep("log-completed");
           }}

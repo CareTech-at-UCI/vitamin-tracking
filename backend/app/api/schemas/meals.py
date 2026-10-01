@@ -69,6 +69,7 @@ class RecentFoodItem(BaseModel):
     id: int
     meal_id: int
     name: str
+    image_path: str | None = None
 
 
 class RecentFoodsMeals(BaseModel):
