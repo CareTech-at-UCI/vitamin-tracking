@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import DatePicker from "@/app/recent-foods/_components/DatePicker";
 import DaySection from "@/app/recent-foods/_components/DaySection";
+import EditMealModal from "@/app/recent-foods/_components/EditMealModal";
 import { HiChevronLeft, HiCheck, HiPlus, HiPencil } from "react-icons/hi";
 import { createClient } from "@/utils/supabase/client";
 import {
@@ -19,6 +20,7 @@ const SIGNED_URL_TTL_SECONDS = 60 * 60;
 
 type FoodItem = {
   id: number;
+  mealId: number;
   name: string;
   image: string;
 };
@@ -51,6 +53,8 @@ export default function RecentFoodsPage() {
   const [mealsByDate, setMealsByDate] = useState<Record<string, Meals>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadCount, setReloadCount] = useState(0);
+  const [editingMeal, setEditingMeal] = useState<{ mealId: number; image: string } | null>(null);
 
   const recentDates = useMemo(() => [selectedDate], [selectedDate]);
 
@@ -107,6 +111,7 @@ export default function RecentFoodsPage() {
             const toFoodItems = (items: RecentFoodsApiItem[]): FoodItem[] =>
               items.map((item) => ({
                 id: item.id,
+                mealId: item.meal_id,
                 name: item.name,
                 image: (item.image_path && signedUrlByPath.get(item.image_path)) || FOOD_IMAGE,
               }));
@@ -139,7 +144,7 @@ export default function RecentFoodsPage() {
     return () => {
       isCurrentRequest = false;
     };
-  }, [recentDates]);
+  }, [recentDates, reloadCount]);
 
   return (
     <div className="relative flex min-h-0 min-w-0 flex-1 flex-col bg-background">
@@ -202,6 +207,7 @@ export default function RecentFoodsPage() {
                     meals={meals}
                     isEditing={isEditing}
                     onEdit={() => setIsEditing(true)}
+                    onMealEdit={(item) => setEditingMeal({ mealId: item.mealId, image: item.image })}
                     onPreviousDate={goToPreviousDate}
                     onNextDate={goToNextDate}
                   />
@@ -229,6 +235,15 @@ export default function RecentFoodsPage() {
             Save Changes
           </button>
         </div>
+      )}
+
+      {editingMeal && (
+        <EditMealModal
+          mealId={editingMeal.mealId}
+          image={editingMeal.image}
+          onClose={() => setEditingMeal(null)}
+          onSaved={() => setReloadCount((count) => count + 1)}
+        />
       )}
 
       {!isEditing && (

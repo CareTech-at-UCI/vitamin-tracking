@@ -65,7 +65,7 @@ async def create_meal_item(
             supabase.table("meal_items")
             .insert({
                 "meal_id": body.meal_id,
-                "weight": body.weight,
+                "serving_size": body.serving_size,
                 "item_name": body.item_name,
             })
             .execute()
@@ -161,7 +161,7 @@ async def sync_meal_items(
             continue
 
         update_data = {
-            "weight": item.weight,
+            "serving_size": item.serving_size,
             "item_name": item.item_name,
         }
         try:
@@ -172,7 +172,7 @@ async def sync_meal_items(
     payload = [
         {
             "meal_id": meal_id,
-            "weight": item.weight,
+            "serving_size": item.serving_size,
             "item_name": item.item_name,
         }
         for item in body.items
@@ -235,8 +235,8 @@ async def update_meal_item(
 
     # only mutable fields are accepted; meal_id is immutable after create
     update_data = {}
-    if body.weight is not None:
-        update_data["weight"] = body.weight
+    if body.serving_size is not None:
+        update_data["serving_size"] = body.serving_size
     if body.item_name is not None:
         update_data["item_name"] = body.item_name
 

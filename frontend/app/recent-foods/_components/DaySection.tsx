@@ -4,6 +4,7 @@ import MealRow from "./MealRow";
 
 type FoodItem = {
   id: number;
+  mealId: number;
   name: string;
   image: string;
 };
@@ -19,6 +20,7 @@ type Props = {
   date: string;
   meals: Meals;
   onEdit: () => void;
+  onMealEdit: (item: FoodItem) => void;
   isEditing?: boolean;
   onPreviousDate: () => void;
   onNextDate: () => void;
@@ -47,6 +49,7 @@ export default function DaySection({
   date,
   meals,
   onEdit,
+  onMealEdit,
   isEditing = false,
   onPreviousDate,
   onNextDate,
@@ -99,13 +102,13 @@ export default function DaySection({
       ) : (
         <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-x-16">
           <div className="min-w-0 space-y-5">
-            <MealRow title="Breakfast" items={meals.breakfast} />
-            <MealRow title="Lunch" items={meals.lunch} />
+            <MealRow title="Breakfast" items={meals.breakfast} onMealEdit={onMealEdit} />
+            <MealRow title="Lunch" items={meals.lunch} onMealEdit={onMealEdit} />
           </div>
 
           <div className="min-w-0 space-y-5">
-            <MealRow title="Dinner" items={meals.dinner} />
-            <MealRow title="Snacks" items={meals.snacks} />
+            <MealRow title="Dinner" items={meals.dinner} onMealEdit={onMealEdit} />
+            <MealRow title="Snacks" items={meals.snacks} onMealEdit={onMealEdit} />
           </div>
         </div>
       )}

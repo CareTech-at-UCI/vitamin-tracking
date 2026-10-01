@@ -2,18 +2,22 @@ import { FC } from "react";
 
 export type FoodItem = {
   id: number;
+  mealId: number;
   name: string;
   image: string;
 };
 
 type Props = {
   item: FoodItem;
+  onClick: () => void;
 };
 
-const FoodCard: FC<Props> = ({ item }) => {
+const FoodCard: FC<Props> = ({ item, onClick }) => {
   return (
     <button
       type="button"
+      onClick={onClick}
+      aria-label={`Edit ${item.name}`}
       className="relative size-36 shrink-0 overflow-hidden rounded-2xl text-left shadow-sm transition hover:scale-[1.02] sm:size-40"
     >
       <img
