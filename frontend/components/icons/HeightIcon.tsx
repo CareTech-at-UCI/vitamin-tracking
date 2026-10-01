@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const HeightWeightIcon = ({ className = "h-full w-full" }: { className?: string }) => (
+export const HeightIcon = ({ className = "h-full w-full" }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 99 95"

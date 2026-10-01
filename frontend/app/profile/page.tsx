@@ -132,11 +132,11 @@ export default function Profile() {
     }
 
     return (
-        <div className="flex w-full flex-col items-start gap-[1rem] p-[1.75rem]">
+        <div className="flex min-w-0 w-full flex-col items-start max-lg:gap-6 max-lg:p-4 gap-[1rem] lg:gap-[0.5rem] p-[1.75rem] lg:p-[0.875rem]">
 
             {/* Profile Header */}
-            <div className="flex w-full flex-col items-start gap-[1.5rem] p-[1.75rem]">
-                    <div className="flex origin-left flex-row items-center gap-[1vw]">
+            <div className="flex min-w-0 w-full flex-col items-start max-lg:gap-4 max-lg:p-0 gap-[1.5rem] lg:gap-[0.75rem] p-[1.75rem] lg:p-[0.875rem]">
+                    <div className="grid w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-4 lg:flex lg:flex-wrap lg:gap-[1vw]">
 
                         {/* Profile picture */}
                         <Image
@@ -145,61 +145,66 @@ export default function Profile() {
                             width={200}
                             height={200}
                             loading="eager"
-                            className="h-[12.5rem] w-[12.5rem] shrink-0 rounded-full object-cover"
+                            className="h-20 w-20 sm:h-24 sm:w-24 lg:h-[6.25rem] lg:w-[6.25rem] shrink-0 rounded-full object-cover"
                         />
 
                         {/* Profile text */}
-                        <div className="flex flex-col gap-[0.5rem]">
+                        <div className="flex min-w-0 flex-col break-words gap-[0.5rem] lg:gap-[0.25rem]">
                             <h1
-                                className="font-[Montserrat_Alternates] text-[clamp(2.5rem,4vw,4rem)] font-semibold leading-none tracking-[-8%] text-[#0A3323]"
+                                className="font-[Montserrat_Alternates] text-2xl sm:text-3xl lg:text-[clamp(1.25rem,2vw,2rem)] font-semibold leading-none tracking-[-8%] text-[#0A3323]"
                             >
                                 {firstName}
                             </h1>
 
                             <p
-                                className="font-[Instrument_Sans] text-[clamp(1.5rem,2vw,2rem)] font-medium leading-none tracking-[-2%] text-[#26612F]"
+                                className="font-[Instrument_Sans] text-base sm:text-lg lg:text-[clamp(0.75rem,1vw,1rem)] font-medium leading-none tracking-[-2%] text-[#26612F]"
                             >
                                 {name}
                             </p>
                         </div>
 
-                        {/* Height */}
-                        <div className="ml-[10vw]">
+                        <div className="col-span-2 lg:order-last lg:w-full">
+                            {/* Edit Profile Button, CHANGE HREF WHEN EDITING IS IMPLEMENTED */}
+                            <button
+                                type="button"
+                                onClick={() => {}}
+                                className="inline-flex w-auto items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#F16F33] px-4 py-2 font-[Instrument_Sans] text-base font-medium text-[#FFFDEE]"
+                            >
+                                <span>Edit Profile</span>
+                                <HiPencil color="#FFFDEE" />
+                            </button>
+                        </div>
+
+                        <div className="col-span-2 grid w-full min-w-0 grid-cols-2 gap-3 sm:gap-6 lg:ml-[5vw] lg:mt-5 lg:w-auto">
+                            {/* Height */}
                             <HeightWeightCard
                                 title="Height"
                                 imperial={`${feet}’ ${inches}’’`}
                                 metric={`${metricHeight} cm`}
                             />
+
+
+                            {/* Weight */}
+                            <HeightWeightCard
+                                title="Weight"
+                                imperial={weight}
+                                metric={`${metricWeight} kg`}
+                            />
                         </div>
+                    </div>
 
-                        {/* Weight */}
-                        <HeightWeightCard
-                            title="Weight"
-                            imperial={weight}
-                            metric={`${metricWeight} kg`}
-                        />
-                    </div>    
 
-                {/* Edit Profile Button, CHANGE HREF WHEN EDITING IS IMPLEMENTED */}
-                <button
-                    type="button"
-                    onClick={() => {}}
-                    className="flex h-[2.5rem] w-[12vw] min-w-[9rem] items-center justify-center gap-[0.5rem] rounded-[2rem] bg-[#F16F33] px-[1.5rem] py-[0.5rem] font-[Instrument_Sans] text-[clamp(1rem,1.4vw,1.25rem)] font-medium leading-[100%] tracking-[-5%] text-[#FFFDEE]"
-                >
-                    <span>Edit Profile</span>
-                    <HiPencil color="#FFFDEE" />
-                </button>
             </div>
 
             {/* Personal Info: Age + Sex */}
             <section className="flex w-full flex-col items-start">
                 <h2
-                    className="p-[1.75rem] font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
+                    className="max-lg:p-0 max-lg:pb-4 p-[1.75rem] lg:p-[0.875rem] font-[Montserrat_Alternates] text-xl sm:text-2xl lg:text-[clamp(1rem,1.4vw,1.25rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
                 >
                     Personal Info
                 </h2>
 
-                <div className="flex flex-row items-center gap-[1vw] px-[1.5vw]">
+                <div className="grid w-full grid-cols-2 gap-3 sm:gap-6 lg:flex lg:gap-[0.5vw] lg:px-[0.75vw]">
                     <PersonalInfoCard
                         title="Sex"
                         content={sex}
@@ -213,9 +218,9 @@ export default function Profile() {
             </section>
 
             {/* Activity Levels */}
-            <section className="flex w-full flex-col items-start gap-[1.5rem] p-[1.75rem]">
+            <section className="flex min-w-0 w-full flex-col items-start max-lg:gap-4 max-lg:p-0 gap-[1.5rem] lg:gap-[0.75rem] p-[1.75rem] lg:p-[0.875rem]">
                 <h2
-                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem]"
+                    className="font-[Montserrat_Alternates] text-xl sm:text-2xl lg:text-[clamp(1rem,1.4vw,1.25rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem] lg:pb-[0.25rem]"
                 >
                     Activity Levels
                 </h2>
@@ -224,9 +229,9 @@ export default function Profile() {
             </section>
 
             {/* Dietary Restrictions */}
-            <section className="flex w-full flex-col items-start gap-[1.5rem] px-[1.5vw]">
+            <section className="flex min-w-0 w-full flex-col items-start max-lg:gap-4 max-lg:p-0 gap-[1.5rem] lg:gap-[0.75rem] px-[1.5vw] lg:px-[0.75vw]">
                 <h2
-                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem]"
+                    className="font-[Montserrat_Alternates] text-xl sm:text-2xl lg:text-[clamp(1rem,1.4vw,1.25rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323] pb-[0.5rem] lg:pb-[0.25rem]"
                 >
                     Dietary Restrictions
                 </h2>
@@ -238,9 +243,9 @@ export default function Profile() {
             </section>
 
             {/* Dietary Plans */}
-            <section className="flex w-full flex-col items-start gap-[1.5rem] px-[1.5vw] py-[3vh]">
+            <section className="flex min-w-0 w-full flex-col items-start max-lg:gap-4 max-lg:p-0 gap-[1.5rem] lg:gap-[0.75rem] px-[1.5vw] lg:px-[0.75vw] py-[3vh] lg:py-[1.5vh]">
                 <h2
-                    className="font-[Montserrat_Alternates] text-[clamp(2rem,2.8vw,2.5rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
+                    className="font-[Montserrat_Alternates] text-xl sm:text-2xl lg:text-[clamp(1rem,1.4vw,1.25rem)] font-semibold leading-[100%] tracking-[-8%] text-[#0A3323]"
                 >
                     Dietary Plans
                 </h2>
