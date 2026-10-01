@@ -7,6 +7,7 @@ export type FoodItem = {
   id: number;
   name: string;
   servings: number;
+  foodItemId?: number;
 };
 
 type FoodItemRowProps = {

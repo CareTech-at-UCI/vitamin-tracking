@@ -5,13 +5,28 @@ from unittest.mock import Mock, patch
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from app.api.deps.auth import get_current_user_id
+from app.api.deps.supabase import get_supabase_admin
 from app.api.v1.endpoints import scan
+
+USER_ID = "44728848-87d7-45ea-99d2-e6600c49b8d1"
+
+
+def table_returning(data: list[dict]) -> Mock:
+    query = Mock()
+    query.select.return_value = query
+    query.in_.return_value = query
+    query.execute.return_value = Mock(data=data)
+    return query
 
 
 class ScanEndpointTests(TestCase):
     def setUp(self) -> None:
         app = FastAPI()
         app.include_router(scan.router, prefix="/scan")
+        self.supabase = Mock()
+        app.dependency_overrides[get_supabase_admin] = lambda: self.supabase
+        app.dependency_overrides[get_current_user_id] = lambda: USER_ID
         self.client = TestClient(app)
 
     @patch("app.api.v1.endpoints.scan.get_roboflow_client")
@@ -26,6 +41,7 @@ class ScanEndpointTests(TestCase):
             return {"predictions": [{"class": "apple", "confidence": 0.93}]}
 
         get_client.return_value.infer.side_effect = infer
+        self.supabase.table.return_value = table_returning([])
 
         response = self.client.post(
             "/scan/infer",
@@ -46,3 +62,75 @@ class ScanEndpointTests(TestCase):
 
         self.assertEqual(response.status_code, 415)
         get_client.assert_not_called()
+
+    @patch("app.api.v1.endpoints.scan.get_roboflow_client")
+    def test_infer_attaches_foods_by_class_name(self, get_client: Mock) -> None:
+        get_client.return_value.infer.return_value = {
+            "predictions": [
+                {"class": "apple", "class_id": 2, "confidence": 0.6},
+                {"class": "apple", "class_id": 2, "confidence": 0.9},
+                {"class": "waffle", "class_id": 210, "confidence": 0.7},
+            ]
+        }
+        food_items = table_returning([
+            {"id": 240, "class_id": 211, "name": "waffle"},
+            {"id": 3, "class_id": 2, "name": "apple"},
+        ])
+        self.supabase.table.return_value = food_items
+
+        response = self.client.post(
+            "/scan/infer",
+            files={"image": ("food.jpg", b"jpeg data", "image/jpeg")},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        food_items.in_.assert_called_once_with("name", ["apple", "waffle"])
+        foods = response.json()["foods"]
+        self.assertEqual([f["name"] for f in foods], ["apple", "waffle"])
+        self.assertEqual(foods[0]["confidence"], 0.9)
+
+    def test_log_creates_meal_and_returns_scaled_nutrients(self) -> None:
+        food_items = table_returning([{"id": 3, "name": "apple"}])
+        food_item_nutrients = table_returning([
+            {"food_item_id": 3, "quantity": 8.4, "nutrients": {"id": 1, "name": "Vitamin C", "symbol": "C", "unit": "mg"}},
+        ])
+        self.supabase.table.side_effect = lambda name: {
+            "food_items": food_items,
+            "food_item_nutrients": food_item_nutrients,
+        }[name]
+        self.supabase.rpc.return_value.execute.return_value = Mock(data=42)
+
+        response = self.client.post(
+            "/scan/log",
+            json={
+                "type": "lunch",
+                "consumed_at": "2026-10-01T12:30:00-07:00",
+                "items": [{"food_item_id": 3, "servings": 2}],
+            },
+        )
+
+        self.assertEqual(response.status_code, 201)
+        body = response.json()
+        self.assertEqual(body["meal_id"], 42)
+        self.assertAlmostEqual(body["nutrients"][0]["quantity"], 16.8)
+        rpc_name, rpc_params = self.supabase.rpc.call_args.args
+        self.assertEqual(rpc_name, "log_scanned_meal")
+        self.assertEqual(rpc_params["p_user_id"], USER_ID)
+        self.assertEqual(rpc_params["p_items"], [{"food_item_id": 3, "servings": 2}])
+
+    def test_log_resolves_manual_names_and_rejects_unknown(self) -> None:
+        food_items = table_returning([])
+        self.supabase.table.return_value = food_items
+
+        response = self.client.post(
+            "/scan/log",
+            json={
+                "type": "snack",
+                "consumed_at": "2026-10-01T15:00:00Z",
+                "items": [{"name": "Mystery Stew", "servings": 1}],
+            },
+        )
+
+        self.assertEqual(response.status_code, 422)
+        food_items.in_.assert_called_once_with("name", ["mystery-stew"])
+        self.supabase.rpc.assert_not_called()

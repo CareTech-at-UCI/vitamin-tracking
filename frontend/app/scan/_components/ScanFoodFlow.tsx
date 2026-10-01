@@ -8,7 +8,7 @@ import ScanCameraModal from "@/app/scan/_components/ScanCameraModal";
 import ProceedStep from "@/app/scan/_components/ProceedStep";
 import { type DrawerSnap } from "@/app/scan/_components/Drawer";
 import { useScanChrome } from "@/app/scan/_components/ScanChromeContext";
-import { inferFoodImage } from "@/lib/scan/api";
+import { inferFoodImage, logScannedMeal } from "@/lib/scan/api";
 
 type ScanStep = "proceed" | "scan" | "confirm" | "log-completed" | "closed";
 
@@ -59,12 +59,17 @@ function ScanFoodFlowSession() {
     setScanning(true);
     setScanError(null);
     try {
-      const foodNames = await inferFoodImage(image);
-      if (foodNames.length === 0) {
+      const detectedFoods = await inferFoodImage(image);
+      if (detectedFoods.length === 0) {
         throw new Error("No food was detected. Reframe the food and try again.");
       }
       setDetectedFoodItems(
-        foodNames.map((name, index) => ({ id: index + 1, name, servings: 1 })),
+        detectedFoods.map((food, index) => ({
+          id: index + 1,
+          name: food.name,
+          servings: 1,
+          foodItemId: food.foodItemId,
+        })),
       );
       setStep("confirm");
     } catch (error) {
@@ -111,8 +116,10 @@ function ScanFoodFlowSession() {
         <ConfirmFoodModal
           initialItems={detectedFoodItems}
           onClose={() => setStep("scan")}
-          onAddMeal={(items) => {
-            setLoggedFoodItems(items);
+          onAddMeal={async (items) => {
+            const itemsToLog = items.filter((item) => item.servings > 0);
+            await logScannedMeal(itemsToLog);
+            setLoggedFoodItems(itemsToLog);
             setStep("log-completed");
           }}
         />

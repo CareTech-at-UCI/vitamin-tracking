@@ -12,7 +12,7 @@ import FoodServing from "@/app/scan/_components/FoodServing";
 type ConfirmFoodModalProps = {
   initialItems: FoodItem[];
   onClose: () => void;
-  onAddMeal: (items: FoodItem[]) => void;
+  onAddMeal: (items: FoodItem[]) => Promise<void>;
 };
 
 function ConfirmFoodContent({
@@ -91,6 +91,8 @@ export default function ConfirmFoodModal({
 }: ConfirmFoodModalProps) {
   const [items, setItems] = useState(initialItems);
   const [snap, setSnap] = useState<DrawerSnap>("expanded");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const totalServings = useMemo(
     () => items.reduce((sum, item) => sum + item.servings, 0),
@@ -99,10 +101,28 @@ export default function ConfirmFoodModal({
 
   function updateItem(updatedItem: FoodItem) {
     setItems((currentItems) =>
-      currentItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item,
-      ),
+      currentItems.map((item) => {
+        if (item.id !== updatedItem.id) return item;
+        // A renamed food no longer matches its detected class, so resolve it by name instead.
+        return updatedItem.name === item.name
+          ? updatedItem
+          : { ...updatedItem, foodItemId: undefined };
+      }),
     );
+  }
+
+  async function handleAddMeal() {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      await onAddMeal(items);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to log meal. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function addFoodItem() {
@@ -136,27 +156,35 @@ export default function ConfirmFoodModal({
   }
 
   const footer = (
-    <div className="flex min-h-16 items-center justify-between gap-4 border-t bg-white px-4 py-3 text-black">
-      <div className="flex items-center gap-4">
-        <p className="font-body text-base font-medium">
-          Servings: {totalServings}
+    <div className="border-t bg-white px-4 py-3 text-black">
+      {submitError && (
+        <p role="alert" className="pb-2 font-body text-sm text-red-600">
+          {submitError}
         </p>
+      )}
+      <div className="flex min-h-10 items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <p className="font-body text-base font-medium">
+            Servings: {totalServings}
+          </p>
+          <button
+            type="button"
+            onClick={addFoodItem}
+            aria-label="Add food item"
+            className="flex size-8 items-center justify-center rounded-full border border-primary text-2xl leading-none text-primary transition hover:bg-primary hover:text-white"
+          >
+            +
+          </button>
+        </div>
         <button
           type="button"
-          onClick={addFoodItem}
-          aria-label="Add food item"
-          className="flex size-8 items-center justify-center rounded-full border border-primary text-2xl leading-none text-primary transition hover:bg-primary hover:text-white"
+          onClick={handleAddMeal}
+          disabled={submitting || totalServings === 0}
+          className="min-h-10 rounded-full bg-primary px-8 font-body text-base font-medium text-white transition hover:brightness-95 disabled:opacity-60"
         >
-          +
+          {submitting ? "Adding..." : "Add Meal"}
         </button>
       </div>
-      <button
-        type="button"
-        onClick={() => onAddMeal(items)}
-        className="min-h-10 rounded-full bg-primary px-8 font-body text-base font-medium text-white transition hover:brightness-95"
-      >
-        Add Meal
-      </button>
     </div>
   );
 

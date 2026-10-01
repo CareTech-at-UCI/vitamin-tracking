@@ -5,10 +5,15 @@ from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from inference_sdk import InferenceConfiguration, InferenceHTTPClient
+from supabase import Client
 
 from app.api.core.config import get_settings
+from app.api.deps.auth import get_current_user_id
+from app.api.deps.supabase import get_supabase_admin
+from app.api.schemas.scan import ScanLogCreate, ScanLogResponse
+from app.api.services import scan_service
 
 router = APIRouter()
 
@@ -27,8 +32,11 @@ def get_roboflow_client() -> InferenceHTTPClient:
 
 
 @router.post("/infer")
-async def infer_food(image: UploadFile) -> dict:
-    """Run the configured Roboflow object-detection model on an uploaded image."""
+async def infer_food(
+    image: UploadFile,
+    supabase: Client = Depends(get_supabase_admin),
+) -> dict:
+    """Run the Roboflow model on an uploaded image and attach matching food_items as `foods`."""
     if image.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(status_code=415, detail="Upload a JPEG, PNG, or WebP image.")
 
@@ -60,4 +68,36 @@ async def infer_food(image: UploadFile) -> dict:
 
     if not isinstance(result, dict):
         raise HTTPException(status_code=502, detail="Roboflow returned an invalid response.")
+
+    try:
+        result["foods"] = scan_service.match_predictions_to_foods(supabase, result.get("predictions") or [])
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Food lookup failed.") from exc
     return result
+
+
+@router.post("/log", response_model=ScanLogResponse, status_code=201)
+async def log_scanned_meal(
+    body: ScanLogCreate,
+    user_id: str = Depends(get_current_user_id),
+    supabase: Client = Depends(get_supabase_admin),
+):
+    """Log confirmed foods as a meal for the authenticated user, copying nutrients from food_item_nutrients."""
+    try:
+        items, unmatched = scan_service.resolve_food_items(supabase, body)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Food lookup failed.") from exc
+
+    if unmatched:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Not in our food database: {', '.join(unmatched)}",
+        )
+
+    try:
+        meal_id = scan_service.log_meal(supabase, user_id, body, items)
+        nutrients = scan_service.summarize_nutrients(supabase, items)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Failed to log meal.") from exc
+
+    return {"meal_id": meal_id, "items": items, "nutrients": nutrients}
