@@ -45,7 +45,7 @@ export default function Dashboard() {
 
 
             {/* Food Recommendations label */}
-            <h2 className="font-display text-xl md:text-2xl lg:text-[2.5rem] font-semibold leading-none tracking-[-0.08em] text-[#0A3323]">Food Recommendations</h2>
+            {/* <h2 className="font-display text-xl md:text-2xl lg:text-[2.5rem] font-semibold leading-none tracking-[-0.08em] text-[#0A3323]">Food Recommendations</h2> */}
 
             {/* Recent Food button — bottom right */}
             <div className="hidden md:flex justify-end gap-3">
