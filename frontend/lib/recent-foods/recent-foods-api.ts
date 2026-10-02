@@ -170,8 +170,11 @@ export async function getRecentFoodsDay(
 ): Promise<RecentFoodsDayResponse> {
   const base = getRecentFoodsApiBaseUrl();
   const url = new URL(`${base}/api/v1/meals/recent-foods`);
+  const [year, month, day] = date.split("-").map(Number);
   url.searchParams.set("date", date);
   url.searchParams.set("user_id", userId);
+  url.searchParams.set("start_at", new Date(year, month - 1, day).toISOString());
+  url.searchParams.set("end_at", new Date(year, month - 1, day + 1).toISOString());
 
   const response = await fetch(url.toString(), { cache: "no-store" });
   if (!response.ok) {

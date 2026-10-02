@@ -2,8 +2,9 @@
 Dashboard endpoints.
 """
 
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from uuid import UUID
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from supabase import Client
@@ -18,20 +19,26 @@ router = APIRouter()
 async def get_dashboard_week(
     user_id: UUID,
     anchor_date: date | None = Query(default=None),
+    time_zone: str = Query(default="UTC"),
     supabase: Client = Depends(get_supabase_admin),
 ):
     """
     Get dashboard vitamin totals for past 7 days.
     """
 
+    try:
+        local_zone = ZoneInfo(time_zone)
+    except ZoneInfoNotFoundError as exc:
+        raise HTTPException(status_code=422, detail="Invalid time zone") from exc
+
     if anchor_date is None:
-        anchor_date = datetime.utcnow().date()
+        anchor_date = datetime.now(local_zone).date()
 
     # Generate rolling 7 day window (inclusive calendar days).
     start_date = anchor_date - timedelta(days=6)
     dates = [start_date + timedelta(days=i) for i in range(7)]
-    range_start = datetime.combine(start_date, time.min)
-    range_end = datetime.combine(anchor_date + timedelta(days=1), time.min)
+    range_start = datetime.combine(start_date, time.min, tzinfo=local_zone)
+    range_end = datetime.combine(anchor_date + timedelta(days=1), time.min, tzinfo=local_zone)
 
     # Default empty response structure.
     empty_days = [{"date": current_date, "vitamins": []} for current_date in dates]
@@ -42,8 +49,8 @@ async def get_dashboard_week(
             supabase.table("meals")
             .select("*")
             .eq("user_id", str(user_id))
-            .gte("consumed_at", range_start.isoformat())
-            .lt("consumed_at", range_end.isoformat())
+            .gte("consumed_at", range_start.astimezone(timezone.utc).isoformat())
+            .lt("consumed_at", range_end.astimezone(timezone.utc).isoformat())
             .execute()
         )
 
@@ -132,7 +139,7 @@ async def get_dashboard_week(
 
             consumed_date = datetime.fromisoformat(
                 meal["consumed_at"].replace("Z", "+00:00")
-            ).date()
+            ).astimezone(local_zone).date()
 
             key = (consumed_date, nutrient_id)
             totals_by_date_and_nutrient[key] = (

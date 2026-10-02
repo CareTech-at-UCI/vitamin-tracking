@@ -53,6 +53,7 @@ async function fetchDashboardWeek(userId: string): Promise<DashboardWeekResponse
   const base = getApiBaseUrl();
   const url = new URL(`${base}/api/v1/dashboard/week`);
   url.searchParams.set("user_id", userId);
+  url.searchParams.set("time_zone", Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   const res = await fetch(url.toString(), { cache: "no-store" });
 

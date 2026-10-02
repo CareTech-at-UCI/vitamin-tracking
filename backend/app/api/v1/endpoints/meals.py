@@ -2,7 +2,7 @@
 Meal endpoints.
 """
 
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -89,11 +89,20 @@ async def get_user_meals(
 async def get_recent_foods_for_day(
     user_id: UUID = Query(...),
     date_value: date = Query(..., alias="date"),
+    start_at: datetime | None = Query(default=None),
+    end_at: datetime | None = Query(default=None),
     supabase: Client = Depends(get_supabase_admin),
 ):
     """Return logged meal items for one user's local calendar day."""
-    day_start = datetime.combine(date_value, time.min)
-    next_day_start = day_start + timedelta(days=1)
+    if (start_at is None) != (end_at is None):
+        raise HTTPException(status_code=422, detail="Provide both start_at and end_at")
+    if start_at is not None and end_at is not None:
+        if start_at.tzinfo is None or end_at.tzinfo is None or start_at >= end_at:
+            raise HTTPException(status_code=422, detail="Provide ordered timezone-aware day bounds")
+        day_start, next_day_start = start_at, end_at
+    else:
+        day_start = datetime.combine(date_value, time.min, tzinfo=timezone.utc)
+        next_day_start = day_start + timedelta(days=1)
 
     try:
         user_response = (

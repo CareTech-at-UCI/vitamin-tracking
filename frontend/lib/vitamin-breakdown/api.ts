@@ -34,6 +34,7 @@ async function fetchVitaminBreakdown(
   params: URLSearchParams,
 ): Promise<VitaminBreakdownResponse> {
   const base = getApiBaseUrl();
+  params.set("time_zone", Intl.DateTimeFormat().resolvedOptions().timeZone);
   const res = await fetch(`${base}${path}?${params.toString()}`, {
     cache: "no-store",
   });
