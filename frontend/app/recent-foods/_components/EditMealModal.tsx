@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { HiMagnifyingGlass, HiPencil, HiXMark } from "react-icons/hi2";
+import { HiMagnifyingGlass, HiPencil, HiTrash, HiXMark } from "react-icons/hi2";
 import ModalShell from "@/components/ModalShell";
 import {
   getMealEditorDetails,
+  deleteMeal,
   saveMealEditorDetails,
   type MealEditorDetails,
   type MealEditorItem,
@@ -39,6 +40,8 @@ export default function EditMealModal({ mealId, image, onClose, onSaved }: Props
   const [nutrientSearch, setNutrientSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [titleEditing, setTitleEditing] = useState(false);
 
@@ -134,6 +137,21 @@ export default function EditMealModal({ mealId, image, onClose, onSaved }: Props
     }
   }
 
+  async function handleDeleteMeal() {
+    setDeleting(true);
+    setError(null);
+    try {
+      await deleteMeal(mealId);
+      onSaved();
+      onClose();
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : "Could not delete this meal.");
+    } finally {
+      setDeleting(false);
+      setConfirmDelete(false);
+    }
+  }
+
   const displayTitle = meal?.notes?.trim() ||
     `${meal?.type?.charAt(0).toUpperCase()}${meal?.type?.slice(1) ?? "Meal"}`;
   const summaryNutrients = [
@@ -150,7 +168,7 @@ export default function EditMealModal({ mealId, image, onClose, onSaved }: Props
     <ModalShell
       ariaLabel="Edit meal"
       onClose={onClose}
-      className="z-[70] !items-start overflow-y-auto py-4 sm:!items-center sm:py-8"
+      className="z-70 items-start! overflow-y-auto py-4 sm:items-center! sm:py-8"
       panelClassName="max-w-[810px] overflow-hidden rounded-[14px] bg-background text-secondary"
       closeButtonClassName="right-5 top-5 text-secondary"
     >
@@ -197,7 +215,8 @@ export default function EditMealModal({ mealId, image, onClose, onSaved }: Props
                 </button>
                 <button
                   type="button"
-                  aria-label={`Remove ${item.item_name}`}
+                  aria-label={`Remove ${item.item_name}; save entry to apply`}
+                  title="Remove this food when you save the entry"
                   onClick={(event) => {
                     event.stopPropagation();
                     removeFood(item);
@@ -362,11 +381,45 @@ export default function EditMealModal({ mealId, image, onClose, onSaved }: Props
         </div>
 
         {error && <p role="alert" className="mt-3 font-secondary text-sm text-red-700">{error}</p>}
-        <div className="mt-4 flex justify-end border-t border-secondary/15 pt-4">
+        {confirmDelete && (
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-700/20 bg-red-50 px-3 py-2">
+            <p className="font-secondary text-sm text-red-900">
+              Delete this meal and all its food items? This cannot be undone.
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(false)}
+                disabled={deleting}
+                className="rounded-full px-3 py-2 font-secondary text-sm text-secondary hover:bg-black/5 disabled:opacity-60"
+              >
+                Keep Meal
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteMeal}
+                disabled={deleting}
+                className="rounded-full bg-red-700 px-4 py-2 font-secondary text-sm font-medium text-white hover:bg-red-800 disabled:opacity-60"
+              >
+                {deleting ? "Deleting..." : "Delete Meal"}
+              </button>
+            </div>
+          </div>
+        )}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-secondary/15 pt-4">
+          <button
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+            disabled={loading || saving || deleting || !meal}
+            className="inline-flex items-center gap-2 rounded-full px-3 py-2 font-secondary text-sm font-medium text-red-800 transition hover:bg-red-50 disabled:opacity-50"
+          >
+            <HiTrash className="size-4" />
+            Delete Meal
+          </button>
           <button
             type="button"
             onClick={handleSave}
-            disabled={loading || saving || !meal}
+            disabled={loading || saving || deleting || !meal}
             className="min-w-32 rounded-full bg-primary px-6 py-2.5 font-secondary text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-55"
           >
             {saving ? "Saving..." : "Save Entry"}

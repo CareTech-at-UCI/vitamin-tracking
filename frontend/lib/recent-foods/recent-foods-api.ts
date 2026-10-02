@@ -160,6 +160,10 @@ export async function saveMealEditorDetails(
   });
 }
 
+export async function deleteMeal(mealId: number): Promise<void> {
+  await mealApiFetch(`/api/v1/meals/${mealId}`, { method: "DELETE" });
+}
+
 export async function getRecentFoodsDay(
   date: string,
   userId: string,
