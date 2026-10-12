@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import {
     getProfile,
     updateProfile,
@@ -36,13 +36,8 @@ const AVATARS: { id: AvatarId; picture: ProfilePicture; label: string }[] = [
     { id: "grape", picture: "grape", label: "Grape" },
 ];
 
-function heightParts(height: number | null): { feet: string; inches: string } {
-    if (height === null) return { feet: "", inches: "" };
-    const totalInches = Math.round(Number(height));
-    return {
-        feet: String(Math.floor(totalInches / 12)),
-        inches: String(totalInches % 12),
-    };
+function formatHeight(totalInches: number): string {
+    return `${Math.floor(totalInches / 12)}'${totalInches % 12}`;
 }
 
 function ageFromDate(dateOfBirth: string | null): string {
@@ -67,7 +62,7 @@ function ProfileField({
     children: React.ReactNode;
 }) {
     return (
-        <label className="flex min-w-0 flex-col gap-1.5 text-xs font-medium text-[#0A3323]">
+        <label className="flex min-w-0 flex-col gap-1.5 text-base font-medium text-[#0A3323] sm:text-xs">
             <span>{label}</span>
             {children}
         </label>
@@ -75,7 +70,7 @@ function ProfileField({
 }
 
 const inputClassName =
-    "h-10 min-w-0 rounded-lg border border-[#E8DFC3] bg-[#F8F2DD] px-3 text-sm text-[#205C31] outline-none focus:border-[#26612F] focus:ring-2 focus:ring-[#26612F]/15";
+    "h-14 min-w-0 rounded-lg border border-[#E8DFC3] bg-[#F8F2DD] px-3 text-lg text-[#205C31] outline-none focus:border-[#26612F] focus:ring-2 focus:ring-[#26612F]/15 sm:h-10 sm:text-sm";
 
 export default function EditProfileModal({
     profile,
@@ -84,9 +79,8 @@ export default function EditProfileModal({
 }: EditProfileModalProps) {
     const [firstName, setFirstName] = useState(profile.first_name ?? "");
     const [lastName, setLastName] = useState(profile.last_name ?? "");
-    const initialHeight = heightParts(profile.height);
-    const [feet, setFeet] = useState(initialHeight.feet);
-    const [inches, setInches] = useState(initialHeight.inches);
+    const [fullName, setFullName] = useState(`${profile.first_name ?? ""} ${profile.last_name ?? ""}`.trim());
+    const [height, setHeight] = useState(profile.height === null ? "" : String(Math.round(Number(profile.height))));
     const [weight, setWeight] = useState(profile.weight === null ? "" : String(profile.weight));
     const [sex, setSex] = useState<Sex | "">(profile.sex ?? "");
     const [activityLevel, setActivityLevel] = useState(profile.activity_level ?? 1);
@@ -178,7 +172,7 @@ export default function EditProfileModal({
             await updateProfile({
                 first_name: firstName.trim(),
                 last_name: lastName.trim(),
-                height: Number(feet) * 12 + Number(inches),
+                height: Number(height),
                 weight: Number(weight),
                 sex: sex as Sex,
                 activity_level: activityLevel,
@@ -207,11 +201,7 @@ export default function EditProfileModal({
 
     const restrictionSuggestions = searchChoices(restrictionSearch, restrictionCatalog, restrictions);
     const planSuggestions = searchChoices(planSearch, planCatalog, plans);
-    const inchOptions = feet === "0"
-        ? Array.from({ length: 11 }, (_, index) => index + 1)
-        : feet === "10"
-            ? [0]
-            : Array.from({ length: 12 }, (_, index) => index);
+    const heightOptions = Array.from({ length: 120 }, (_, index) => index + 1);
     const canAddRestriction = restrictionSearch.trim().length > 0 &&
         !restrictionCatalog.some((item) => item.name.toLowerCase() === restrictionSearch.trim().toLowerCase()) &&
         !restrictions.some((item) => item.name.toLowerCase() === restrictionSearch.trim().toLowerCase());
@@ -230,15 +220,15 @@ export default function EditProfileModal({
         canAdd: boolean,
     ) {
         return (
-            <section className="space-y-2">
-                <h3 className="text-xs font-medium text-[#0A3323]">{title}</h3>
-                <div className="flex min-h-7 flex-wrap gap-1.5">
+            <section className="order-4 space-y-3 sm:order-0 sm:space-y-2">
+                <h3 className="text-base font-medium text-[#0A3323] sm:text-xs">{title}</h3>
+                <div className="flex min-h-11 flex-wrap gap-2 sm:min-h-7 sm:gap-1.5">
                     {selected.map((item) => (
                         <button
                             key={`${item.id}-${item.name}`}
                             type="button"
                             onClick={() => toggleSelection(item, selected, setSelected)}
-                            className="inline-flex min-h-7 items-center gap-2 rounded-full bg-[#26612F] px-3 text-xs text-[#FFFDEE]"
+                            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#26612F] px-5 text-base text-[#FFFDEE] sm:min-h-7 sm:px-3 sm:text-xs"
                             aria-label={`Remove ${item.name}`}
                         >
                             {item.name}<X size={13} aria-hidden="true" />
@@ -251,7 +241,7 @@ export default function EditProfileModal({
                         onChange={(event) => setSearch(event.target.value)}
                         placeholder={`Search ${title.toLowerCase()}`}
                         aria-label={`Search ${title.toLowerCase()}`}
-                        className={`${inputClassName} h-9 w-full pr-9 text-xs`}
+                        className={`${inputClassName} h-14 w-full pr-9 text-base sm:h-9 sm:text-xs`}
                     />
                     {search ? (
                         <button
@@ -274,7 +264,7 @@ export default function EditProfileModal({
                                     toggleSelection(item, selected, setSelected);
                                     setSearch("");
                                 }}
-                                className="rounded-full border border-[#7FA27B] px-3 py-1 text-xs text-[#26612F] hover:bg-[#E7EFDF]"
+                                className="rounded-full border border-[#7FA27B] px-3 py-1 text-sm text-[#26612F] hover:bg-[#E7EFDF] sm:text-xs"
                             >
                                 {item.name}
                             </button>
@@ -283,13 +273,13 @@ export default function EditProfileModal({
                             <button
                                 type="button"
                                 onClick={() => addCustom(search, catalog, selected, setSelected, () => setSearch(""))}
-                                className="rounded-full border border-dashed border-[#F16F33] bg-[#FFF1E6] px-3 py-1 text-xs text-[#B94F20]"
+                                className="rounded-full border border-dashed border-[#F16F33] bg-[#FFF1E6] px-3 py-1 text-sm text-[#B94F20] sm:text-xs"
                             >
                                 Add: {search.trim()}
                             </button>
                         ) : null}
                         {suggestions.length === 0 && !canAdd ? (
-                            <p className="text-xs text-[#638066]">No matching options.</p>
+                                <p className="text-sm text-[#638066] sm:text-xs">No matching options.</p>
                         ) : null}
                     </div>
                 ) : null}
@@ -299,7 +289,7 @@ export default function EditProfileModal({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#0A3323]/35 p-3 backdrop-blur-[5px] sm:p-6"
+            className="fixed inset-0 z-60 flex items-start justify-center overflow-y-auto bg-[#FFFDEE] p-0 sm:items-center sm:bg-[#0A3323]/35 sm:p-6 sm:backdrop-blur-[5px]"
             onMouseDown={(event) => {
                 if (event.target === event.currentTarget && !saving) onClose();
             }}
@@ -308,32 +298,46 @@ export default function EditProfileModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="edit-profile-title"
-                className="relative my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-155 overflow-y-auto rounded-xl border border-[#91A889] bg-[#FFFDEE] px-5 pb-5 pt-4 shadow-[0_16px_60px_rgba(10,51,35,0.2)] sm:max-h-[calc(100dvh-3rem)] sm:px-10 sm:pb-7 sm:pt-6"
+                className="relative h-dvh max-h-dvh w-full max-w-none overflow-y-auto bg-[#FFFDEE] px-6 pb-10 pt-3 shadow-none sm:my-auto sm:h-auto sm:max-h-[calc(100dvh-3rem)] sm:max-w-155 sm:rounded-xl sm:border sm:border-[#91A889] sm:px-10 sm:pb-7 sm:pt-6 sm:shadow-[0_16px_60px_rgba(10,51,35,0.2)]"
             >
+                <div className="relative mb-7 flex h-12 items-center justify-center sm:hidden">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        disabled={saving}
+                        aria-label="Back to profile"
+                        className="absolute left-0 flex h-10 w-10 items-center justify-center text-[#0A3323] disabled:opacity-50"
+                    >
+                        <ArrowLeft size={27} strokeWidth={2.5} />
+                    </button>
+                    <p aria-hidden="true" className="font-[Montserrat_Alternates] text-3xl font-semibold text-[#0A3323]">
+                        Edit Profile
+                    </p>
+                </div>
                 <button
                     type="button"
                     onClick={onClose}
                     disabled={saving}
                     aria-label="Close edit profile"
-                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center text-[#26612F] transition hover:text-[#F16F33] disabled:opacity-50 sm:right-5 sm:top-4"
+                    className="absolute right-3 top-3 hidden h-9 w-9 items-center justify-center text-[#26612F] transition hover:text-[#F16F33] disabled:opacity-50 sm:flex sm:right-5 sm:top-4"
                 >
                     <X size={25} strokeWidth={2.4} />
                 </button>
 
-                <header className="mb-5 flex flex-col items-center">
+                <header className="mb-8 flex flex-col items-center sm:mb-5">
                     <h2 id="edit-profile-title" className="sr-only">Edit profile</h2>
                     <Image
                         src={AVATAR_ASSETS[avatar]}
                         alt={`${avatar} avatar`}
                         width={80}
                         height={80}
-                        className="h-20 w-20 rounded-full object-cover"
+                        className="h-40 w-40 rounded-full object-cover sm:h-20 sm:w-20"
                     />
                     <button
                         type="button"
                         onClick={() => setShowAvatars((current) => !current)}
                         aria-expanded={showAvatars}
-                        className="mt-2 rounded-full bg-[#F16F33] px-5 py-1 text-xs font-medium text-white hover:bg-[#D95B25]"
+                        className="mt-3 h-11 w-42 rounded-full bg-[#F16F33] px-5 text-lg font-medium text-white hover:bg-[#D95B25] sm:mt-2 sm:h-auto sm:w-auto sm:py-1 sm:text-xs"
                     >
                         Edit Avatar
                     </button>
@@ -358,57 +362,59 @@ export default function EditProfileModal({
                     ) : null}
                 </header>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-[minmax(0,1fr)_80px] gap-2 sm:gap-3">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-7 sm:gap-4">
+                    <div className="order-1 hidden grid-cols-[minmax(0,1fr)_80px] gap-2 sm:order-0 sm:grid sm:gap-3">
                         <ProfileField label="First Name">
-                            <input required maxLength={20} value={firstName} onChange={(event) => setFirstName(event.target.value)} className={inputClassName} />
+                            <input required maxLength={20} value={firstName} onChange={(event) => {
+                                setFirstName(event.target.value);
+                                setFullName(`${event.target.value} ${lastName}`.trim());
+                            }} className={inputClassName} />
                         </ProfileField>
                         <ProfileField label="Age">
                             <input readOnly value={ageFromDate(profile.date_of_birth)} className={`${inputClassName} bg-[#F2ECD5]`} />
                         </ProfileField>
                         <ProfileField label="Last Name">
-                            <input required maxLength={20} value={lastName} onChange={(event) => setLastName(event.target.value)} className={inputClassName} />
+                            <input required maxLength={20} value={lastName} onChange={(event) => {
+                                setLastName(event.target.value);
+                                setFullName(`${firstName} ${event.target.value}`.trim());
+                            }} className={inputClassName} />
                         </ProfileField>
                         <span aria-hidden="true" />
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                        <ProfileField label="Height">
-                            <div className="flex min-w-0 gap-1.5">
-                                <select
-                                    required
-                                    aria-label="Height in feet"
-                                    value={feet}
-                                    onChange={(event) => {
-                                        const nextFeet = event.target.value;
-                                        setFeet(nextFeet);
-                                        const validInches = nextFeet === "0"
-                                            ? Array.from({ length: 11 }, (_, index) => String(index + 1))
-                                            : nextFeet === "10"
-                                                ? ["0"]
-                                                : Array.from({ length: 12 }, (_, index) => String(index));
-                                        if (!validInches.includes(inches)) setInches(validInches[0]);
-                                    }}
-                                    className={`${inputClassName} w-1/2 px-2`}
-                                >
-                                    <option value="" disabled>ft</option>
-                                    {Array.from({ length: 11 }, (_, index) => (
-                                        <option key={index} value={index}>{index}&apos;</option>
-                                    ))}
-                                </select>
-                                <select
-                                    required
-                                    aria-label="Height in inches"
-                                    value={inches}
-                                    onChange={(event) => setInches(event.target.value)}
-                                    className={`${inputClassName} w-1/2 px-2`}
-                                >
-                                    <option value="" disabled>in</option>
-                                    {inchOptions.map((value) => (
-                                        <option key={value} value={value}>{value}&quot;</option>
-                                    ))}
-                                </select>
-                            </div>
+                    <div className="order-1 flex flex-col gap-5 sm:hidden">
+                        <ProfileField label="First and Last Name">
+                            <input
+                                required
+                                maxLength={41}
+                                pattern=".*\S\s+\S.*"
+                                value={fullName}
+                                onChange={(event) => {
+                                    const value = event.target.value;
+                                    const trimmedValue = value.trimEnd();
+                                    const separator = trimmedValue.lastIndexOf(" ");
+                                    setFullName(value);
+                                    setFirstName(separator < 0 ? trimmedValue : trimmedValue.slice(0, separator).trim());
+                                    setLastName(separator < 0 ? "" : trimmedValue.slice(separator + 1));
+                                }}
+                                className={inputClassName}
+                            />
+                        </ProfileField>
+                        <div className="w-28">
+                            <ProfileField label="Age">
+                                <input readOnly value={ageFromDate(profile.date_of_birth)} className={`${inputClassName} bg-[#F2ECD5]`} />
+                            </ProfileField>
+                        </div>
+                    </div>
+
+                    <div className="order-3 grid grid-cols-3 gap-2 sm:order-0 sm:gap-3">
+                        <ProfileField label="Height (in)">
+                            <select required aria-label="Height in feet and inches" value={height} onChange={(event) => setHeight(event.target.value)} className={`${inputClassName} px-2`}>
+                                <option value="" disabled>Select</option>
+                                {heightOptions.map((totalInches) => (
+                                    <option key={totalInches} value={totalInches}>{formatHeight(totalInches)}</option>
+                                ))}
+                            </select>
                         </ProfileField>
                         <ProfileField label="Weight (lb)">
                             <input required type="number" min="1" max="999" step="0.1" value={weight} onChange={(event) => setWeight(event.target.value)} className={inputClassName} />
@@ -423,11 +429,11 @@ export default function EditProfileModal({
                         </ProfileField>
                     </div>
 
-                    <fieldset>
-                        <legend className="mb-2 text-xs font-medium text-[#0A3323]">How physically active would you describe yourself as?</legend>
+                    <fieldset className="order-2 sm:order-0">
+                        <legend className="mb-3 text-lg font-medium leading-tight text-[#0A3323] sm:mb-2 sm:text-xs">How physically active would you describe yourself as?</legend>
                         <div className="grid grid-cols-4 gap-1">
                             {ACTIVITY_LEVELS.map((level, index) => (
-                                <label key={level} className="flex cursor-pointer flex-col items-center gap-1.5 text-center text-[10px] text-[#26612F] sm:text-xs">
+                                <label key={level} className="flex cursor-pointer flex-col items-center gap-2 text-center text-sm text-[#26612F] sm:gap-1.5 sm:text-xs">
                                     <input
                                         type="radio"
                                         name="activity-level"
@@ -445,9 +451,9 @@ export default function EditProfileModal({
                     {renderDietSection("Your Restrictions", restrictions, setRestrictions, restrictionSearch, setRestrictionSearch, restrictionCatalog, restrictionSuggestions, canAddRestriction)}
                     {renderDietSection("Your Dietary Plans", plans, setPlans, planSearch, setPlanSearch, planCatalog, planSuggestions, canAddPlan)}
 
-                    {error ? <p role="alert" className="wrap-break-word text-sm text-red-700">{error}</p> : null}
+                    {error ? <p role="alert" className="order-5 wrap-break-word text-sm text-red-700 sm:order-0">{error}</p> : null}
 
-                    <footer className="flex justify-end gap-2 border-t border-[#E8DFC3] pt-4">
+                    <footer className="order-6 flex justify-end gap-2 border-t border-[#E8DFC3] pt-4 sm:order-0">
                         <button
                             type="button"
                             onClick={onClose}
