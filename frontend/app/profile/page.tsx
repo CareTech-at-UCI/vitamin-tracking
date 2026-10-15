@@ -6,15 +6,18 @@ import HeightWeightCard from "./_components/HeightWeightCard";
 import PersonalInfoCard from "./_components/PersonalInfoCard";
 import ActivityLevelCards from "./_components/ActivityLevelCards";
 import DietaryRestrictionPlanCard from "./_components/DietaryRestrictionPlanCard";
+import EditProfileModal from "./_components/EditProfileModal";
 
-import { useEffect, useState } from "react";
-import { getProfile } from "@/lib/profile/api";
+import { useCallback, useEffect, useState } from "react";
+import { getProfile, type Profile } from "@/lib/profile/api";
 import { profilePictureToAvatarSrc } from "@/lib/profile/avatars";
 import Image from "next/image";
 import { HiPencil } from "react-icons/hi";
 
 export default function Profile() {
     const [loading, setLoading] = useState(true);
+    const [profileData, setProfileData] = useState<Profile | null>(null);
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     const [avatarSrc, setAvatarSrc] = useState(
         "/assets/avatars/tomato.svg"
@@ -40,7 +43,7 @@ export default function Profile() {
     const [dietPlans, setDietPlans] =
         useState<string[]>([]);
 
-    const calculateAge = (dateOfBirth: string) => {
+    const calculateAge = useCallback((dateOfBirth: string) => {
         const birthDate = new Date(dateOfBirth);
         const today = new Date();
 
@@ -60,9 +63,9 @@ export default function Profile() {
         }
 
         return age;
-    };
+    }, []);
 
-    const convertActivity = (currActivity: number) => {
+    const convertActivity = useCallback((currActivity: number) => {
         const activityLevels = [
             "Sedentary",
             "Light",
@@ -71,45 +74,38 @@ export default function Profile() {
         ];
 
         return activityLevels[currActivity - 1] ?? "Sedentary";
-    };
+    }, []);
+
+    const applyProfile = useCallback((data: Profile) => {
+        setProfileData(data);
+        setAvatarSrc(profilePictureToAvatarSrc(data.profile_picture));
+
+        const firstNameValue = data.first_name ?? "";
+        const lastNameValue = data.last_name ?? "";
+        setName(`${firstNameValue} ${lastNameValue}`.trim());
+        setFirstName(firstNameValue);
+
+        const height = Number(data.height ?? 0);
+        setFeet(Math.floor(height / 12));
+        setInches(height % 12);
+        setMetricHeight(Math.round(height * 2.54 * 10) / 10);
+
+        const weight = Number(data.weight ?? 0);
+        setWeight(weight);
+        setMetricWeight(Math.round((weight / 2.20462) * 10) / 10);
+
+        const sexValue = data.sex ?? "";
+        setSex(sexValue ? sexValue.charAt(0).toUpperCase() + sexValue.slice(1) : "");
+
+        setAge(data.date_of_birth ? calculateAge(data.date_of_birth) : 0);
+        setActivity(convertActivity(Number(data.activity_level ?? 0)));
+        setDietRestrictions((data.diet_restrictions ?? []).map((restriction) => restriction.name));
+        setDietPlans((data.dietary_plans ?? []).map((plan) => plan.name));
+    }, [calculateAge, convertActivity]);
 
     useEffect(() => {
         getProfile()
-            .then((data) => {
-                if (data.profile_picture) {
-                    setAvatarSrc(
-                        profilePictureToAvatarSrc(
-                            data.profile_picture
-                        )
-                    );
-                }
-
-                const firstNameValue = data.first_name ?? "";
-                const lastNameValue = data.last_name ?? "";
-                setName(`${firstNameValue} ${lastNameValue}`.trim());
-                setFirstName(firstNameValue);
-
-                const height = Number(data.height ?? 0);
-                setFeet(Math.floor(height / 12));
-                setInches(height % 12);
-                setMetricHeight(Math.round(height * 2.54 * 10) / 10);
-
-                const weight = Number(data.weight ?? 0);
-                setWeight(weight);
-                setMetricWeight(Math.round((weight / 2.20462) * 10) / 10);
-
-                const sexValue = data.sex ?? "";
-                setSex(sexValue ? sexValue.charAt(0).toUpperCase() + sexValue.slice(1) : "");
-
-                if (data.date_of_birth) {setAge(calculateAge(data.date_of_birth));}
-
-                const activityLevel = Number(data.activity_level ?? 0);
-                setActivity(convertActivity(activityLevel));
-
-                setDietRestrictions((data.diet_restrictions ?? []).map((restriction) => restriction.name));
-
-                setDietPlans((data.dietary_plans ?? []).map((plan) => plan.name));
-            })
+            .then(applyProfile)
             .catch((error) => {
                 console.error(
                     "Failed to fetch user profile:",
@@ -119,7 +115,7 @@ export default function Profile() {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+    }, [applyProfile]);
 
     if (loading) {
         return (
@@ -164,10 +160,9 @@ export default function Profile() {
                         </div>
 
                         <div className="col-span-2 lg:order-last lg:w-full">
-                            {/* Edit Profile Button, CHANGE HREF WHEN EDITING IS IMPLEMENTED */}
                             <button
                                 type="button"
-                                onClick={() => {}}
+                                onClick={() => setIsEditOpen(true)}
                                 className="inline-flex w-auto items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#F16F33] px-4 py-2 font-[Instrument_Sans] text-base font-medium text-[#FFFDEE]"
                             >
                                 <span>Edit Profile</span>
@@ -255,6 +250,13 @@ export default function Profile() {
                     emptyMessage="No dietary plans added yet."
                 />
             </section>
+        {isEditOpen && profileData ? (
+            <EditProfileModal
+                profile={profileData}
+                onClose={() => setIsEditOpen(false)}
+                onSaved={applyProfile}
+            />
+        ) : null}
         </div>
     );
 }
